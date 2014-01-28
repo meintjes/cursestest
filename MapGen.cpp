@@ -11,27 +11,44 @@
 Map::Map(Player &player, int depth) : you(player) {
   switch (randTo(0)) {
   default:
+    playerX = 2;
+    playerY = 2;
     generateBoxes(depth);
   }
   space[playerX][playerY].setType(&StairsUp);
 }
 
-void Map::drawLine(Point a, Point b, const SpaceType *type) {
+void Map::drawLine(Point a, const Point b, const SpaceType *type) {
+  //this is horrific style, but fuck it
   if (randTo(1)) {
-    std::swap(a, b);
+    while (a.x - b.x) {
+      space[a.x][a.y].setType(type);
+      a.x += sgn(b.x - a.x);
+      if (!randTo(10)) { //creates wavy lines rather than straight angles
+	drawLine(a, b, type);
+	return;
+      }
+    }
+    while (a.y - b.y) {
+      space[a.x][a.y].setType(type);
+      a.y += sgn(b.y - a.y);
+    }
   }
-
-  while (a.x - b.x) {
-    assert(a.x <= MAPWIDTH && a.y <= MAPHEIGHT);
-    space[a.x][a.y].setType(&Floor);
-    a.x += sgn(b.x - a.x);
+  else {
+    while (a.y - b.y) {
+      space[a.x][a.y].setType(type);
+      a.y += sgn(b.y - a.y);
+      if (!randTo(10)) { //creates wavy lines rather than straight angles
+	drawLine(a, b, type);
+	return;
+      }
+    }
+    while (a.x - b.x) {
+      space[a.x][a.y].setType(type);
+      a.x += sgn(b.x - a.x);
+    }
   }
-  while (b.y - a.y) {
-    assert(b.x <= MAPWIDTH && b.y <= MAPHEIGHT);
-    space[b.x][b.y].setType(&Floor);
-    b.y += sgn(a.y - b.y);
-  }
-  space[a.x][b.y].setType(&Floor);
+  space[a.x][a.y].setType(type);
 }
 
 void Map::drawBox(Point a, Point b, const SpaceType *type) {

@@ -15,7 +15,7 @@ Player::Player() {
 }
 
 void Player::display() const {
-  move(24, 0);
+  move(23, 0);
   //print hp bar, colored according to your current hp
   const Color &hpColor = ((hp * 10) / hpMax > 1) ? BlackOnGreen : BlackOnRed;
   int i = 0;
@@ -31,13 +31,13 @@ void Player::display() const {
   }
 
   //print current floor
-  move(24, 32);
+  move(23, 32);
   addstr(currentBranch->name.c_str());
   addstr(": ");
   addch('1' + currentDepth);
 
   //print item display
-  move(24, 79 - MAX_NUM_ITEMS);
+  move(23, 79 - MAX_NUM_ITEMS);
   for (int i = numBombs; i > 0; i--) {
     Cch{'!', Orange}.add();
   }
