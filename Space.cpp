@@ -165,5 +165,5 @@ int Space::getRange() const {
 }
 
 bool Space::typeIs(const SpaceType *typeIn) const {
-  return type->id == typeIn->id;
+  return *type == *typeIn;
 }

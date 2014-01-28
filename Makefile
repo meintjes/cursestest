@@ -1,8 +1,8 @@
 GXX=g++
 GXX_FLAGS=-c -Wall -Werror -pedantic -std=c++11 -lncurses
 
-cursestest: main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o
-	$(GXX) -lncurses main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o -o $@
+cursestest: main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o
+	$(GXX) -lncurses main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o -o $@
 
 main.o: Map.o Space.o Enemy.o Player.o
 	$(GXX) $(GXX_FLAGS) main.cpp
@@ -16,7 +16,7 @@ MapGen.o: Space.o functions.o
 Cch.o:
 	$(GXX) $(GXX_FLAGS) Cch.cpp
 
-Space.o: Enemy.o
+Space.o: Enemy.o SpaceType.o
 	$(GXX) $(GXX_FLAGS) Space.cpp
 
 Enemy.o:
@@ -27,6 +27,9 @@ Player.o: Cch.o functions.o
 
 functions.o:
 	$(GXX) $(GXX_FLAGS) functions.cpp
+
+SpaceType.o:
+	$(GXX) $(GXX_FLAGS) SpaceType.cpp
 
 clean:
 	rm -rf *.o cursestest

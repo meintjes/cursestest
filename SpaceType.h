@@ -4,6 +4,7 @@
 #include "Cch.h"
 
 struct SpaceType {
+  bool operator==(const SpaceType &rhs) const;
   Cch glyph;
   bool passable;
   bool transparent;
