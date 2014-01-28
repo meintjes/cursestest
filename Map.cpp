@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "Cch.h"
 #include "Color.h"
+#include "functions.h"
 #include <ncurses.h>
 #include <algorithm>
 
@@ -36,22 +37,30 @@ int Map::getPlayerY() const {
 
 bool Map::getInput() {
   switch (getch()) {
+  case 'y':
   case '7':
     return this->movePlayer(-1, -1);
+  case 'k':
   case '8':
     return this->movePlayer(0, -1);
+  case 'u':
   case '9':
     return this->movePlayer(1, -1);
+  case 'h':
   case '4':
     return this->movePlayer(-1, 0);
   case '5':
     return this->movePlayer(0, 0);
+  case 'l':
   case '6':
     return this->movePlayer(1, 0);
+  case 'b':
   case '1':
     return this->movePlayer(-1, 1);
+  case 'j':
   case '2':
     return this->movePlayer(0, 1);
+  case 'n':
   case '3':
     return this->movePlayer(1, 1);
 
@@ -224,7 +233,5 @@ int Map::distance(int x1, int y1, int x2, int y2) {
 }
 
 std::pair<int, int> Map::direction(int x1, int y1, int x2, int y2) {
-  int dx = (x2 - x1) ? ((x2 - x1) / abs(x2 - x1)) : 0;
-  int dy = (y2 - y1) ? ((y2 - y1) / abs(y2 - y1)) : 0;
-  return std::pair<int, int>(dx, dy);
+  return std::pair<int, int>(sgn(x2 - x1), sgn(y2 - y1));
 }

@@ -7,7 +7,7 @@ cursestest: main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o Spa
 main.o: Map.o Space.o Enemy.o Player.o
 	$(GXX) $(GXX_FLAGS) main.cpp
 
-Map.o: Space.o Cch.o Player.o
+Map.o: Space.o Cch.o Player.o functions.o
 	$(GXX) $(GXX_FLAGS) Map.cpp
 
 MapGen.o: Space.o functions.o
