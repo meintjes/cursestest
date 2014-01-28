@@ -5,10 +5,13 @@
 
 #include <assert.h>
 
-Map::Map(Player &player) : you(player) {
+//depth arg will eventually be used to scale difficulty. once different branches
+//are implemented, there'll probably be another argument controlling monster
+//and loot generation
+Map::Map(Player &player, int depth) : you(player) {
   switch (randTo(0)) {
   default:
-    generateBoxes();
+    generateBoxes(depth);
   }
   space[playerX][playerY].setType(&StairsUp);
 }
@@ -50,7 +53,7 @@ void Map::generateRoom(Point center, int maxRadius) {
   drawBox(Point{xMin, yMin}, Point{xMax, yMax}, &Floor);
 }
 
-void Map::generateBoxes() {
+void Map::generateBoxes(int depth) {
   std::vector<Point> roomLocations;
 
   for (int i = randRange(8, 10); i > 0; i--) {
@@ -59,12 +62,12 @@ void Map::generateBoxes() {
     roomLocations.push_back(center);
   }
 
-  for (unsigned int i = 0; i < roomLocations.size(); i++) {
-    drawLine(roomLocations.at(i),
-	     roomLocations.at(randTo(roomLocations.size() - 1)), &Floor);
+  for (unsigned int i = 1; i < roomLocations.size(); i++) {
+    drawLine(roomLocations.at(i), roomLocations.at(i - 1), &Floor);
   }
 
   playerX = roomLocations.at(0).x;
   playerY = roomLocations.at(0).y;
-  space[roomLocations.at(1).x][roomLocations.at(1).y].setType(&StairsDown);
+  space[roomLocations.at(roomLocations.size() - 1).x]
+       [roomLocations.at(roomLocations.size() - 1).y].setType(&StairsDown);
 }
