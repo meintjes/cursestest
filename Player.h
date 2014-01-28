@@ -29,7 +29,7 @@ class Player {
   bool addArrows(int numIn);
 
   void setBranch(Branch *branch);
-  void changeDepth(int dz);
+  bool changeDepth(int dz);
 
  private:
   static const int MAX_NUM_ITEMS = 20;

@@ -184,8 +184,7 @@ bool Map::isVisible(int x, int y) const {
 
 bool Map::changeFloor(int dz, const SpaceType *type) {
   if (space[playerX][playerY].typeIs(type)) {
-    you.changeDepth(dz);
-    return true;
+    return you.changeDepth(dz);
   }
   else {
     return false;

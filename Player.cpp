@@ -146,13 +146,29 @@ void Player::setBranch(Branch *branch) {
   currentBranch = branch;
 }
 
-void Player::changeDepth(int dz) {
+bool Player::changeDepth(int dz) {
   currentDepth += dz;
+
+  //if going down from bottom of branch, don't spend a turn
+  //TODO: make branch ends not generate down-stairs
   if (currentDepth >= currentBranch->depth) {
     currentDepth = currentBranch->depth - 1;
+    return false;
   }
+
+  //if going up from top of branch, go to parent branch and depth
   if (currentDepth < 0) {
-    currentDepth = currentBranch->parentDepth;
-    currentBranch = currentBranch->parentBranch;
+    if (currentBranch->parentBranch) { 
+      currentDepth = currentBranch->parentDepth;
+      currentBranch = currentBranch->parentBranch;
+      return true;
+    }
+    else { //if there's no parent branch, don't spend a turn
+      currentDepth -= dz;
+      return false;
+    }
   }
+
+  //spend a turn in the general case
+  return true;
 }

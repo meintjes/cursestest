@@ -38,7 +38,7 @@ int main() {
 int playGame() {
   Player you;
 
-  Branch dungeon{"Dungeon", DEPTH_DUNGEON, &dungeon, 5};
+  Branch dungeon{"Dungeon", DEPTH_DUNGEON, nullptr, 0};
   for (int i = 0; i < DEPTH_DUNGEON; i++) {
     dungeon.floors.push_back(Map(you));
   }
