@@ -11,8 +11,6 @@
 Map::Map(Player &player, int depth) : you(player) {
   switch (randTo(0)) {
   default:
-    playerX = 2;
-    playerY = 2;
     generateBoxes(depth);
   }
   space[playerX][playerY].setType(&StairsUp);
