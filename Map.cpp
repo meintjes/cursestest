@@ -11,7 +11,7 @@ void Map::display() const {
   move(0, 0);
   for (int y = 0; y <= MAPHEIGHT + 1; y++) {
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
-      if (isVisible(x, y)) {
+      if (isVisible(x, y, you.getLOS())) {
 	if (x == playerX && y == playerY) {
 	  Cch{'@', BlackOnWhite}.add();
 	}
@@ -69,7 +69,7 @@ bool Map::getInput() {
   case 's':
     return you.lightTorch();
   case 'd':
-    return this->shootArrow();
+    return you.drawArrow();
 
   case '<':
     return this->changeFloor(-1, &StairsUp);
@@ -82,34 +82,37 @@ bool Map::getInput() {
 }
 
 bool Map::movePlayer(int dx, int dy) {
-  Space *target = &space[playerX + dx][playerY + dy];
-  if (target->isPassable()) {
-    playerX += dx;
-    playerY += dy;
-    target->pickup(you);
-    return true;
-  }
-  else if (target->hasEnemy()) {
-    target->kill(*this, playerX + dx, playerY + dy);
+  if ((dx != 0 || dy != 0) && you.shootArrow()) {
+    for (int i = 0, x = playerX, y = playerY;
+	 i < 6 && (space[x][y].isPassable() || space[x][y].hasEnemy());
+	 i++) {
+      space[x][y].kill(*this, x, y);
+      x += dx;
+      y += dy;
+    }
     return true;
   }
   else {
-    return false;
+    Space *target = &space[playerX + dx][playerY + dy];
+    if (target->isPassable()) {
+      playerX += dx;
+      playerY += dy;
+      target->pickup(you);
+      return true;
+    }
+    else if (target->hasEnemy()) {
+      target->kill(*this, playerX + dx, playerY + dy);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }
 
 bool Map::dropBomb() {
   if (!space[playerX][playerY].hasBomb() && you.dropBomb()) {
     space[playerX][playerY].dropBomb();
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-bool Map::shootArrow() {
-  if (you.shootArrow()) {
     return true;
   }
   else {
@@ -148,11 +151,11 @@ void Map::tick(int turns) {
       }
       if (space[x][y].hasEnemy()) {
 	//enemies within range attack the player
-	if (distance(x, y, playerX, playerY) <= space[x][y].getRange()) {
+	if (isVisible(x, y, space[x][y].getRange())) {
 	  toAttack.push_back(Point{x, y});
 	}
 	//enemies outside range of the player try to move toward him
-	else if (distance(x, y, playerX, playerY) <= 7) {
+	else if (isVisible(x, y, 7)) {
 	  toMove.push_back(Point{x, y});
 	}
       }
@@ -174,8 +177,8 @@ void Map::tick(int turns) {
   }
 }
 
-bool Map::isVisible(int x, int y) const {
-  if (distance(x, y, playerX, playerY) > you.getLOS()) {
+bool Map::isVisible(int x, int y, int LOS) const {
+  if (distance(x, y, playerX, playerY) > LOS) {
     return false;
   }
   else {

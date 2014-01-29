@@ -10,8 +10,11 @@ Player::Player() {
   numTorches = 3;
   numArrows = 1;
   torchDuration = 0;
+
   currentBranch = nullptr;
   currentDepth = 0;
+
+  arrowMode = false;
 }
 
 void Player::display() const {
@@ -95,9 +98,25 @@ bool Player::dropBomb() {
   }
 }
 
-bool Player::shootArrow() {
-  if (numArrows > 0) {
+bool Player::drawArrow() {
+  if (arrowMode) {
+    arrowMode = false;
+    numArrows++;
+    return true;
+  }
+  else if (numArrows > 0) {
+    arrowMode = true;
     numArrows--;
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool Player::shootArrow() {
+  if (arrowMode) {
+    arrowMode = false;
     return true;
   }
   else {

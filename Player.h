@@ -20,7 +20,8 @@ class Player {
 
   bool lightTorch();
   bool dropBomb();
-  bool shootArrow();
+  bool drawArrow(); //toggles arrowmode
+  bool shootArrow(); //returns whether you had arrowmode, then unsets it
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
@@ -44,6 +45,8 @@ class Player {
 
   Branch *currentBranch;
   int currentDepth;
+
+  bool arrowMode;
 };
 
 #endif

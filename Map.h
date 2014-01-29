@@ -22,6 +22,7 @@ class Map {
   void drawBox(Point a, Point b, const SpaceType *type);
   void generateRoom(Point center, int maxRadius);
   void generateBoxes(int depth);
+  void sanitizeEntry(); //removes enemies within 2 spaces of player
 
   //defined in Map.cpp
  public:
@@ -30,7 +31,6 @@ class Map {
   bool getInput();
   bool movePlayer(int dx, int dy);
   bool dropBomb();
-  bool shootArrow();
 
   void moveEnemy(int x, int y);
   Space& getSpace(int x, int y);
@@ -44,7 +44,7 @@ class Map {
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
 
-  bool isVisible(int x, int y) const;
+  bool isVisible(int x, int y, int LOS) const;
 
   bool changeFloor(int dz, const SpaceType *type);
 

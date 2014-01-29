@@ -13,7 +13,9 @@ Map::Map(Player &player, int depth) : you(player) {
   default:
     generateBoxes(depth);
   }
+
   space[playerX][playerY].setType(&StairsUp);
+  sanitizeEntry();
 }
 
 void Map::drawLine(Point a, const Point b, const SpaceType *type) {
@@ -85,4 +87,12 @@ void Map::generateBoxes(int depth) {
   playerY = roomLocations.at(0).y;
   space[roomLocations.at(roomLocations.size() - 1).x]
        [roomLocations.at(roomLocations.size() - 1).y].setType(&StairsDown);
+}
+
+void Map::sanitizeEntry() {
+  for (int x = playerX - 2; x <= playerX + 2; x++) {
+    for (int y = playerY - 2; y <= playerY + 2; y++) {
+      space[x][y].setEnemy(nullptr);
+    }
+  }
 }
