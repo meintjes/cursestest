@@ -9,7 +9,7 @@
 #include <vector>
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
-const int MAPWIDTH = 77;
+const int MAPWIDTH = 78;
 const int MAPHEIGHT = 21;
 
 class Map {
@@ -28,7 +28,6 @@ class Map {
  public:
   void display() const;
 
-  bool getInput();
   bool movePlayer(int dx, int dy);
   bool dropBomb();
 
@@ -39,14 +38,13 @@ class Map {
   Player &you;
   int getPlayerX() const;
   int getPlayerY() const;
+  bool changeFloor(int dz, const SpaceType *type);
 
  private:
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
 
   bool isVisible(int x, int y, int LOS) const;
-
-  bool changeFloor(int dz, const SpaceType *type);
 
   std::vector<Point> toExplode;
   void executeToExplode();

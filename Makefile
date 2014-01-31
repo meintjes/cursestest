@@ -1,10 +1,10 @@
 GXX=g++
-GXX_FLAGS=-c -Wall -Werror -pedantic -std=c++11 -lncurses
+GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses
 
-cursestest: main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o
-	$(GXX) -lncurses main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o -o $@
+cursestest: main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o
+	$(GXX) -lncurses main.o Map.o MapGen.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o -o $@
 
-main.o: Map.o Space.o Enemy.o Player.o
+main.o: Map.o Space.o Enemy.o Player.o Command.o
 	$(GXX) $(GXX_FLAGS) main.cpp
 
 Map.o: Space.o Cch.o Player.o functions.o
@@ -30,6 +30,9 @@ functions.o:
 
 SpaceType.o:
 	$(GXX) $(GXX_FLAGS) SpaceType.cpp
+
+Command.o:
+	$(GXX) $(GXX_FLAGS) Command.cpp
 
 clean:
 	rm -rf *.o cursestest

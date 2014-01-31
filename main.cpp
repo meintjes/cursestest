@@ -2,11 +2,14 @@
 #include "Map.h"
 #include "Player.h"
 #include "Branch.h"
+#include "Command.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <string>
 
 int playGame();
+bool getInput(Map *map, const CommandMap cmap);
 
 int main() {
   initscr();
@@ -29,13 +32,16 @@ int main() {
 
   if (has_colors()) {
     playGame();
-  }  
+  }
 
   endwin();
   return 0;
 }
 
 int playGame() {
+  CommandMap cmap;
+  readControls("controls.txt", cmap);
+
   Player you;
 
   Branch dungeon{"Dungeon", DEPTH_DUNGEON, nullptr, 0};
@@ -48,8 +54,10 @@ int playGame() {
   while (you.getHp() > 0) {
     you.getCurrentFloor()->display();
     you.display();
-    while (!you.getCurrentFloor()->getInput());  //get input that would cause a turn to pass
-    you.getCurrentFloor()->tick();               //then update game state
+
+    //get input that would cause a turn to pass
+    while (!getInput(you.getCurrentFloor(), cmap));  
+    you.getCurrentFloor()->tick(); //then update game state
   }
 
   you.getCurrentFloor()->display();
@@ -58,4 +66,42 @@ int playGame() {
   getch();
 
   return 0;
+}
+
+bool getInput(Map *map, const CommandMap cmap) {
+  switch (cmap[getch()]) {
+  case COMMAND_MOVE_UPLEFT:
+    return map->movePlayer(-1, -1);
+  case COMMAND_MOVE_UP:
+    return map->movePlayer(0, -1);
+  case COMMAND_MOVE_UPRIGHT:
+    return map->movePlayer(1, -1);
+  case COMMAND_MOVE_LEFT:
+    return map->movePlayer(-1, 0);
+  case COMMAND_WAIT:
+    return map->movePlayer(0, 0);
+  case COMMAND_MOVE_RIGHT:
+    return map->movePlayer(1, 0);
+  case COMMAND_MOVE_DOWNLEFT:
+    return map->movePlayer(-1, 1);
+  case COMMAND_MOVE_DOWN:
+    return map->movePlayer(0, 1);
+  case COMMAND_MOVE_DOWNRIGHT:
+    return map->movePlayer(1, 1);
+
+  case COMMAND_USE_BOMB:
+    return map->dropBomb();
+  case COMMAND_USE_TORCH:
+    return map->you.lightTorch();
+  case COMMAND_USE_ARROW:
+    return map->you.drawArrow();
+
+  case COMMAND_INTERACT_STAIRSUP:
+    return map->changeFloor(-1, &StairsUp);
+  case COMMAND_INTERACT_STAIRSDOWN:
+    return map->changeFloor(+1, &StairsDown);
+
+  default:
+    return false;
+  }
 }

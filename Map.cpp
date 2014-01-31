@@ -2,14 +2,15 @@
 #include "Cch.h"
 #include "Color.h"
 #include "functions.h"
+#include "Command.h"
 #include <ncurses.h>
 #include <algorithm>
 
 #include <assert.h>
 
 void Map::display() const {
-  move(0, 0);
   for (int y = 0; y <= MAPHEIGHT + 1; y++) {
+    move(y, 0);
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
       if (isVisible(x, y, you.getLOS())) {
 	if (x == playerX && y == playerY) {
@@ -33,52 +34,6 @@ int Map::getPlayerX() const {
 
 int Map::getPlayerY() const {
   return playerY;
-}
-
-bool Map::getInput() {
-  switch (getch()) {
-  case 'y':
-  case '7':
-    return this->movePlayer(-1, -1);
-  case 'k':
-  case '8':
-    return this->movePlayer(0, -1);
-  case 'u':
-  case '9':
-    return this->movePlayer(1, -1);
-  case 'h':
-  case '4':
-    return this->movePlayer(-1, 0);
-  case '5':
-    return this->movePlayer(0, 0);
-  case 'l':
-  case '6':
-    return this->movePlayer(1, 0);
-  case 'b':
-  case '1':
-    return this->movePlayer(-1, 1);
-  case 'j':
-  case '2':
-    return this->movePlayer(0, 1);
-  case 'n':
-  case '3':
-    return this->movePlayer(1, 1);
-
-  case 'a':
-    return this->dropBomb();
-  case 's':
-    return you.lightTorch();
-  case 'd':
-    return you.drawArrow();
-
-  case '<':
-    return this->changeFloor(-1, &StairsUp);
-  case '>':
-    return this->changeFloor(+1, &StairsDown);
-
-  default:
-    return false;
-  }
 }
 
 bool Map::movePlayer(int dx, int dy) {
