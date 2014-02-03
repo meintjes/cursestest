@@ -1,7 +1,7 @@
 #ifndef __SPACETYPE_H__
 #define __SPACETYPE_H__
 
-#include "Cch.h"
+#include "ColoredText.h"
 
 struct SpaceType {
   bool operator==(const SpaceType &rhs) const;

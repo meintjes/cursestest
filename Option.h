@@ -1,7 +1,7 @@
 #ifndef __OPTION_H__
 #define __OPTION_H__
 
-#include "Cst.h"
+#include "ColoredText.h"
 
 class Option {
  public:

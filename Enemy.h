@@ -2,7 +2,7 @@
 #define __ENEMY_H__
 
 #include <functional>
-#include "Cch.h"
+#include "ColoredText.h"
 
 class Map;
 
