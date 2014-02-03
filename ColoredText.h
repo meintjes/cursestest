@@ -29,8 +29,9 @@ template <typename T> class ColoredText {
   }
 
  private:
-  void print() const;
-  
+  void print() const {
+    addstr(std::to_string(text).c_str());
+  }
 
   T text;
   const Color &color;

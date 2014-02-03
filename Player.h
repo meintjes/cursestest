@@ -1,6 +1,8 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+#include "ColoredText.h"
+
 struct Branch;
 struct Item;
 class Map;
@@ -17,6 +19,7 @@ class Player {
   int getLOS() const;
   Map* getCurrentFloor() const;
   int getNumItems() const;
+  Cch getGlyph() const;
 
   bool lightTorch();
   bool dropBomb();

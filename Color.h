@@ -27,5 +27,6 @@ const Color White {8, true};
 const Color BlackOnWhite {9, false};
 const Color BlackOnRed {10, false};
 const Color BlackOnGreen {11, false};
+const Color BlackOnBrown {12, false};
 
 #endif

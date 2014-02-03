@@ -14,7 +14,7 @@ void Map::display() const {
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
       if (isVisible(x, y, you.getLOS())) {
 	if (x == playerX && y == playerY) {
-	  Cch{'@', BlackOnWhite}.add();
+	  you.getGlyph().add();
 	}
 	else {
 	  space[x][y].getGlyph(true).add();

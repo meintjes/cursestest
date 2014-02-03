@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "ColoredText.h"
 #include "functions.h"
 #include "Branch.h"
 
@@ -35,9 +34,8 @@ void Player::display() const {
 
   //print current floor
   move(23, 32);
-  addstr(currentBranch->name.c_str());
-  addstr(": ");
-  addch('1' + currentDepth);
+  Cst{currentBranch->name + ": ", LightGray}.add();
+  ColoredText<int>{currentDepth + 1, White}.add();
 
   //print item display
   move(23, 79 - MAX_NUM_ITEMS);
@@ -75,6 +73,15 @@ Map* Player::getCurrentFloor() const {
 
 int Player::getNumItems() const {
   return (numBombs + numTorches + numArrows);
+}
+
+Cch Player::getGlyph() const {
+  if (arrowMode) {
+    return Cch{'@', BlackOnBrown};
+  }
+  else {
+    return Cch{'@', BlackOnWhite};
+  }
 }
 
 bool Player::lightTorch() {
