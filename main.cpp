@@ -3,13 +3,16 @@
 #include "Player.h"
 #include "Branch.h"
 #include "Command.h"
+#include "Menu.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
 #include <string>
 
-int playGame();
+void playGame();
 bool getInput(Map *map, const CommandMap cmap);
+
+Menu MainMenu({Option{"Play game", playGame}, Option{"Change controls", createControls}});
 
 int main() {
   initscr();
@@ -30,18 +33,13 @@ int main() {
   init_pair(10, COLOR_BLACK, COLOR_RED);
   init_pair(11, COLOR_BLACK, COLOR_GREEN);
 
-  if (has_colors()) {
-    playGame();
-  }
+  MainMenu();
 
   endwin();
   return 0;
 }
 
-int playGame() {
-  CommandMap cmap;
-  readControls("controls.txt", cmap);
-
+void playGame() {
   Player you;
 
   Branch dungeon{"Dungeon", DEPTH_DUNGEON, nullptr, 0};
@@ -50,6 +48,9 @@ int playGame() {
   }
 
   you.setBranch(&dungeon);
+
+  CommandMap cmap;
+  readControls("controls.txt", cmap);
 
   while (you.getHp() > 0) {
     you.getCurrentFloor()->display();
@@ -64,8 +65,6 @@ int playGame() {
   you.display();
 
   getch();
-
-  return 0;
 }
 
 bool getInput(Map *map, const CommandMap cmap) {

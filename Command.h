@@ -23,32 +23,12 @@ enum Command {COMMAND_FIRST,
 	      COMMAND_INTERACT_STAIRSDOWN,
 
 	      COMMAND_LAST};
-/*
-static std::string CommandNames[COMMAND_LAST];
-
-CommandNames[COMMAND_MOVE_UPLEFT] = "Move up/left";
-CommandNames[COMMAND_MOVE_UP] = "Move up";
-CommandNames[COMMAND_MOVE_UPRIGHT] = "Move up/right";
-CommandNames[COMMAND_MOVE_LEFT] = "Move left";
-CommandNames[COMMAND_WAIT] = "Wait";
-CommandNames[COMMAND_MOVE_RIGHT] = "Move right";
-CommandNames[COMMAND_MOVE_DOWNLEFT] = "Move down/left";
-CommandNames[COMMAND_MOVE_DOWN] = "Move down";
-CommandNames[COMMAND_MOVE_DOWNRIGHT] = "Move down/right";
-
-CommandNames[COMMAND_USE_BOMB] = "Use bomb";
-CommandNames[COMMAND_USE_TORCH] = "Use torch";
-CommandNames[COMMAND_USE_ARROW] = "Use arrow";
-
-CommandNames[COMMAND_INTERACT_STAIRSUP] = "Go up stairs";
-CommandNames[COMMAND_INTERACT_STAIRSDOWN] = "Go down stairs";
-*/
 
 const int CMAP_SIZE = 256;
 typedef Command CommandMap[CMAP_SIZE];
 
 bool readControls(std::string filename, CommandMap cmap);
-void createControls(CommandMap cmap);
+void createControls();
 void writeControls(std::string filename, CommandMap cmap);
 
 #endif
