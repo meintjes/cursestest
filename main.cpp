@@ -8,25 +8,26 @@
 #include <ctime>
 #include <vector>
 #include <string>
+#include <functional>
 
 void playGame();
 bool getInput(Map *map, const CommandMap cmap);
 
 Menu ControlsMenu({
-  Option{"Move up/left", changeControl<COMMAND_MOVE_UPLEFT>},
-  Option{"Move up", changeControl<COMMAND_MOVE_UP>},
-  Option{"Move up/right", changeControl<COMMAND_MOVE_UPRIGHT>},
-  Option{"Move left", changeControl<COMMAND_MOVE_LEFT>},
-  Option{"Wait", changeControl<COMMAND_WAIT>},
-  Option{"Move right", changeControl<COMMAND_MOVE_RIGHT>},
-  Option{"Move down/left", changeControl<COMMAND_MOVE_DOWNLEFT>},
-  Option{"Move down", changeControl<COMMAND_MOVE_DOWN>},
-  Option{"Move down/right", changeControl<COMMAND_MOVE_DOWNRIGHT>},
-  Option{"Use bomb", changeControl<COMMAND_USE_BOMB>},
-  Option{"Use torch", changeControl<COMMAND_USE_TORCH>},
-  Option{"Use arrow", changeControl<COMMAND_USE_ARROW>},
-  Option{"Go up stairs", changeControl<COMMAND_INTERACT_STAIRSUP>},
-  Option{"Go down stairs", changeControl<COMMAND_INTERACT_STAIRSDOWN>}
+  Option{"Move up/left", std::bind(changeControl, COMMAND_MOVE_UPLEFT)},
+  Option{"Move up", std::bind(changeControl, COMMAND_MOVE_UP)},
+  Option{"Move up/right", std::bind(changeControl, COMMAND_MOVE_UPRIGHT)},
+  Option{"Move left", std::bind(changeControl, COMMAND_MOVE_LEFT)},
+  Option{"Wait", std::bind(changeControl, COMMAND_WAIT)},
+  Option{"Move right", std::bind(changeControl, COMMAND_MOVE_RIGHT)},
+  Option{"Move down/left", std::bind(changeControl, COMMAND_MOVE_DOWNLEFT)},
+  Option{"Move down", std::bind(changeControl, COMMAND_MOVE_DOWN)},
+  Option{"Move down/right", std::bind(changeControl, COMMAND_MOVE_DOWNRIGHT)},
+  Option{"Use bomb", std::bind(changeControl, COMMAND_USE_BOMB)},
+  Option{"Use torch", std::bind(changeControl, COMMAND_USE_TORCH)},
+  Option{"Use arrow", std::bind(changeControl, COMMAND_USE_ARROW)},
+  Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
+  Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)}
 });
 
 Menu MainMenu({

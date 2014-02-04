@@ -31,30 +31,6 @@ typedef Command CommandMap[CMAP_SIZE];
 
 bool readControls(std::string filename, CommandMap cmap);
 void writeControls(std::string filename, CommandMap cmap);
-
-template <Command command> void changeControl() {
-  CommandMap cmap;
-  if (readControls("controls.txt", cmap)) {
-    unsigned char ch = getch();
-    while (ch != 13 && ch != 27) {
-      erase();
-      move(0, 0);
-      if (ch < CMAP_SIZE) {
-	addch(ch);
-	addstr(" has been bound.");
-	cmap[ch] = command;
-	ch = getch();
-      }
-      else {
-	addstr("Character out of range.");
-      }
-    } 
-    writeControls("controls.txt", cmap);
-  }
-  else {
-    addstr("Failed to load controls.");
-    getch();
-  }
-}
+void changeControl(Command command);
 
 #endif
