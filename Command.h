@@ -26,7 +26,9 @@ enum Command {COMMAND_FIRST,
 
 	      COMMAND_LAST};
 
-const int CMAP_SIZE = 256;
+//if size is changed to 256, writeControls() overflows, loops infinitely,
+//and takes up all the space on your drive. it's hilarious, definitely do it
+const int CMAP_SIZE = 128;
 typedef Command CommandMap[CMAP_SIZE];
 
 bool readControls(std::string filename, CommandMap cmap);

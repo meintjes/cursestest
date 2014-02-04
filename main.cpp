@@ -71,7 +71,7 @@ void playGame() {
 
   you.setBranch(&dungeon);
 
-  CommandMap cmap;
+  CommandMap cmap = {COMMAND_FIRST};
   readControls("controls.txt", cmap);
 
   while (you.getHp() > 0) {

@@ -24,9 +24,9 @@ void writeControls(std::string filename, CommandMap cmap) {
   file.open(filename);
 
   for (int com = COMMAND_FIRST + 1; com < COMMAND_LAST; com++) {
-    for (int i = 0; i < CMAP_SIZE; i++) {
+    for (unsigned char i = 0; i < CMAP_SIZE; i++) {
       if (cmap[i] == com) {
-	file << static_cast<unsigned char>(i);
+	file << i;
       }
     }
     file << '\n';
@@ -34,26 +34,17 @@ void writeControls(std::string filename, CommandMap cmap) {
 }
 
 void changeControl(Command command) {
-  CommandMap cmap;
+  CommandMap cmap = {COMMAND_FIRST};
   if (readControls("controls.txt", cmap)) {
+    move(11, 26);
+    addstr("Press a key.");
     unsigned char ch = getch();
-    while (ch != 13 && ch != 27) {
-      erase();
-      move(0, 0);
-      if (ch < CMAP_SIZE) {
-	addch(ch);
-	addstr(" has been bound.");
-	cmap[ch] = command;
-	ch = getch();
-      }
-      else {
-	addstr("Character out of range.");
-      }
-    } 
-    writeControls("controls.txt", cmap);
+    if (ch < CMAP_SIZE) {
+      cmap[ch] = command;
+      writeControls("controls.txt", cmap);
+    }
   }
   else {
     addstr("Failed to load controls.");
-    getch();
   }
 }
