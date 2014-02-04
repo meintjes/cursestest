@@ -35,16 +35,27 @@ void writeControls(std::string filename, CommandMap cmap) {
 
 void changeControl(Command command) {
   CommandMap cmap = {COMMAND_FIRST};
+  move(11, 26);
   if (readControls("controls.txt", cmap)) {
-    move(11, 26);
-    addstr("Press a key.");
+    addstr("Press a key to bind to control (escape to clear).");
     unsigned char ch = getch();
-    if (ch < CMAP_SIZE) {
-      cmap[ch] = command;
-      writeControls("controls.txt", cmap);
+    if (ch == 27) {
+      clearControl(command, cmap);
     }
+    else if (ch < CMAP_SIZE) {
+      cmap[ch] = command;
+    }
+    writeControls("controls.txt", cmap);
   }
   else {
     addstr("Failed to load controls.");
+  }
+}
+
+void clearControl(Command command, CommandMap cmap) {
+  for (unsigned char i = 0; i < CMAP_SIZE; i++) {
+    if (cmap[i] == command) {
+      cmap[i] = COMMAND_FIRST;
+    }
   }
 }

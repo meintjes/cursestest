@@ -5,8 +5,8 @@
 #include <string>
 #include <ncurses.h>
 
-enum Command {COMMAND_FIRST,
-
+enum Command {COMMAND_FIRST, //exists so cmaps are initialized with an
+	                     //unused command rather than something useful
 	      COMMAND_MOVE_UPLEFT,
 	      COMMAND_MOVE_UP,
 	      COMMAND_MOVE_UPRIGHT,
@@ -24,7 +24,7 @@ enum Command {COMMAND_FIRST,
 	      COMMAND_INTERACT_STAIRSUP,
 	      COMMAND_INTERACT_STAIRSDOWN,
 
-	      COMMAND_LAST};
+	      COMMAND_LAST}; //exits to help iterate through cmaps
 
 //if size is changed to 256, writeControls() overflows, loops infinitely,
 //and takes up all the space on your drive. it's hilarious, definitely do it
@@ -34,5 +34,6 @@ typedef Command CommandMap[CMAP_SIZE];
 bool readControls(std::string filename, CommandMap cmap);
 void writeControls(std::string filename, CommandMap cmap);
 void changeControl(Command command);
+void clearControl(Command command, CommandMap cmap);
 
 #endif

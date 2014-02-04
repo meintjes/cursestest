@@ -12,6 +12,7 @@ class Option {
   Cst getText() const;
  private:
   Cst text;
+  std::function<void(void)> textfn;
   std::function<void(void)> fn;
 };
 
