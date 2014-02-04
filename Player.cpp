@@ -33,7 +33,7 @@ void Player::display() const {
   }
 
   //print current floor
-  move(23, 32);
+  move(23, 33);
   Cst{currentBranch->name + ": ", LightGray}.add();
   ColoredText<int>{currentDepth + 1, White}.add();
 

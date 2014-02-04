@@ -2,15 +2,17 @@
 #define __OPTION_H__
 
 #include "ColoredText.h"
+#include <functional>
 
 class Option {
  public:
-  Option(std::string nameIn, void (*fnIn)(), const Color &color = LightGray);
+  Option(std::string nameIn, std::function<void(void)> fnIn);
+  Option(Cst nameIn, std::function<void(void)> fnIn);
   void operator()() const;
   Cst getText() const;
  private:
   Cst text;
-  void (*fn)();
+  std::function<void(void)> fn;
 };
 
 #endif

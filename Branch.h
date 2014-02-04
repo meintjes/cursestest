@@ -5,7 +5,7 @@
 #include <vector>
 #include "Map.h"
 
-const int DEPTH_DUNGEON = 9;
+const int DEPTH_DUNGEON = 12;
 
 struct Branch {
   std::string name;

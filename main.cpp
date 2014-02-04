@@ -12,7 +12,27 @@
 void playGame();
 bool getInput(Map *map, const CommandMap cmap);
 
-Menu MainMenu({Option{"Play game", playGame}, Option{"Change controls", createControls}});
+Menu ControlsMenu({
+  Option{"Move up/left", changeControl<COMMAND_MOVE_UPLEFT>},
+  Option{"Move up", changeControl<COMMAND_MOVE_UP>},
+  Option{"Move up/right", changeControl<COMMAND_MOVE_UPRIGHT>},
+  Option{"Move left", changeControl<COMMAND_MOVE_LEFT>},
+  Option{"Wait", changeControl<COMMAND_WAIT>},
+  Option{"Move right", changeControl<COMMAND_MOVE_RIGHT>},
+  Option{"Move down/left", changeControl<COMMAND_MOVE_DOWNLEFT>},
+  Option{"Move down", changeControl<COMMAND_MOVE_DOWN>},
+  Option{"Move down/right", changeControl<COMMAND_MOVE_DOWNRIGHT>},
+  Option{"Use bomb", changeControl<COMMAND_USE_BOMB>},
+  Option{"Use torch", changeControl<COMMAND_USE_TORCH>},
+  Option{"Use arrow", changeControl<COMMAND_USE_ARROW>},
+  Option{"Go up stairs", changeControl<COMMAND_INTERACT_STAIRSUP>},
+  Option{"Go down stairs", changeControl<COMMAND_INTERACT_STAIRSDOWN>}
+});
+
+Menu MainMenu({
+  Option{"Play game", playGame},
+  Option{"Change controls", ControlsMenu}
+});
 
 int main() {
   initscr();

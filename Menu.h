@@ -1,7 +1,6 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
-#include "Command.h"
 #include "Option.h"
 #include <ncurses.h>
 #include <vector>

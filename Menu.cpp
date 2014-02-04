@@ -14,7 +14,8 @@ void Menu::operator()() {
 void Menu::displayMenu() {
   erase();
   for (int i = -11; i <= 11; i++) {
-    if (currentOption + i >= 0 && currentOption + i < static_cast<int>(options.size())) {
+    if (currentOption + i >= 0 &&
+	currentOption + i < static_cast<int>(options.size())) {
       move(11 + i, 4);
       if (i == 0) {
 	//is this good style I don't even know. TODO: implement even more classes,
