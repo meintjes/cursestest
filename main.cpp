@@ -27,7 +27,9 @@ Menu ControlsMenu({
   Option{"Use torch", std::bind(changeControl, COMMAND_USE_TORCH)},
   Option{"Use arrow", std::bind(changeControl, COMMAND_USE_ARROW)},
   Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
-  Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)}
+  Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
+
+  Option{Cst{"Reset all controls", Red}, resetControls}
 });
 
 Menu MainMenu({
@@ -72,7 +74,7 @@ void playGame() {
   you.setBranch(&dungeon);
 
   CommandMap cmap = {COMMAND_FIRST};
-  readControls("controls.txt", cmap);
+  readControls(cmap);
 
   while (you.getHp() > 0) {
     you.getCurrentFloor()->display();

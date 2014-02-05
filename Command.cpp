@@ -1,9 +1,9 @@
 #include "Command.h"
 #include <fstream>
 
-bool readControls(std::string filename, CommandMap cmap) {
+bool readControls(CommandMap cmap) {
   std::ifstream file;
-  file.open(filename);
+  file.open("controls.txt");
   std::string line;
 
   for (int com = COMMAND_FIRST + 1; com < COMMAND_LAST; com++) {
@@ -19,9 +19,9 @@ bool readControls(std::string filename, CommandMap cmap) {
   return true; //success!
 }
 
-void writeControls(std::string filename, CommandMap cmap) {
+void writeControls(CommandMap cmap) {
   std::ofstream file;
-  file.open(filename);
+  file.open("controls.txt");
 
   for (int com = COMMAND_FIRST + 1; com < COMMAND_LAST; com++) {
     for (unsigned char i = 0; i < CMAP_SIZE; i++) {
@@ -36,7 +36,7 @@ void writeControls(std::string filename, CommandMap cmap) {
 void changeControl(Command command) {
   CommandMap cmap = {COMMAND_FIRST};
   move(11, 26);
-  if (readControls("controls.txt", cmap)) {
+  if (readControls(cmap)) {
     addstr("Press a key to bind to control (escape to clear).");
     unsigned char ch = getch();
     if (ch == 27) {
@@ -45,7 +45,7 @@ void changeControl(Command command) {
     else if (ch < CMAP_SIZE) {
       cmap[ch] = command;
     }
-    writeControls("controls.txt", cmap);
+    writeControls(cmap);
   }
   else {
     addstr("Failed to load controls.");
@@ -58,4 +58,27 @@ void clearControl(Command command, CommandMap cmap) {
       cmap[i] = COMMAND_FIRST;
     }
   }
+}
+
+void resetControls() {
+  CommandMap cmap = {COMMAND_FIRST};
+  
+  cmap['7'] = cmap['y'] = COMMAND_MOVE_UPLEFT;
+  cmap['8'] = cmap['k'] = COMMAND_MOVE_UP;
+  cmap['9'] = cmap['u'] = COMMAND_MOVE_UPRIGHT;
+  cmap['4'] = cmap['h'] = COMMAND_MOVE_LEFT;
+  cmap['5'] = cmap['s'] = COMMAND_WAIT;
+  cmap['6'] = cmap['l'] = COMMAND_MOVE_RIGHT;
+  cmap['1'] = cmap['b'] = COMMAND_MOVE_DOWNLEFT,
+  cmap['2'] = cmap['j'] = COMMAND_MOVE_DOWN,
+  cmap['3'] = cmap['n'] = COMMAND_MOVE_DOWNRIGHT,
+
+  cmap['q'] = COMMAND_USE_BOMB,
+  cmap['w'] = COMMAND_USE_TORCH,
+  cmap['e'] = COMMAND_USE_ARROW,
+
+  cmap['<'] = COMMAND_INTERACT_STAIRSUP,
+  cmap['>'] = COMMAND_INTERACT_STAIRSDOWN,
+
+  writeControls(cmap);
 }

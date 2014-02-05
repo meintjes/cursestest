@@ -31,9 +31,10 @@ enum Command {COMMAND_FIRST, //exists so cmaps are initialized with an
 const int CMAP_SIZE = 128;
 typedef Command CommandMap[CMAP_SIZE];
 
-bool readControls(std::string filename, CommandMap cmap);
-void writeControls(std::string filename, CommandMap cmap);
+bool readControls(CommandMap cmap);
+void writeControls(CommandMap cmap);
 void changeControl(Command command);
 void clearControl(Command command, CommandMap cmap);
+void resetControls();
 
 #endif
