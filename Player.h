@@ -1,7 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "ColoredText.h"
+#include "Cch.h"
 
 struct Branch;
 struct Item;

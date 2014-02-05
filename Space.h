@@ -12,11 +12,12 @@ class Space {
  public:
   Space();
 
-  void setType(const SpaceType *typeIn);
-  void setItem(const Item *itemIn);
+  void setType(const SpaceType &typeIn);
+  void setItem(const Item &itemIn);
 
   void moveEnemy(Space &target);
-  void setEnemy(const Enemy *enemyIn);
+  void setEnemy(const Enemy &enemyIn);
+  void setEnemy();
   void attack(Map &map, int x, int y);
   void kill(Map &map, int x, int y);
 

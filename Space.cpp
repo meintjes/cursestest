@@ -1,5 +1,5 @@
 #include "Space.h"
-#include "ColoredText.h"
+#include "Cst.h"
 
 class Map;
 
@@ -13,12 +13,12 @@ Space::Space() {
   item = nullptr;
 }
 
-void Space::setType(const SpaceType *typeIn) {
-  type = typeIn;
+void Space::setType(const SpaceType &typeIn) {
+  type = &typeIn;
 }
 
-void Space::setItem(const Item *itemIn) {
-  item = itemIn;
+void Space::setItem(const Item &itemIn) {
+  item = &itemIn;
 }
 
 void Space::moveEnemy(Space &target) {
@@ -28,8 +28,12 @@ void Space::moveEnemy(Space &target) {
   }
 }
 
-void Space::setEnemy(const Enemy *enemyIn) {
-  enemy = enemyIn;
+void Space::setEnemy(const Enemy &enemyIn) {
+  enemy = &enemyIn;
+}
+
+void Space::setEnemy() {
+  enemy = nullptr;
 }
 
 void Space::attack(Map &map, int x, int y) {

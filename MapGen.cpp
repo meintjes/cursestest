@@ -14,11 +14,11 @@ Map::Map(Player &player, int depth) : you(player) {
     generateBoxes(depth);
   }
 
-  space[playerX][playerY].setType(&StairsUp);
+  space[playerX][playerY].setType(StairsUp);
   sanitizeEntry();
 }
 
-void Map::drawLine(Point a, const Point b, const SpaceType *type) {
+void Map::drawLine(Point a, const Point b, const SpaceType &type) {
   //this is horrific style, but fuck it
   if (randTo(1)) {
     while (a.x - b.x) {
@@ -51,7 +51,7 @@ void Map::drawLine(Point a, const Point b, const SpaceType *type) {
   space[a.x][a.y].setType(type);
 }
 
-void Map::drawBox(Point a, Point b, const SpaceType *type) {
+void Map::drawBox(Point a, Point b, const SpaceType &type) {
   int xMax = std::max(a.x, b.x);
   int yMax = std::max(a.y, b.y);
   for (int x = std::min(a.x, b.x); x <= xMax; x++) {
@@ -67,7 +67,7 @@ void Map::generateRoom(Point center, int maxRadius) {
   int xMax = std::min(MAPWIDTH, center.x + randRange(1, maxRadius));
   int yMin = std::max(1, center.y - randRange(1, maxRadius));
   int yMax = std::min(MAPHEIGHT, center.y + randRange(1, maxRadius));
-  drawBox(Point{xMin, yMin}, Point{xMax, yMax}, &Floor);
+  drawBox(Point{xMin, yMin}, Point{xMax, yMax}, Floor);
 }
 
 void Map::generateBoxes(int depth) {
@@ -80,19 +80,19 @@ void Map::generateBoxes(int depth) {
   }
 
   for (unsigned int i = 1; i < roomLocations.size(); i++) {
-    drawLine(roomLocations.at(i), roomLocations.at(i - 1), &Floor);
+    drawLine(roomLocations.at(i), roomLocations.at(i - 1), Floor);
   }
 
   playerX = roomLocations.at(0).x;
   playerY = roomLocations.at(0).y;
   space[roomLocations.at(roomLocations.size() - 1).x]
-       [roomLocations.at(roomLocations.size() - 1).y].setType(&StairsDown);
+       [roomLocations.at(roomLocations.size() - 1).y].setType(StairsDown);
 }
 
 void Map::sanitizeEntry() {
   for (int x = playerX - 2; x <= playerX + 2; x++) {
     for (int y = playerY - 2; y <= playerY + 2; y++) {
-      space[x][y].setEnemy(nullptr);
+      space[x][y].setEnemy();
     }
   }
 }

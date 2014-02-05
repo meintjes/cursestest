@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "functions.h"
 #include "Branch.h"
+#include "Cst.h"
 
 Player::Player() {
   hp = 10;
@@ -34,8 +35,9 @@ void Player::display() const {
 
   //print current floor
   move(23, 31);
-  (currentBranch->name + ": ").add();
-  ColoredText<int>{currentDepth + 1, White}.add();
+  (currentBranch->name).add();
+  
+  Cch{static_cast<char>('1' + currentDepth), White}.add();
 
   //print item display
   move(23, 79 - MAX_NUM_ITEMS);

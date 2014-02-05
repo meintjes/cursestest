@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Cch.h"
 
 Menu::Menu(std::vector<Option> optionsIn) : options(optionsIn) {
   currentOption = 0;

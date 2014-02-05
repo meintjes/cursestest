@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Map.h"
+#include "Cst.h"
 
 const int DEPTH_DUNGEON = 12;
 

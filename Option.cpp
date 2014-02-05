@@ -1,9 +1,5 @@
 #include "Option.h"
 
-Option::Option(std::string nameIn, std::function<void(void)> fnIn) :
-  text(nameIn), textfn(nullptr), fn(fnIn) {
-}
-
 Option::Option(Cst nameIn, std::function<void(void)> fnIn) :
   text(nameIn), textfn(nullptr), fn(fnIn) {
 }
