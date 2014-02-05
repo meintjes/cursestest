@@ -34,7 +34,7 @@ void Player::display() const {
 
   //print current floor
   move(23, 31);
-  Cst{currentBranch->name + ": ", LightGray}.add();
+  (currentBranch->name + ": ").add();
   ColoredText<int>{currentDepth + 1, White}.add();
 
   //print item display

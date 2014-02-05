@@ -8,7 +8,7 @@
 const int DEPTH_DUNGEON = 12;
 
 struct Branch {
-  std::string name;
+  Cst name;
   int depth;
 
   Branch *parentBranch;

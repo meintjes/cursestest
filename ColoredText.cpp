@@ -1,11 +1,10 @@
 #include "ColoredText.h"
 #include <ncurses.h>
-#include <string>
 
-template <> void ColoredText<std::string>::print() const {
+template <> void Cst::print() const {
   addstr(text.c_str());
 }
 
-template <> void ColoredText<char>::print() const {
+template <> void Cch::print() const {
   addch(text);
 }
