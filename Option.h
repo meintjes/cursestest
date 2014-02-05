@@ -8,11 +8,12 @@ class Option {
  public:
   Option(std::string nameIn, std::function<void(void)> fnIn);
   Option(Cst nameIn, std::function<void(void)> fnIn);
+  Option(std::function<Cst(void)> textfnIn, std::function<void(void)> fnIn);
   void operator()() const;
   Cst getText() const;
  private:
   Cst text;
-  std::function<void(void)> textfn;
+  std::function<Cst(void)> textfn;
   std::function<void(void)> fn;
 };
 

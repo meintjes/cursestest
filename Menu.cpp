@@ -13,6 +13,20 @@ void Menu::operator()() {
 
 void Menu::displayMenu() {
   erase();
+
+  //cool scrollbar
+  for (int y = 1; y < 22; y++) {
+    move(y, 1);
+    Cch{'|', DarkGray}.add();
+  }
+  if (options.size() > 1) {
+    move(1 + ((20*currentOption) / (options.size() - 1)), 1);
+  }
+  else {
+    move(11, 1);
+  }
+  Cch{' ', BlackOnWhite}.add();
+
   for (int i = -11; i <= 11; i++) {
     if (currentOption + i >= 0 &&
 	currentOption + i < static_cast<int>(options.size())) {
