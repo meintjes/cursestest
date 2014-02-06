@@ -1,7 +1,7 @@
 #include "Cst.h"
 #include <ncurses.h>
 
-Cst::Cst(const char* textIn)
+Cst::Cst(const char *textIn)
   : text(textIn), color(LightGray) {
 
 }
@@ -29,4 +29,12 @@ void addcs(const Cst &cst) {
     addstr(cst.text.c_str());
     attroff(COLOR_PAIR(cst.color.id));
   }
+}
+
+Cst operator+(const Cst &cst, const std::string &str) {
+  return cst.color(cst.text + str);
+}
+
+Cst operator+(const std::string &str, const Cst &cst) {
+  return cst.color(str + cst.text);
 }

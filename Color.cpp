@@ -6,7 +6,6 @@ Cst Color::operator()(const Cst &cst) const {
   return Cst(cst.text, *this);
 }
 
-
 Cch Color::operator()(const char &ch) const {
   return Cch(ch, *this);
 }

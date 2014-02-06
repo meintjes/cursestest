@@ -37,7 +37,7 @@ void changeControl(Command command) {
   CommandMap cmap = {COMMAND_FIRST};
   move(11, 26);
   if (readControls(cmap)) {
-    addstr("Press a key to bind to control (escape to clear).");
+    addcs(White("Press a key to bind to control (escape to clear)."));
     unsigned char ch = getch();
     if (ch == 27) {
       clearControl(command, cmap);
@@ -48,7 +48,7 @@ void changeControl(Command command) {
     writeControls(cmap);
   }
   else {
-    addstr("Failed to load controls.");
+    addcs(Red("Failed to load controls."));
   }
 }
 

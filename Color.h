@@ -1,6 +1,8 @@
 #ifndef __COLOR_H__
 #define __COLOR_H__
 
+#include <string>
+
 class Cst;
 class Cch;
 

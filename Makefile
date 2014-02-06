@@ -31,7 +31,7 @@ Player.o: Player.cpp Cst.o Cch.o functions.o
 functions.o: functions.cpp
 	$(GXX) $(GXX_FLAGS) functions.cpp
 
-SpaceType.o: SpaceType.cpp
+SpaceType.o: SpaceType.cpp Color.o
 	$(GXX) $(GXX_FLAGS) SpaceType.cpp
 
 Command.o: Command.cpp Menu.o

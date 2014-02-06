@@ -6,11 +6,14 @@
 
 class Cst {
  public:
-  Cst(const char* textIn);
+  //constructor for implicit conversion from strings literal.
+  Cst(const char *textIn);
   Cst(const std::string &textIn);
 
   friend void addcs(const Cst &cst);
-  friend Cst Color::operator()(const Cst &cst) const;
+  friend class Color;
+  friend Cst operator+(const Cst &cst, const std::string &str);
+  friend Cst operator+(const std::string &str, const Cst &cst);
  private:
   //constructor is private. use Color::operator()
   Cst(const std::string &textIn, const Color &colorIn);

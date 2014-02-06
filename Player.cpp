@@ -34,7 +34,7 @@ void Player::display() const {
 
   //print current floor
   move(23, 31);
-  addcs(currentBranch->name); //todo: reinstate colon and space
+  addcs(currentBranch->name + ": ");
   addc(White('1' + currentDepth));
 
   //print item display

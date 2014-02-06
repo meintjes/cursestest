@@ -1,6 +1,7 @@
 #ifndef __SPACETYPE_H__
 #define __SPACETYPE_H__
 
+#include "Color.h"
 #include "Cch.h"
 
 struct SpaceType {
