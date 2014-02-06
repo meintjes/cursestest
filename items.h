@@ -4,14 +4,14 @@
 #include "Item.h"
 
 const Item Health {
-  Cch{'+', Red},
+  Red('+'),
   [](Player &you) {
     return you.heal(5);
   }
 };
 
 const Item BigHealth {
-  Cch{'+', Orange},
+  Orange('+'),
   [](Player &you) {
     return you.heal(100);
   }
@@ -19,21 +19,21 @@ const Item BigHealth {
 
 
 const Item Bomb {
-  Cch{'!', LightGray},
+  LightGray('!'),
   [](Player &you) {
     return you.addBombs(1);
   }
 };
 
 const Item BombPack {
-  Cch{'!', Cyan},
+  Cyan('!'),
   [](Player &you) {
     return you.addBombs(3);
   }
 };
 
 const Item BombBigPack {
-  Cch{'!', LightCyan},
+  LightCyan('!'),
   [](Player &you) {
     return you.addBombs(6);
   }
@@ -41,14 +41,14 @@ const Item BombBigPack {
 
 
 const Item TorchPack {
-  Cch{'^', Cyan},
+  Cyan('^'),
   [](Player &you) {
     return you.addTorches(3);
   }
 };
 
 const Item TorchBigPack {
-  Cch{'^', LightCyan},
+  LightCyan('^'),
   [](Player &you) {
     return you.addTorches(6);
   }
@@ -56,21 +56,21 @@ const Item TorchBigPack {
 
 
 const Item Arrow {
-  Cch{'|', LightGray},
+  LightGray('|'),
   [](Player &you) {
     return you.addArrows(1);
   }
 };
 
 const Item ArrowPack {
-  Cch{'|', Cyan},
+  Cyan('|'),
   [](Player &you) {
     return you.addArrows(3);
   }
 };
 
 const Item ArrowBigPack {
-  Cch{'|', LightCyan},
+  LightCyan('|'),
   [](Player &you) {
     return you.addArrows(6);
   }

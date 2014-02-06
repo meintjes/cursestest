@@ -2,6 +2,8 @@
 #include "functions.h"
 #include "Branch.h"
 #include "Cst.h"
+#include "Cch.h"
+#include <ncurses.h>
 
 Player::Player() {
   hp = 10;
@@ -23,32 +25,28 @@ void Player::display() const {
   const Color &hpColor = ((hp * 10) / hpMax > 1) ? BlackOnGreen : BlackOnRed;
   int i = 0;
   for (; i < (hp * 10) / hpMax; i++) {
-    Cch{' ', hpColor}.add();
-    Cch{' ', hpColor}.add();
-    Cch{' ', DarkGray}.add();
+    addcs(hpColor("  "));
+    addc(DarkGray(' '));
   } //print rest of bar for reference
   for (; i < 10; i++) {
-    Cch{'[', DarkGray}.add();
-    Cch{']', DarkGray}.add();
-    Cch{' ', DarkGray}.add();
+    addcs(DarkGray("[] "));
   }
 
   //print current floor
   move(23, 31);
-  (currentBranch->name).add();
-  
-  Cch{static_cast<char>('1' + currentDepth), White}.add();
+  addcs(currentBranch->name); //todo: reinstate colon and space
+  addc(White('1' + currentDepth));
 
   //print item display
   move(23, 79 - MAX_NUM_ITEMS);
   for (int i = numBombs; i > 0; i--) {
-    Cch{'!', Orange}.add();
+    addc(Orange('!'));
   }
   for (int i = numTorches; i > 0; i--) {
-    Cch{'^', Yellow}.add();
+    addc(Yellow('^'));
   }
   for (int i = numArrows; i> 0; i--) {
-    Cch{'|', Brown}.add();
+    addc(Brown('|'));
   }
   for (int i = 78 - getNumItems(); i < 79; i++) {
     addch(' ');
@@ -79,10 +77,10 @@ int Player::getNumItems() const {
 
 Cch Player::getGlyph() const {
   if (arrowMode) {
-    return Cch{'@', BlackOnBrown};
+    return BlackOnBrown('@');
   }
   else {
-    return Cch{'@', BlackOnWhite};
+    return BlackOnWhite('@');
   }
 }
 

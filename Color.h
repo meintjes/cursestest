@@ -1,11 +1,19 @@
 #ifndef __COLOR_H__
 #define __COLOR_H__
 
-#include <ncurses.h>
+class Cst;
+class Cch;
 
 struct Color {
   int id;
   bool bold;
+
+  Cst operator()(const Cst &cst) const;
+
+  Cch operator()(const char &ch) const;
+  Cch operator()(const Cch &cch) const;
+
+  friend void addc(const Cst &cst);
 };
 
 const Color DarkGray {1, true};

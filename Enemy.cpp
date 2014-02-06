@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include "Map.h"
 
 Enemy::Enemy(Cch glyphIn,
 	     int rangeIn,

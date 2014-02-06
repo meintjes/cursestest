@@ -1,5 +1,7 @@
 #include "Menu.h"
 #include "Cch.h"
+#include "Cst.h"
+#include <ncurses.h>
 
 Menu::Menu(std::vector<Option> optionsIn) : options(optionsIn) {
   currentOption = 0;
@@ -18,7 +20,7 @@ void Menu::displayMenu() {
   //cool scrollbar
   for (int y = 1; y < 22; y++) {
     move(y, 1);
-    Cch{'|', DarkGray}.add();
+    DarkGray('|');
   }
   if (options.size() > 1) {
     move(1 + ((20*currentOption) / (options.size() - 1)), 1);
@@ -26,25 +28,22 @@ void Menu::displayMenu() {
   else {
     move(11, 1);
   }
-  Cch{' ', BlackOnWhite}.add();
+  BlackOnWhite(' ');
 
   for (int i = -11; i <= 11; i++) {
     if (currentOption + i >= 0 &&
 	currentOption + i < static_cast<int>(options.size())) {
       move(11 + i, 4);
       if (i == 0) {
-	//is this good style I don't even know. TODO: implement even more classes,
-	//chain together even more member access operators. don't stop until the
-	//following line is at least 200 characters long.
-	options.at(currentOption + i).getText().shift(BlackOnWhite).add();
+	addcs(BlackOnWhite(options.at(currentOption + i).getText()));
       }
       else {
-	options.at(currentOption + i).getText().add();
+	addcs(options.at(currentOption + i).getText());
       }
     }
   }
   move(23, 1);
-  Cst{"hjkl/numpad to select options", Cyan}.add();
+  addcs(Cyan("hjkl/numpad to select options"));
   refresh();
 }
 

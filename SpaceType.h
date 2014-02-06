@@ -13,11 +13,11 @@ struct SpaceType {
 };
 
 //                    glyph                  passable  transparent  destructible
-const SpaceType Wall {Cch{'#', White},          false,    false,    false, 0};
-const SpaceType GlassWall {Cch{'#', LightCyan}, false,    true,     true, 1};
-const SpaceType Floor {Cch{'.', White},         true,     true,     false, 2};
+const SpaceType Wall {White('#'),             false,    false,    false, 0};
+const SpaceType GlassWall {LightCyan('#'),    false,    true,     true, 1};
+const SpaceType Floor {White('.'),            true,     true,     false, 2};
 
-const SpaceType StairsUp {Cch{'<', White},      true,     true,     false, 3};
-const SpaceType StairsDown {Cch{'>', White},    true,     true,     false, 4};
+const SpaceType StairsUp {White('<'),         true,     true,     false, 3};
+const SpaceType StairsDown {White('>'),       true,     true,     false, 4};
 
 #endif

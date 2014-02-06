@@ -1,5 +1,5 @@
 #include "Space.h"
-#include "Cst.h"
+#include "Cch.h"
 
 class Map;
 
@@ -90,7 +90,7 @@ bool Space::tick() {
 Cch Space::getGlyph(bool isVisible) const {
   if (!discovered) {
     if (!isVisible) {
-      return Cch{' ', DarkGray};
+      return DarkGray(' ');
     }
     else {
       discovered = true;
@@ -101,7 +101,7 @@ Cch Space::getGlyph(bool isVisible) const {
       return item->glyph;
     }
     else {
-      return type->glyph.shift(DarkGray);
+      return DarkGray(type->glyph);
     }  
   }
 
@@ -117,24 +117,24 @@ Cch Space::getGlyph(bool isVisible) const {
   }
 
   if (explosionDuration > 0) {
-    return Cch{'#', Red};
+    return Red('#');
   }
 
   if (gasDuration > 0) {
     if (gasDuration > 1) {
-      return Cch{'*', LightGreen};
+      return LightGreen('*');
     }
     else {
-      return Cch{'*', DarkGreen};
+      return DarkGreen('*');
     }
   }
 
   if (bombDuration > 0) {
     if (bombDuration > 1) {
-      return Cch{'!', Orange};
+      return Orange('!');
     }
     else {
-      return Cch{'!', Red};
+      return Red('!');
     }
   }
 

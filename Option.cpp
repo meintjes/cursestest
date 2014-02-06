@@ -6,7 +6,7 @@ Option::Option(Cst nameIn, std::function<void(void)> fnIn) :
 
 Option::Option(std::function<Cst(void)> textfnIn,
 	       std::function<void(void)> fnIn) :
-  text(Cst{"ERROR", Red}), textfn(textfnIn), fn(fnIn) {
+  text(Red("ERROR")), textfn(textfnIn), fn(fnIn) {
 
 }
 

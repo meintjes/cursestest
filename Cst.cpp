@@ -1,30 +1,32 @@
 #include "Cst.h"
+#include <ncurses.h>
 
-Cst::Cst(const char* textIn, const Color &colorIn)
+Cst::Cst(const char* textIn)
+  : text(textIn), color(LightGray) {
+
+}
+
+Cst::Cst(const std::string &textIn)
+  : text(textIn), color(LightGray) {
+
+}
+
+Cst::Cst(const std::string &textIn, const Color &colorIn)
   : text(textIn), color(colorIn) {
 
 }
 
-Cst::Cst(std::string textIn, const Color &colorIn)
-  : text(textIn), color(colorIn) {
-
-}
-
-void Cst::add() const {
-  if (color.bold) {
+void addcs(const Cst &cst) {
+  if (cst.color.bold) {
     attron(A_BOLD);
-    attron(COLOR_PAIR(color.id));
-    addstr(text.c_str());
-    attroff(COLOR_PAIR(color.id));
+    attron(COLOR_PAIR(cst.color.id));
+    addstr(cst.text.c_str());
+    attroff(COLOR_PAIR(cst.color.id));
     attroff(A_BOLD);
   }
   else {
-    attron(COLOR_PAIR(color.id));
-    addstr(text.c_str());
-    attroff(COLOR_PAIR(color.id));
+    attron(COLOR_PAIR(cst.color.id));
+    addstr(cst.text.c_str());
+    attroff(COLOR_PAIR(cst.color.id));
   }
-}
-
-Cst Cst::shift(const Color &newcolor) const {
-  return Cst{this->text, newcolor};
 }

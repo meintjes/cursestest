@@ -14,17 +14,16 @@ void Map::display() const {
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
       if (isVisible(x, y, you.getLOS())) {
 	if (x == playerX && y == playerY) {
-	  you.getGlyph().add();
+	  addc(you.getGlyph());
 	}
 	else {
-	  space[x][y].getGlyph(true).add();
+	  addc(space[x][y].getGlyph(true));
 	}
       }
       else {
-	space[x][y].getGlyph(false).add();
+	addc(space[x][y].getGlyph(false));
       }
     }
-    addch('\n');
   }
 }
 

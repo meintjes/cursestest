@@ -29,7 +29,7 @@ Menu ControlsMenu({
   Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
   Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
 
-  Option{Cst{"Reset all controls", Red}, resetControls}
+  Option{Red("Reset all controls"), resetControls}
 });
 
 Menu MainMenu({

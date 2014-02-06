@@ -6,21 +6,17 @@ Cch::Cch(char glyphIn, const Color &colorIn)
 
 }
 
-void Cch::add() const {
-  if (color.bold) {
+void addc(const Cch &cch) {
+  if (cch.color.bold) {
     attron(A_BOLD);
-    attron(COLOR_PAIR(color.id));
-    addch(glyph);
-    attroff(COLOR_PAIR(color.id));
+    attron(COLOR_PAIR(cch.color.id));
+    addch(cch.glyph);
+    attroff(COLOR_PAIR(cch.color.id));
     attroff(A_BOLD);
   }
   else {
-    attron(COLOR_PAIR(color.id));
-    addch(glyph);
-    attroff(COLOR_PAIR(color.id));
+    attron(COLOR_PAIR(cch.color.id));
+    addch(cch.glyph);
+    attroff(COLOR_PAIR(cch.color.id));
   }
-}
-
-Cch Cch::shift(const Color &newcolor) const {
-  return Cch{this->glyph, newcolor};
 }

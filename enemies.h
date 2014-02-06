@@ -6,7 +6,7 @@
 #include "Map.h"
 #include "Color.h"
 
-const Enemy Zombie(Cch{'z', LightGray},
+const Enemy Zombie(LightGray('z'),
 1, [](Map &map, int x, int y) {
   map.you.damage();
 },
@@ -14,7 +14,7 @@ const Enemy Zombie(Cch{'z', LightGray},
   map.getSpace(x,y).setEnemy();
 } );
 
-const Enemy BigZombie(Cch{'Z', LightGray},
+const Enemy BigZombie(LightGray('Z'),
 1, [](Map &map, int x, int y) {
   map.you.damage();
 },
@@ -22,7 +22,7 @@ const Enemy BigZombie(Cch{'Z', LightGray},
   map.getSpace(x,y).setEnemy(Zombie);
 } );
 
-const Enemy PrimedExploder(Cch{'O', LightGreen},
+const Enemy PrimedExploder(LightGreen('O'),
 3, [](Map &map, int x, int y) {
   map.getSpace(x,y).kill(map, x, y);
 },
@@ -35,7 +35,7 @@ const Enemy PrimedExploder(Cch{'O', LightGreen},
   }
 } );
 
-const Enemy Exploder(Cch{'o', LightGreen},
+const Enemy Exploder(LightGreen('o'),
 1, [](Map &map, int x, int y) {
   map.getSpace(x,y).setEnemy(PrimedExploder);
 },
@@ -44,7 +44,7 @@ const Enemy Exploder(Cch{'o', LightGreen},
   map.getSpace(x,y).addGas(5);
 } );
 
-const Enemy Reacher(Cch{'x', Orange},
+const Enemy Reacher(Orange('x'),
 2, [](Map &map, int x, int y) {
   map.you.damage();
 },

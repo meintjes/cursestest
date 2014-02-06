@@ -2,7 +2,6 @@
 #define __MENU_H__
 
 #include "Option.h"
-#include <ncurses.h>
 #include <vector>
 
 class Menu {

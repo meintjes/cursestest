@@ -6,12 +6,16 @@
 
 class Cst {
  public:
-  Cst(const char* textIn, const Color &colorIn = LightGray);
-  Cst(std::string textIn, const Color &colorIn = LightGray);
-  void add() const;
-  Cst shift(const Color &newcolor) const;
+  Cst(const char* textIn);
+  Cst(const std::string &textIn);
+
+  friend void addcs(const Cst &cst);
+  friend Cst Color::operator()(const Cst &cst) const;
  private:
-  std::string text;
+  //constructor is private. use Color::operator()
+  Cst(const std::string &textIn, const Color &colorIn);
+
+  const std::string text;
   const Color &color;
 };
 
