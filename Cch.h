@@ -1,15 +1,16 @@
 #ifndef __CCH_H__
 #define __CCH_H__
 
-#include "Color.h"
+class Color;
 
 class Cch {
  public:
+  Cch(const char &glyphIn);
   friend void addc(const Cch &cch);
   friend class Color;
  private:
   //constructor is private. use Color::operator()
-  Cch(char glyphIn, const Color &colorIn);
+  Cch(const char &glyphIn, const Color &colorIn);
 
   const char glyph;
   const Color &color;

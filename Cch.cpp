@@ -1,7 +1,13 @@
 #include <ncurses.h>
 #include "Cch.h"
+#include "Color.h"
 
-Cch::Cch(char glyphIn, const Color &colorIn)
+Cch::Cch(const char &glyphIn)
+  : glyph(glyphIn), color(LightGray) {
+
+}
+
+Cch::Cch(const char &glyphIn, const Color &colorIn)
   : glyph(glyphIn), color(colorIn) {
 
 }

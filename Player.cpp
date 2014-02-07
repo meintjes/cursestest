@@ -3,6 +3,7 @@
 #include "Branch.h"
 #include "Cst.h"
 #include "Cch.h"
+#include <string>
 #include <ncurses.h>
 
 Player::Player() {
@@ -35,7 +36,7 @@ void Player::display() const {
   //print current floor
   move(23, 31);
   addcs(currentBranch->name + ": ");
-  addc(White('1' + currentDepth));
+  addcs(White(std::to_string(1 + currentDepth)));
 
   //print item display
   move(23, 79 - MAX_NUM_ITEMS);

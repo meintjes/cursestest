@@ -10,10 +10,8 @@ struct Color {
   int id;
   bool bold;
 
-  Cst operator()(const Cst &cst) const;
-
-  Cch operator()(const char &ch) const;
-  Cch operator()(const Cch &cch) const;
+  const Cst operator()(const Cst &cst) const;
+  const Cch operator()(const Cch &cch) const;
 
   friend void addc(const Cst &cst);
 };

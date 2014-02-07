@@ -20,7 +20,7 @@ void Menu::displayMenu() {
   //cool scrollbar
   for (int y = 1; y < 22; y++) {
     move(y, 1);
-    DarkGray('|');
+    addc(DarkGray('|'));
   }
   if (options.size() > 1) {
     move(1 + ((20*currentOption) / (options.size() - 1)), 1);
@@ -28,7 +28,7 @@ void Menu::displayMenu() {
   else {
     move(11, 1);
   }
-  BlackOnWhite(' ');
+  addc(BlackOnWhite(' '));
 
   for (int i = -11; i <= 11; i++) {
     if (currentOption + i >= 0 &&

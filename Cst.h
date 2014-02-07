@@ -1,8 +1,8 @@
 #ifndef __CST_H__
 #define __CST_H__
 
-#include "Color.h"
 #include <string>
+#include "Color.h"
 
 class Cst {
  public:

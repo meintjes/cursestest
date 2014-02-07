@@ -16,6 +16,8 @@ Cst::Cst(const std::string &textIn, const Color &colorIn)
 
 }
 
+
+
 void addcs(const Cst &cst) {
   if (cst.color.bold) {
     attron(A_BOLD);
