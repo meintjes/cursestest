@@ -143,43 +143,43 @@ bool Map::isVisible(int x, int y, int LOS) const {
   if (distance(x, y, playerX, playerY) > LOS) {
     return false;
   }
+
+  return hasDirectLOS(x, y, playerX, playerY);
+  /*
   for (int xn = x - 1; xn <= x + 1; xn++) {
     for (int yn = y - 1; yn <= y + 1; yn++) {
       if (isValidX(xn) && isValidY(yn) &&
-	  hasDirectLOS(xn, yn, playerX, playerY)) {
+      hasDirectLOS(xn, yn, playerX, playerY)) {
 	return true;
       }
     }
   }
   return false;
+  */
 }
 
 bool Map::hasDirectLOS(int x, int y, int x2, int y2) const {
   int dx = abs(x2 - x);
   int dy = abs(y2 - y);
-  double error = dx - dy;
+  int sgnx = x < x2 ? 1 : -1;
+  int sgny = y < y2 ? 1 : -1;
+  int error = dx - dy;
 
   while(true) {
-    if (!space[x][y].isTransparent()) {
-      return false;
-    }
     if (x == x2 && y == y2) {
       return true;
     }
-    double e2 = 2*error;
+    int e2 = 2*error;
     if (e2 > -dy) {
       error -= dy;
-      x += sgn(x2 - x);
-    }
-    if (!space[x][y].isTransparent()) {
-      return false;
+      x += sgnx;
     }
     if (x == x2 && y == y2) {
       return true;
     }
     if (e2 < dx) {
-      error = error + dx;
-      y += sgn(y2 - y);
+      error += dx;
+      y += sgny;
     }
     if (!space[x][y].isTransparent()) {
       return false;
