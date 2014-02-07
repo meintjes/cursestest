@@ -135,16 +135,29 @@ bool Map::isVisible(int x, int y, int LOS) const {
   if (distance(x, y, playerX, playerY) > LOS) {
     return false;
   }
-  else {
-    while (x != playerX || y != playerY) {
-      std::pair<int, int> result = direction(x, y, playerX, playerY);
-      x += result.first;
-      y += result.second;
-      if (!space[x][y].isTransparent()) {
-	return false;
-      }
+  int dx = abs(x - playerX);
+  int dy = abs(y - playerY);
+  double error = dx - dy;
+
+  while(true) {
+    if (x == playerX && y == playerY) {
+      return true;
     }
-    return true;
+    double e2 = 2*error;
+    if (e2 > -dy) {
+      error -= dy;
+      x += sgn(playerX - x);
+    }
+    if (x == playerX && y == playerY) {
+      return true;
+    }
+    if (e2 < dx) {
+      error = error + dx;
+      y += sgn(playerY - y);
+    }
+    if (!space[x][y].isTransparent()) {
+      return false;
+    }
   }
 }
 
