@@ -47,7 +47,7 @@ class Map {
   static bool isValidX(int x);
   static bool isValidY(int y);
   bool isVisible(int x, int y, int LOS) const;
-  bool hasDirectLOS(int x, int y, int x2, int y2) const;
+  bool hasLOS(int x1, int y1, int x2, int y2) const;
 
   std::vector<Point> toExplode;
   void executeToExplode();

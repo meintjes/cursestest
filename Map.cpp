@@ -144,44 +144,40 @@ bool Map::isVisible(int x, int y, int LOS) const {
     return false;
   }
 
-  return hasDirectLOS(x, y, playerX, playerY);
-  /*
-  for (int xn = x - 1; xn <= x + 1; xn++) {
-    for (int yn = y - 1; yn <= y + 1; yn++) {
-      if (isValidX(xn) && isValidY(yn) &&
-      hasDirectLOS(xn, yn, playerX, playerY)) {
-	return true;
-      }
-    }
+  if (space[x + sgn(playerX - x)][y + sgn(playerY - y)].isTransparent()) {
+    return hasLOS(x, y, playerX, playerY) ||
+      hasLOS(x + sgn(playerX - x), y + sgn(playerY - y), playerX, playerY);
   }
-  return false;
-  */
+  else {
+    return hasLOS(x, y, playerX, playerY);
+  }
 }
 
-bool Map::hasDirectLOS(int x, int y, int x2, int y2) const {
-  int dx = abs(x2 - x);
-  int dy = abs(y2 - y);
-  int sgnx = x < x2 ? 1 : -1;
-  int sgny = y < y2 ? 1 : -1;
-  int error = dx - dy;
+bool Map::hasLOS(int x1, int y1, int x2, int y2) const {
+  int dx = abs(x2 - x1);
+  int dy = abs(y2 - y1);
+  int sgnx = sgn(x2 - x1);
+  int sgny = sgn(y2 - y1);
 
+  //bresenham's line algorithm, roughly. thanks wikipedia
+  int error = dx - dy;
   while(true) {
-    if (x == x2 && y == y2) {
+    if (x1 == x2 && y1 == y2) {
       return true;
     }
     int e2 = 2*error;
     if (e2 > -dy) {
       error -= dy;
-      x += sgnx;
+      x1 += sgnx;
     }
-    if (x == x2 && y == y2) {
+    if (x1 == x2 && y1 == y2) {
       return true;
     }
     if (e2 < dx) {
       error += dx;
-      y += sgny;
+      y1 += sgny;
     }
-    if (!space[x][y].isTransparent()) {
+    if (!space[x1][y1].isTransparent()) {
       return false;
     }
   }
