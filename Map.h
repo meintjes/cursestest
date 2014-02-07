@@ -44,7 +44,10 @@ class Map {
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
 
+  static bool isValidX(int x);
+  static bool isValidY(int y);
   bool isVisible(int x, int y, int LOS) const;
+  bool hasDirectLOS(int x, int y, int x2, int y2) const;
 
   std::vector<Point> toExplode;
   void executeToExplode();
