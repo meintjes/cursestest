@@ -113,6 +113,9 @@ void Map::tick(int turns) {
 	  toMove.push_back(Point{x, y});
 	}
       }
+      else if (space[x][y].isPassable() && !isVisible(x, y, 7) && !randTo(750)) {
+	space[x][y].setEnemy(getRandomEnemy());
+      }
     }
   }
 

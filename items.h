@@ -39,6 +39,12 @@ const Item BombBigPack {
   }
 };
 
+const Item Torch {
+  LightGray('^'),
+  [](Player &you) {
+    return you.addTorches(1);
+  }
+};
 
 const Item TorchPack {
   Cyan('^'),

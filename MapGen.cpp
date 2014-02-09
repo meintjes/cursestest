@@ -87,6 +87,51 @@ void Map::generateBoxes(int depth) {
   playerY = roomLocations.at(0).y;
   space[roomLocations.at(roomLocations.size() - 1).x]
        [roomLocations.at(roomLocations.size() - 1).y].setType(StairsDown);
+
+  for (int x = 1; x <= MAPWIDTH; x++) {
+    for (int y = 1; y <= MAPHEIGHT; y++) {
+      if (space[x][y].isPassable()) {
+	if (!randTo(50 - depth)) {
+	  space[x][y].setEnemy(getRandomEnemy());
+	}
+	else if (!randTo(80 - depth)){
+	  space[x][y].setItem(getRandomItem());
+	}
+      }
+    }
+  }
+}
+
+const Enemy& Map::getRandomEnemy() {
+  int num = randTo(99);
+  if (num < 50)
+    return Zombie;
+  if (num < 75)
+    return BigZombie;
+  if (num < 90)
+    return Exploder;
+  
+  return Reacher;
+}
+
+const Item& Map::getRandomItem() {
+  int num = randTo(99);
+  if (num < 35)
+    return Health;
+  if (num < 45)
+    return BigHealth;
+  if (num < 65)
+    return TorchPack;
+  if (num < 80)
+    return BombPack;
+  if (num < 90)
+    return ArrowPack;
+  if (num < 94)
+    return TorchBigPack;
+  if (num < 97)
+    return BombBigPack;
+
+  return ArrowBigPack;
 }
 
 void Map::sanitizeEntry() {
