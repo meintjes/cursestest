@@ -75,8 +75,27 @@ bool Map::dropBomb() {
 }
 
 void Map::moveEnemy(int x, int y) {
-  Space &target = space[x + sgn(playerX - x)][y + sgn(playerY - y)];
-  space[x][y].moveEnemy(target);
+  //try to move in diagonal direction
+  Space *target = &space[x + sgn(playerX - x)][y + sgn(playerY - y)];
+  if (!space[x][y].moveEnemy(target)) {
+    //if it fails, try to move in only one direction
+    //note: where dx == dy, moves in y direction first.
+    //this is probably not as good as randomizing it
+    if (abs(playerX - x) > abs(playerY - y)) { //move in x direction
+      target = &space[x + sgn(playerX - x)][y];
+      if (!space[x][y].moveEnemy(target)) {
+	target = &space[x][y + sgn(playerY - y)];
+	space[x][y].moveEnemy(target);
+      }
+    }
+    else { //move in y direction
+      target = &space[x][y + sgn(playerY - y)];
+      if (!space[x][y].moveEnemy(target)) {
+	target = &space[x + sgn(playerX - x)][y];
+	space[x][y].moveEnemy(target);
+      }
+    }
+  }
 }
 
 Space& Map::getSpace(int x, int y) {

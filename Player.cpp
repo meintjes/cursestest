@@ -9,9 +9,9 @@
 Player::Player() {
   hp = 10;
   hpMax = 10;
-  numBombs = 2;
+  numBombs = 1;
   numTorches = 3;
-  numArrows = 1;
+  numArrows = 3;
   torchDuration = 0;
 
   currentBranch = nullptr;

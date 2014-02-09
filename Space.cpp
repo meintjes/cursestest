@@ -21,10 +21,14 @@ void Space::setItem(const Item &itemIn) {
   item = &itemIn;
 }
 
-void Space::moveEnemy(Space &target) {
-  if (target.isPassable()) {
-    target.enemy = this->enemy;
+bool Space::moveEnemy(Space *target) {
+  if (target->isPassable()) {
+    target->enemy = this->enemy;
     this->enemy = nullptr;
+    return true;
+  }
+  else {
+    return false;
   }
 }
 

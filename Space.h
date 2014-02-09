@@ -15,7 +15,7 @@ class Space {
   void setType(const SpaceType &typeIn);
   void setItem(const Item &itemIn);
 
-  void moveEnemy(Space &target);
+  bool moveEnemy(Space *target);
   void setEnemy(const Enemy &enemyIn);
   void setEnemy();
   void attack(Map &map, int x, int y);
