@@ -75,9 +75,7 @@ bool Map::dropBomb() {
 }
 
 void Map::moveEnemy(int x, int y) {
-  std::pair<int, int> dir = direction(x, y, playerX, playerY);
-  Space &target = space[x + dir.first][y + dir.second];
-  
+  Space &target = space[x + sgn(playerX - x)][y + sgn(playerY - y)];
   space[x][y].moveEnemy(target);
 }
 
@@ -113,7 +111,7 @@ void Map::tick(int turns) {
 	  toMove.push_back(Point{x, y});
 	}
       }
-      else if (space[x][y].isPassable() && !isVisible(x, y, 7) && !randTo(750)) {
+      else if (space[x][y].isPassable() && !randTo(750) && !isVisible(x, y, 7)) {
 	space[x][y].setEnemy(getRandomEnemy());
       }
     }
@@ -225,8 +223,4 @@ void Map::executeToMove() {
 
 int Map::distance(int x1, int y1, int x2, int y2) {
   return std::max(abs(x1-x2), abs(y1-y2));
-}
-
-std::pair<int, int> Map::direction(int x1, int y1, int x2, int y2) {
-  return std::pair<int, int>(sgn(x2 - x1), sgn(y2 - y1));
 }

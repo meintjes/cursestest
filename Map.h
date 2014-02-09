@@ -5,7 +5,6 @@
 #include "Player.h"
 #include "Point.h"
 #include "SpaceType.h"
-#include <utility>
 #include <vector>
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
@@ -59,7 +58,6 @@ class Map {
   void executeToMove();
   
   static int distance(int x1, int y1, int x2, int y2);
-  static std::pair<int, int> direction(int x1, int y1, int x2, int y2);
 };
 
 #endif
