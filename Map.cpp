@@ -231,7 +231,7 @@ void Map::executeToMove() {
   std::sort(toMove.begin(), toMove.end(),
 	    [&](Point lhs, Point rhs) {
 	      return (distance(lhs.x, lhs.y, playerX, playerY)
-		      < distance(lhs.x, lhs.y, playerX, playerY));
+		      < distance(rhs.x, rhs.y, playerX, playerY));
 	    }
 	    );
   for ( auto &point : toMove ) {
