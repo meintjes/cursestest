@@ -3,15 +3,25 @@
 #include "Cst.h"
 #include <ncurses.h>
 
-Menu::Menu(std::vector<Option> optionsIn) : options(optionsIn) {
-  currentOption = 0;
-}
+Menu::Menu(std::vector<Option> optionsIn) :
+  options(optionsIn),
+  currentOption(0),
+  isDone(false)
+{}
 
 void Menu::operator()() {
   do {
+    if (isDone) {
+      break;
+    }
+
     displayMenu();
   }
   while (getMenuInput());
+}
+
+void Menu::close() {
+  isDone = true;
 }
 
 void Menu::displayMenu() {
