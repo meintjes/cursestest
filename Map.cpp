@@ -130,7 +130,8 @@ void Map::tick(int turns) {
 	  toMove.push_back(Point{x, y});
 	}
       }
-      else if (space[x][y].isPassable() && !randTo(750) && !isVisible(x, y, 7)) {
+      else if (space[x][y].isPassable() && !randTo(1000)
+	       && !isVisible(x, y, you.getLOS())) {
 	space[x][y].setEnemy(getRandomEnemy());
       }
     }
