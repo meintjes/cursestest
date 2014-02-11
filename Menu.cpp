@@ -10,6 +10,7 @@ Menu::Menu(std::vector<Option> optionsIn) :
 {}
 
 void Menu::operator()() {
+  isDone = false;
   do {
     displayMenu();
     getMenuInput();
