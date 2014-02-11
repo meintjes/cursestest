@@ -32,11 +32,6 @@ Menu ControlsMenu({
   Option{Red("Reset all controls"), resetControls}
 });
 
-Menu MainMenu({
-  Option{"Play game", playGame},
-  Option{"Change controls", ControlsMenu}
-});
-
 int main() {
   initscr();
   noecho();
@@ -59,6 +54,13 @@ int main() {
   init_pair(13, COLOR_BLACK, COLOR_CYAN);
   init_pair(14, COLOR_YELLOW, COLOR_CYAN);
 
+  Menu MainMenu({
+    Option{"Play game", playGame},
+    Option{"Change controls", ControlsMenu},
+    Option{"Quit", [&MainMenu]() mutable {
+      MainMenu.close();
+    }}
+  });
   MainMenu();
 
   endwin();

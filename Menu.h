@@ -9,6 +9,12 @@ class Menu {
   Menu(std::vector<Option> optionsIn);
   void operator()();
 
+  /**
+   * Close the menu. This causes it not to prompt for the next choice. Should
+   * be called from inside a menu option.
+   */
+  void close();
+
  private:
   void displayMenu();
   bool getMenuInput();
@@ -16,6 +22,7 @@ class Menu {
 
   std::vector<Option> options;
   int currentOption;
+  bool isDone;
 };
 
 #endif
