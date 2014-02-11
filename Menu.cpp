@@ -12,8 +12,9 @@ Menu::Menu(std::vector<Option> optionsIn) :
 void Menu::operator()() {
   do {
     displayMenu();
+    getMenuInput();
   }
-  while (getMenuInput(), !isDone);
+  while (!isDone);
 }
 
 void Menu::close() {
