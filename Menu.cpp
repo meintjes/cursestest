@@ -11,13 +11,9 @@ Menu::Menu(std::vector<Option> optionsIn) :
 
 void Menu::operator()() {
   do {
-    if (isDone) {
-      break;
-    }
-
     displayMenu();
   }
-  while (getMenuInput());
+  while (getMenuInput(), !isDone);
 }
 
 void Menu::close() {
@@ -57,28 +53,29 @@ void Menu::displayMenu() {
   refresh();
 }
 
-bool Menu::getMenuInput() {
+void Menu::getMenuInput() {
   switch(getch()) {
   case 27:
   case '4':
   case 'h':
-    return false;
+    close();
+    break;
   case 12:
   case 14:
   case '6':
   case 'l':
     options.at(currentOption)();
-    return true;
+    break;
   case '8':
   case 'k':
     changeChoice(-1);
-    return true;
+    break;
   case '2':
   case 'j':
     changeChoice(+1);
-    return true;
+    break;
   default:
-    return true;
+    break;
   }
 }
 

@@ -17,7 +17,7 @@ class Menu {
 
  private:
   void displayMenu();
-  bool getMenuInput();
+  void getMenuInput();
   void changeChoice(int dx);
 
   std::vector<Option> options;
