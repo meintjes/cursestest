@@ -135,10 +135,10 @@ Cch Space::getGlyph(bool isVisible) const {
 
   if (bombDuration > 0) {
     if (bombDuration > 1) {
-      return Orange('!');
+      return Orange('*');
     }
     else {
-      return Red('!');
+      return Red('*');
     }
   }
 

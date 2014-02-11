@@ -19,21 +19,21 @@ const Item BigHealth {
 
 
 const Item Bomb {
-  LightGray('!'),
+  LightGray('*'),
   [](Player &you) {
     return you.addBombs(1);
   }
 };
 
 const Item BombPack {
-  Cyan('!'),
+  Cyan('*'),
   [](Player &you) {
     return you.addBombs(3);
   }
 };
 
 const Item BombBigPack {
-  LightCyan('!'),
+  LightCyan('*'),
   [](Player &you) {
     return you.addBombs(6);
   }
@@ -79,6 +79,27 @@ const Item ArrowBigPack {
   LightCyan('|'),
   [](Player &you) {
     return you.addArrows(6);
+  }
+};
+
+const Item SpeedPotion {
+  LightGray('!'),
+  [](Player &you) {
+    return you.addSpeedPotions(1);
+  }
+};
+
+const Item SpeedPotionPack {
+  Cyan('!'),
+  [](Player &you) {
+    return you.addSpeedPotions(3);
+  }
+};
+
+const Item SpeedPotionBigPack {
+  LightCyan('!'),
+  [](Player &you) {
+    return you.addSpeedPotions(6);
   }
 };
 

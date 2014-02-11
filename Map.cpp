@@ -102,8 +102,11 @@ Space& Map::getSpace(int x, int y) {
   return space[x][y];
 }
 
-void Map::tick(int turns) {
-  you.tick();
+void Map::tick() {
+  if (!you.tick()) { //don't update game state for free moves
+    return;
+  }
+
   bool damagedByGas = false;
   if (space[playerX][playerY].hasGas()) {
     you.damage();
@@ -144,11 +147,6 @@ void Map::tick(int turns) {
   //kludge to handle gas clouds appearing as part of an attack
   if (space[playerX][playerY].hasGas() && !damagedByGas) {
     you.damage();
-  }
-
-  //handle multi-turn ticks
-  if (turns > 1) {
-    tick(turns - 1);
   }
 }
 

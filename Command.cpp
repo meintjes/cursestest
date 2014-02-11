@@ -76,6 +76,7 @@ void resetControls() {
   cmap['q'] = COMMAND_USE_BOMB,
   cmap['w'] = COMMAND_USE_TORCH,
   cmap['e'] = COMMAND_USE_ARROW,
+  cmap['r'] = COMMAND_USE_SPEEDPOTION,
 
   cmap['<'] = COMMAND_INTERACT_STAIRSUP,
   cmap['>'] = COMMAND_INTERACT_STAIRSDOWN,

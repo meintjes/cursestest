@@ -56,6 +56,8 @@ int main() {
   init_pair(10, COLOR_BLACK, COLOR_RED);
   init_pair(11, COLOR_BLACK, COLOR_GREEN);
   init_pair(12, COLOR_BLACK, COLOR_YELLOW);
+  init_pair(13, COLOR_BLACK, COLOR_CYAN);
+  init_pair(14, COLOR_YELLOW, COLOR_CYAN);
 
   MainMenu();
 
@@ -119,6 +121,8 @@ bool getInput(Map *map, const CommandMap cmap) {
     return map->you.lightTorch();
   case COMMAND_USE_ARROW:
     return map->you.drawArrow();
+  case COMMAND_USE_SPEEDPOTION:
+    return map->you.quaffSpeedPotion();
 
   case COMMAND_INTERACT_STAIRSUP:
     return map->changeFloor(-1, &StairsUp);

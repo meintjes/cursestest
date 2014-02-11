@@ -12,13 +12,15 @@ Player::Player() {
   numBombs = 1;
   numTorches = 3;
   numArrows = 3;
-  torchDuration = 0;
-  lightTorch();
+  numSpeedPotions = 0;
 
   currentBranch = nullptr;
   currentDepth = 0;
 
   arrowMode = false;
+  lightTorch();
+  speedDuration = 0;
+  freeMovesDuration = 0;
 }
 
 void Player::display() const {
@@ -42,22 +44,37 @@ void Player::display() const {
   //print item display
   move(23, 79 - MAX_NUM_ITEMS);
   for (int i = numBombs; i > 0; i--) {
-    addc(Orange('!'));
+    addc(Orange('*'));
   }
   for (int i = numTorches; i > 0; i--) {
     addc(Yellow('^'));
   }
-  for (int i = numArrows; i> 0; i--) {
+  for (int i = numArrows; i > 0; i--) {
     addc(Brown('|'));
+  }
+  for (int i = numSpeedPotions; i > 0; i--) {
+    addc(LightCyan('!'));
   }
   for (int i = 78 - getNumItems(); i < 79; i++) {
     addch(' ');
   }
 }
 
-void Player::tick() {
+bool Player::tick() {
   if (torchDuration > 0) {
     torchDuration--;
+  }
+
+  if (freeMovesDuration > 0) {
+    freeMovesDuration--;
+    return false;
+  }
+  else {
+    if (speedDuration > 0) {
+      freeMovesDuration++;
+      speedDuration--;
+    }
+    return true;
   }
 }
 
@@ -74,12 +91,20 @@ Map* Player::getCurrentFloor() const {
 }
 
 int Player::getNumItems() const {
-  return (numBombs + numTorches + numArrows);
+  return (numBombs + numTorches + numArrows + numSpeedPotions);
 }
 
 Cch Player::getGlyph() const {
   if (arrowMode) {
-    return BlackOnBrown('@');
+    if (freeMovesDuration > 0) {
+      return BrownOnCyan('@');
+    }
+    else {
+      return BlackOnBrown('@');
+    }
+  }
+  else if (freeMovesDuration > 0) {
+    return BlackOnCyan('@');
   }
   else {
     return BlackOnWhite('@');
@@ -132,6 +157,17 @@ bool Player::shootArrow() {
   }
 }
 
+bool Player::quaffSpeedPotion() {
+  if (numSpeedPotions > 0) {
+    numSpeedPotions--;
+    speedDuration = randRange(5, 6);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 void Player::damage(unsigned int num) {
   hp -= num;
 }
@@ -159,6 +195,10 @@ bool Player::addTorches(int numIn) {
 
 bool Player::addArrows(int numIn) {
   return (addItem(numArrows, numIn));
+}
+
+bool Player::addSpeedPotions(int numIn) {
+  return (addItem(numSpeedPotions, numIn));
 }
 
 bool Player::addItem(int &item, int numIn) {

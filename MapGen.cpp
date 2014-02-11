@@ -126,12 +126,8 @@ const Item& Map::getRandomItem() {
     return BombPack;
   if (num < 90)
     return ArrowPack;
-  if (num < 94)
-    return TorchBigPack;
-  if (num < 97)
-    return BombBigPack;
 
-  return ArrowBigPack;
+  return SpeedPotionPack;
 }
 
 void Map::sanitizeEntry() {

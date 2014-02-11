@@ -13,7 +13,7 @@ class Player {
 
   void display() const;
 
-  void tick();
+  bool tick();
 
   int getHp() const;
   int getLOS() const;
@@ -25,12 +25,14 @@ class Player {
   bool dropBomb();
   bool drawArrow(); //toggles arrowmode
   bool shootArrow(); //returns whether you had arrowmode, then unsets it
+  bool quaffSpeedPotion();
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
   bool addBombs(int numIn);
   bool addTorches(int numIn);
   bool addArrows(int numIn);
+  bool addSpeedPotions(int numIn);
 
   void setBranch(Branch *branch);
   bool changeDepth(int dz);
@@ -43,13 +45,16 @@ class Player {
   int hpMax;
   int numBombs;
   int numTorches;
-  int torchDuration;
   int numArrows;
+  int numSpeedPotions;
 
   Branch *currentBranch;
   int currentDepth;
 
   bool arrowMode;
+  int torchDuration;
+  int speedDuration;
+  int freeMovesDuration;
 };
 
 #endif

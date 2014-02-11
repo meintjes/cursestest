@@ -34,7 +34,7 @@ class Map {
 
   void moveEnemy(int x, int y);
   Space& getSpace(int x, int y);
-  void tick(int turns = 1);
+  void tick();
 
   Player &you;
   int getPlayerX() const;
