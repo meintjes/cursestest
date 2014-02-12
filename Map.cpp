@@ -38,26 +38,54 @@ int Map::getPlayerY() const {
 bool Map::movePlayer(int dx, int dy) {
   //if you have an arrow drawn, shoot it
   if ((dx != 0 || dy != 0) && you.shootArrow()) {
+    // Decide the glyph for the arrow shot.
+    char arrowChar;
+    if (dx == 0) {
+      arrowChar = '|';
+    } else if (dy == 0) {
+      arrowChar = '-';
+    } else {
+      if ((dx < 0 && dy > 0) || (dx > 0 && dy < 0)) {
+        arrowChar = '/';
+      } else {
+        arrowChar = '\\';
+      }
+    }
+    Cch arrowGlyph(arrowChar);
+
     for (int i = 0, x = playerX, y = playerY;
 	 i < 6 && (space[x][y].isPassable() || space[x][y].hasEnemy());
 	 i++) {
       space[x][y].kill(*this, x, y);
       x += dx;
       y += dy;
+
+      if (isVisible(x, y, you.getLOS()) && space[x][y].isPassable()) {
+        // Rewrite the actual state of things.
+        display();
+
+        // Write the arrow glyph.
+        move(y, x);
+        addc(arrowGlyph);
+        refresh();
+
+        // Pause for a moment to let the user see the animation.
+        napms(25);
+      }
     }
     return true;
   }
   //otherwise actually move
   else {
     Space *target = &space[playerX + dx][playerY + dy];
-    if (target->isPassable()) {
+    if (target->hasEnemy()) {
+      target->kill(*this, playerX + dx, playerY + dy);
+      return true;
+    }
+    else if (target->isPassable()) {
       playerX += dx;
       playerY += dy;
       target->pickup(you);
-      return true;
-    }
-    else if (target->hasEnemy()) {
-      target->kill(*this, playerX + dx, playerY + dy);
       return true;
     }
     else {

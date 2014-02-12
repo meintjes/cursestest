@@ -22,7 +22,7 @@ void Space::setItem(const Item &itemIn) {
 }
 
 bool Space::moveEnemy(Space *target) {
-  if (target->isPassable()) {
+  if (target->isPassable() && !target->hasEnemy()) {
     target->enemy = this->enemy;
     this->enemy = nullptr;
     return true;
@@ -146,7 +146,7 @@ Cch Space::getGlyph(bool isVisible) const {
 }
 
 bool Space::isPassable() const {
-  return (type->passable && !enemy);
+  return type->passable;
 }
 
 bool Space::isTransparent() const {

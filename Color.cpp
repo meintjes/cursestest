@@ -9,3 +9,7 @@ const Cst Color::operator()(const Cst &cst) const {
 const Cch Color::operator()(const Cch &cch) const {
   return Cch(cch.glyph, *this);
 }
+
+bool Color::operator==(const Color &other) const {
+  return id == other.id && bold == other.bold;
+}

@@ -12,6 +12,7 @@ struct Color {
 
   const Cst operator()(const Cst &cst) const;
   const Cch operator()(const Cch &cch) const;
+  bool operator==(const Color &other) const;
 
   friend void addc(const Cst &cst);
 };
