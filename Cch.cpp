@@ -12,6 +12,10 @@ Cch::Cch(const char &glyphIn, const Color &colorIn)
 
 }
 
+bool Cch::operator==(const Cch &other) const {
+    return glyph == other.glyph && color == other.color;
+}
+
 void addc(const Cch &cch) {
   if (cch.color.bold) {
     attron(A_BOLD);
