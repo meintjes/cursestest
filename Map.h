@@ -50,6 +50,7 @@ class Map {
   bool isVisible(int x, int y, int LOS) const;
   bool hasLOS(int x1, int y1, int x2, int y2) const;
 
+  void explode(int x, int y, int radius);
   std::vector<Point> toExplode;
   void executeToExplode();
   std::vector<Point> toAttack;

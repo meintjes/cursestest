@@ -56,7 +56,7 @@ void Map::drawBox(Point a, Point b, const SpaceType &type) {
   int yMax = std::max(a.y, b.y);
   for (int x = std::min(a.x, b.x); x <= xMax; x++) {
     for (int y = std::min(a.y, b.y); y <= yMax; y++) {
-      assert(x <= MAPWIDTH && y <= MAPHEIGHT);
+      assert(isValidX(x) && isValidY(y));
       space[x][y].setType(type);
     }
   }

@@ -36,6 +36,7 @@ int Map::getPlayerY() const {
 }
 
 bool Map::movePlayer(int dx, int dy) {
+  //if you have an arrow drawn, shoot it
   if ((dx != 0 || dy != 0) && you.shootArrow()) {
     for (int i = 0, x = playerX, y = playerY;
 	 i < 6 && (space[x][y].isPassable() || space[x][y].hasEnemy());
@@ -46,6 +47,7 @@ bool Map::movePlayer(int dx, int dy) {
     }
     return true;
   }
+  //otherwise actually move
   else {
     Space *target = &space[playerX + dx][playerY + dy];
     if (target->isPassable()) {
@@ -113,16 +115,13 @@ void Map::tick() {
     damagedByGas = true;
   }
 
-  //decrement gas cloud and bomb timer durations
   for (int x = 1; x <= MAPWIDTH; x++) {
     for (int y = 1; y <= MAPHEIGHT; y++) {
-      if (space[x][y].tick()) { //if a bomb went off
-	for (int x2 = x - 1; x2 <= x + 1; x2++) {
-	  for (int y2 = y - 1; y2 <= y + 1; y2++) {
-	    toExplode.push_back(Point{x2, y2});
-	  }
-	}
+      //decrement durations of stuff on the space
+      if (space[x][y].tick()) {
+	explode(x, y, 1); //if a bomb went off
       }
+
       if (space[x][y].hasEnemy()) {
 	//enemies within range attack the player
 	if (isVisible(x, y, space[x][y].getRange())) {
@@ -133,10 +132,12 @@ void Map::tick() {
 	  toMove.push_back(Point{x, y});
 	}
       }
+
       else if (space[x][y].isPassable() && !randTo(1000)
 	       && !isVisible(x, y, you.getLOS())) {
 	space[x][y].setEnemy(getRandomEnemy());
       }
+
     }
   }
 
@@ -163,13 +164,12 @@ bool Map::isVisible(int x, int y, int LOS) const {
     return false;
   }
 
-  if (space[x + sgn(playerX - x)][y + sgn(playerY - y)].isTransparent()) {
-    return hasLOS(x, y, playerX, playerY) ||
-      hasLOS(x + sgn(playerX - x), y + sgn(playerY - y), playerX, playerY);
-  }
-  else {
-    return hasLOS(x, y, playerX, playerY);
-  }
+  //extra-permissive; checks if the space has LOS to you, OR if the space
+  //one closer to you in each direction has LOS to you. this makes corridors
+  //behave significantly nicer.
+  return hasLOS(x, y, playerX, playerY) ||
+    (space[x + sgn(playerX - x)][y + sgn(playerY - y)].isTransparent()
+     && hasLOS(x + sgn(playerX - x), y + sgn(playerY - y), playerX, playerY));
 }
 
 bool Map::hasLOS(int x1, int y1, int x2, int y2) const {
@@ -208,6 +208,17 @@ bool Map::changeFloor(int dz, const SpaceType *type) {
   }
   else {
     return false;
+  }
+}
+
+void Map::explode(int x, int y, int radius) {
+  assert(radius >= 0);
+  for (int x2 = x - radius; x2 <= x + radius; x2++) {
+    for (int y2 = y - radius; y2 <= y + radius; y2++) {
+      if (isValidX(x) && isValidY(y)) {
+	toExplode.push_back(Point{x2, y2});
+      }
+    }
   }
 }
 
