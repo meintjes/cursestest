@@ -11,6 +11,8 @@
 const int MAPWIDTH = 78;
 const int MAPHEIGHT = 21;
 
+typedef bool (Map::*DirectionalFn)(int x, int y);
+
 class Map {
   //defined in MapGen.cpp
  public:
@@ -30,6 +32,7 @@ class Map {
   void display() const;
 
   bool movePlayer(int dx, int dy);
+  bool shootArrow(int dx, int dy);
   bool dropBomb();
 
   void moveEnemy(int x, int y);
@@ -39,7 +42,7 @@ class Map {
   Player &you;
   int getPlayerX() const;
   int getPlayerY() const;
-  bool changeFloor(int dz, const SpaceType *type);
+  bool changeFloor(int dz, const SpaceType &type);
 
  private:
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];

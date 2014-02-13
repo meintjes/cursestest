@@ -26,6 +26,7 @@ Menu ControlsMenu({
   Option{"Use bomb", std::bind(changeControl, COMMAND_USE_BOMB)},
   Option{"Use torch", std::bind(changeControl, COMMAND_USE_TORCH)},
   Option{"Use arrow", std::bind(changeControl, COMMAND_USE_ARROW)},
+  Option{"Use speed potion", std::bind(changeControl, COMMAND_USE_SPEEDPOTION)},
   Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
   Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
 
@@ -97,25 +98,33 @@ void playGame() {
 }
 
 bool getInput(Map *map, const CommandMap cmap) {
+  DirectionalFn dfn;
+  if (map->you.hasArrowMode()) {
+    dfn = &Map::shootArrow;
+  }
+  else {
+    dfn = &Map::movePlayer;
+  }
+
   switch (cmap[getch()]) {
   case COMMAND_MOVE_UPLEFT:
-    return map->movePlayer(-1, -1);
+    return (map->*dfn)(-1, -1);
   case COMMAND_MOVE_UP:
-    return map->movePlayer(0, -1);
+    return (map->*dfn)(0, -1);
   case COMMAND_MOVE_UPRIGHT:
-    return map->movePlayer(1, -1);
+    return (map->*dfn)(1, -1);
   case COMMAND_MOVE_LEFT:
-    return map->movePlayer(-1, 0);
+    return (map->*dfn)(-1, 0);
   case COMMAND_WAIT:
-    return map->movePlayer(0, 0);
+    return true;
   case COMMAND_MOVE_RIGHT:
-    return map->movePlayer(1, 0);
+    return (map->*dfn)(1, 0);
   case COMMAND_MOVE_DOWNLEFT:
-    return map->movePlayer(-1, 1);
+    return (map->*dfn)(-1, 1);
   case COMMAND_MOVE_DOWN:
-    return map->movePlayer(0, 1);
+    return (map->*dfn)(0, 1);
   case COMMAND_MOVE_DOWNRIGHT:
-    return map->movePlayer(1, 1);
+    return (map->*dfn)(1, 1);
 
   case COMMAND_USE_BOMB:
     return map->dropBomb();
@@ -127,9 +136,9 @@ bool getInput(Map *map, const CommandMap cmap) {
     return map->you.quaffSpeedPotion();
 
   case COMMAND_INTERACT_STAIRSUP:
-    return map->changeFloor(-1, &StairsUp);
+    return map->changeFloor(-1, StairsUp);
   case COMMAND_INTERACT_STAIRSDOWN:
-    return map->changeFloor(+1, &StairsDown);
+    return map->changeFloor(+1, StairsDown);
 
   default:
     return false;

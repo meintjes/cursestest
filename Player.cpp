@@ -111,6 +111,10 @@ Cch Player::getGlyph() const {
   }
 }
 
+bool Player::hasArrowMode() const {
+  return arrowMode;
+}
+
 bool Player::lightTorch() {
   if (numTorches > 0) {
     numTorches--;

@@ -36,8 +36,24 @@ int Map::getPlayerY() const {
 }
 
 bool Map::movePlayer(int dx, int dy) {
-  //if you have an arrow drawn, shoot it
-  if ((dx != 0 || dy != 0) && you.shootArrow()) {
+  Space *target = &space[playerX + dx][playerY + dy];
+  if (target->hasEnemy()) {
+    target->kill(*this, playerX + dx, playerY + dy);
+    return true;
+  }
+  else if (target->isPassable()) {
+    playerX += dx;
+    playerY += dy;
+    target->pickup(you);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool Map::shootArrow(int dx, int dy) {
+  if (you.shootArrow()) {
     // Decide the glyph for the arrow shot.
     char arrowChar;
     if (dx == 0) {
@@ -75,23 +91,7 @@ bool Map::movePlayer(int dx, int dy) {
     }
     return true;
   }
-  //otherwise actually move
-  else {
-    Space *target = &space[playerX + dx][playerY + dy];
-    if (target->hasEnemy()) {
-      target->kill(*this, playerX + dx, playerY + dy);
-      return true;
-    }
-    else if (target->isPassable()) {
-      playerX += dx;
-      playerY += dy;
-      target->pickup(you);
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
+  return true;
 }
 
 bool Map::dropBomb() {
@@ -129,6 +129,7 @@ void Map::moveEnemy(int x, int y) {
 }
 
 Space& Map::getSpace(int x, int y) {
+  assert(isValidX(x) && isValidY(y));
   return space[x][y];
 }
 
@@ -230,8 +231,8 @@ bool Map::hasLOS(int x1, int y1, int x2, int y2) const {
   }
 }
 
-bool Map::changeFloor(int dz, const SpaceType *type) {
-  if (space[playerX][playerY].typeIs(type)) {
+bool Map::changeFloor(int dz, const SpaceType &type) {
+  if (space[playerX][playerY].typeIs(&type)) {
     return you.changeDepth(dz);
   }
   else {

@@ -20,6 +20,7 @@ class Player {
   Map* getCurrentFloor() const;
   int getNumItems() const;
   Cch getGlyph() const;
+  bool hasArrowMode() const;
 
   bool lightTorch();
   bool dropBomb();
