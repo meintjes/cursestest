@@ -58,24 +58,24 @@ bool Map::shootArrow(int dx, int dy) {
     char arrowChar;
     if (dx == 0) {
       arrowChar = '|';
-    } else if (dy == 0) {
+    }
+    else if (dy == 0) {
       arrowChar = '-';
-    } else {
-      if ((dx < 0 && dy > 0) || (dx > 0 && dy < 0)) {
-        arrowChar = '/';
-      } else {
-        arrowChar = '\\';
-      }
+    }
+    else if ((dx < 0 && dy > 0) || (dx > 0 && dy < 0)) {
+      arrowChar = '/';
+    }
+    else {
+      arrowChar = '\\';
     }
     Cch arrowGlyph(Brown(arrowChar));
 
     for (int i = 0, x = playerX, y = playerY;
-	 i < 6 && (space[x][y].isPassable() || space[x][y].hasEnemy());
-	 i++) {
+	 i < 6 && space[x][y].isPassable(); i++) {
       space[x][y].kill(*this, x, y);
       x += dx;
       y += dy;
-
+      
       if (isVisible(x, y, you.getLOS()) && space[x][y].isPassable()) {
         // Rewrite the actual state of things.
         display();
@@ -113,14 +113,14 @@ void Map::moveEnemy(int x, int y) {
     //this is probably not as good as randomizing it
     if (abs(playerX - x) > abs(playerY - y)) { //move in x direction
       target = &space[x + sgn(playerX - x)][y];
-      if (!space[x][y].moveEnemy(target)) {
+      if (!space[x][y].moveEnemy(target)) { //else move in y direction
 	target = &space[x][y + sgn(playerY - y)];
 	space[x][y].moveEnemy(target);
       }
     }
     else { //move in y direction
       target = &space[x][y + sgn(playerY - y)];
-      if (!space[x][y].moveEnemy(target)) {
+      if (!space[x][y].moveEnemy(target)) { // else move in x direction
 	target = &space[x + sgn(playerX - x)][y];
 	space[x][y].moveEnemy(target);
       }

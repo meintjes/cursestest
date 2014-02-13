@@ -11,5 +11,5 @@ const Cch Color::operator()(const Cch &cch) const {
 }
 
 bool Color::operator==(const Color &other) const {
-  return id == other.id && bold == other.bold;
+  return hue == other.hue && bold == other.bold;
 }

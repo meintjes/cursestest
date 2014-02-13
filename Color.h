@@ -7,7 +7,7 @@ class Cst;
 class Cch;
 
 struct Color {
-  int id;
+  int hue;
   bool bold;
 
   const Cst operator()(const Cst &cst) const;
