@@ -8,7 +8,6 @@ Space::Space() {
   type = &Wall;
   gasDuration = 0;
   bombDuration = 0;
-  explosionDuration = 0;
   enemy = nullptr;
   item = nullptr;
 }
@@ -71,13 +70,9 @@ void Space::explode() {
     type = &Floor;
   }
   enemy = nullptr;
-  explosionDuration++;
 }
 
 bool Space::tick() {
-  if (explosionDuration > 0) {
-    explosionDuration--;
-  }
   if (gasDuration > 0) {
     gasDuration--;
   }
@@ -115,13 +110,9 @@ Cch Space::getGlyph(bool isVisible) const {
   if (!type->passable) {
     return type->glyph;
   }
-
+  
   if (item) {
     return item->glyph;
-  }
-
-  if (explosionDuration > 0) {
-    return Red('#');
   }
 
   if (gasDuration > 0) {

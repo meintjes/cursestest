@@ -44,7 +44,6 @@ class Space {
   const SpaceType *type;
   unsigned int gasDuration;
   unsigned int bombDuration;
-  unsigned int explosionDuration;
   const Enemy *enemy;
   const Item *item;
 };

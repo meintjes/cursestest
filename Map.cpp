@@ -51,7 +51,7 @@ bool Map::movePlayer(int dx, int dy) {
         arrowChar = '\\';
       }
     }
-    Cch arrowGlyph(arrowChar);
+    Cch arrowGlyph(Brown(arrowChar));
 
     for (int i = 0, x = playerX, y = playerY;
 	 i < 6 && (space[x][y].isPassable() || space[x][y].hasEnemy());
@@ -251,10 +251,17 @@ void Map::explode(int x, int y, int radius) {
 }
 
 void Map::executeToExplode() {
-  for ( auto &point : toExplode ) {
-    space[point.x][point.y].explode();
+  if (toExplode.size()) {
+    display();
+    for ( auto &point : toExplode ) {
+      space[point.x][point.y].explode();
+      move(point.y, point.x);
+      addc(Red('#'));
+    }
+    refresh();
+    napms(150);
+    toExplode.clear();
   }
-  toExplode.clear();
 }
 
 void Map::executeToAttack() {
