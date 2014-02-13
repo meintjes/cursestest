@@ -19,14 +19,14 @@ bool Cch::operator==(const Cch &other) const {
 void addc(const Cch &cch) {
   if (cch.color.bold) {
     attron(A_BOLD);
-    attron(COLOR_PAIR(cch.color.id));
+    attron(COLOR_PAIR(cch.color.hue));
     addch(cch.glyph);
-    attroff(COLOR_PAIR(cch.color.id));
+    attroff(COLOR_PAIR(cch.color.hue));
     attroff(A_BOLD);
   }
   else {
-    attron(COLOR_PAIR(cch.color.id));
+    attron(COLOR_PAIR(cch.color.hue));
     addch(cch.glyph);
-    attroff(COLOR_PAIR(cch.color.id));
+    attroff(COLOR_PAIR(cch.color.hue));
   }
 }
