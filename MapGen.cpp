@@ -19,6 +19,8 @@ Map::Map(Player &player, int depth) : you(player) {
 }
 
 void Map::drawLine(Point a, const Point b, const SpaceType &type) {
+  assert(isValidX(a.x) && isValidX(b.x) &&
+	 isValidY(a.y) && isValidY(b.y));
   //this is horrific style, but fuck it
   if (randTo(1)) {
     while (a.x - b.x) {
@@ -52,11 +54,12 @@ void Map::drawLine(Point a, const Point b, const SpaceType &type) {
 }
 
 void Map::drawBox(Point a, Point b, const SpaceType &type) {
+  assert(isValidX(a.x) && isValidX(b.x) &&
+	 isValidY(a.y) && isValidY(b.y));
   int xMax = std::max(a.x, b.x);
   int yMax = std::max(a.y, b.y);
   for (int x = std::min(a.x, b.x); x <= xMax; x++) {
     for (int y = std::min(a.y, b.y); y <= yMax; y++) {
-      assert(isValidX(x) && isValidY(y));
       space[x][y].setType(type);
     }
   }
@@ -133,7 +136,9 @@ const Item& Map::getRandomItem() {
 void Map::sanitizeEntry() {
   for (int x = playerX - 2; x <= playerX + 2; x++) {
     for (int y = playerY - 2; y <= playerY + 2; y++) {
-      space[x][y].setEnemy();
+      if (isValidX(x) && isValidY(y)) {
+	space[x][y].setEnemy();
+      }
     }
   }
 }
