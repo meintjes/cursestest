@@ -17,11 +17,11 @@ void Map::display() const {
 	  addc(you.getGlyph());
 	}
 	else {
-	  addc(space[x][y].getGlyph(true));
+	  addc(getSpace(x, y).getGlyph(true));
 	}
       }
       else {
-	addc(space[x][y].getGlyph(false));
+	addc(getSpace(x, y).getGlyph(false));
       }
     }
   }
@@ -36,7 +36,7 @@ int Map::getPlayerY() const {
 }
 
 bool Map::movePlayer(int dx, int dy) {
-  Space *target = &space[playerX + dx][playerY + dy];
+  Space *target = &getSpace(playerX + dx, playerY + dy);
   if (target->hasEnemy()) {
     target->kill(*this, playerX + dx, playerY + dy);
     return true;
@@ -71,12 +71,12 @@ bool Map::shootArrow(int dx, int dy) {
     Cch arrowGlyph(Brown(arrowChar));
 
     for (int i = 0, x = playerX, y = playerY;
-	 i < 6 && space[x][y].isPassable(); i++) {
-      space[x][y].kill(*this, x, y);
+	 i < 6 && getSpace(x, y).isPassable(); i++) {
+      getSpace(x, y).kill(*this, x, y);
       x += dx;
       y += dy;
       
-      if (isVisible(x, y, you.getLOS()) && space[x][y].isPassable()) {
+      if (isVisible(x, y, you.getLOS()) && getSpace(x, y).isPassable()) {
         // Rewrite the actual state of things.
         display();
 
@@ -95,8 +95,8 @@ bool Map::shootArrow(int dx, int dy) {
 }
 
 bool Map::dropBomb() {
-  if (!space[playerX][playerY].hasBomb() && you.dropBomb()) {
-    space[playerX][playerY].dropBomb();
+  if (!getSpace(playerX, playerY).hasBomb() && you.dropBomb()) {
+    getSpace(playerX, playerY).dropBomb();
     return true;
   }
   else {
@@ -106,26 +106,31 @@ bool Map::dropBomb() {
 
 void Map::moveEnemy(int x, int y) {
   //try to move in diagonal direction
-  Space *target = &space[x + sgn(playerX - x)][y + sgn(playerY - y)];
-  if (!space[x][y].moveEnemy(target)) {
+  Space *target = &getSpace(x + sgn(playerX - x), y + sgn(playerY - y));
+  if (!getSpace(x, y).moveEnemy(target)) {
     //if it fails, try to move in only one direction
     //note: where dx == dy, moves in y direction first.
     //this is probably not as good as randomizing it
     if (abs(playerX - x) > abs(playerY - y)) { //move in x direction
-      target = &space[x + sgn(playerX - x)][y];
-      if (!space[x][y].moveEnemy(target)) { //else move in y direction
-	target = &space[x][y + sgn(playerY - y)];
-	space[x][y].moveEnemy(target);
+      target = &getSpace(x + sgn(playerX - x), y);
+      if (!getSpace(x, y).moveEnemy(target)) { //else move in y direction
+	target = &getSpace(x, y + sgn(playerY - y));
+	getSpace(x, y).moveEnemy(target);
       }
     }
     else { //move in y direction
-      target = &space[x][y + sgn(playerY - y)];
-      if (!space[x][y].moveEnemy(target)) { // else move in x direction
-	target = &space[x + sgn(playerX - x)][y];
-	space[x][y].moveEnemy(target);
+      target = &getSpace(x, y + sgn(playerY - y));
+      if (!getSpace(x, y).moveEnemy(target)) { // else move in x direction
+	target = &getSpace(x + sgn(playerX - x), y);
+	getSpace(x, y).moveEnemy(target);
       }
     }
   }
+}
+
+const Space& Map::getSpace(int x, int y) const {
+  assert(isValidX(x) && isValidY(y));
+  return space[x][y];
 }
 
 Space& Map::getSpace(int x, int y) {
@@ -139,7 +144,7 @@ void Map::tick() {
   }
 
   bool damagedByGas = false;
-  if (space[playerX][playerY].hasGas()) {
+  if (getSpace(playerX, playerY).hasGas()) {
     you.damage();
     damagedByGas = true;
   }
@@ -147,13 +152,13 @@ void Map::tick() {
   for (int x = 1; x <= MAPWIDTH; x++) {
     for (int y = 1; y <= MAPHEIGHT; y++) {
       //decrement durations of stuff on the space
-      if (space[x][y].tick()) {
+      if (getSpace(x, y).tick()) {
 	explode(x, y, 1); //if a bomb went off
       }
 
-      if (space[x][y].hasEnemy()) {
+      if (getSpace(x, y).hasEnemy()) {
 	//enemies within range attack the player
-	if (isVisible(x, y, space[x][y].getRange())) {
+	if (isVisible(x, y, getSpace(x, y).getRange())) {
 	  toAttack.push_back(Point{x, y});
 	}
 	//enemies outside range of the player try to move toward him
@@ -162,9 +167,9 @@ void Map::tick() {
 	}
       }
 
-      else if (space[x][y].isPassable() && !randTo(1000)
+      else if (getSpace(x, y).isPassable() && !randTo(1000)
 	       && !isVisible(x, y, you.getLOS())) {
-	space[x][y].setEnemy(getRandomEnemy());
+	getSpace(x, y).setEnemy(getRandomEnemy());
       }
 
     }
@@ -175,7 +180,7 @@ void Map::tick() {
   executeToAttack();
 
   //kludge to handle gas clouds appearing as part of an attack
-  if (space[playerX][playerY].hasGas() && !damagedByGas) {
+  if (getSpace(playerX, playerY).hasGas() && !damagedByGas) {
     you.damage();
   }
 }
@@ -197,7 +202,7 @@ bool Map::isVisible(int x, int y, int LOS) const {
   //one closer to you in each direction has LOS to you. this makes corridors
   //behave significantly nicer.
   return hasLOS(x, y, playerX, playerY) ||
-    (space[x + sgn(playerX - x)][y + sgn(playerY - y)].isTransparent()
+    (getSpace(x + sgn(playerX - x), y + sgn(playerY - y)).isTransparent()
      && hasLOS(x + sgn(playerX - x), y + sgn(playerY - y), playerX, playerY));
 }
 
@@ -225,14 +230,14 @@ bool Map::hasLOS(int x1, int y1, int x2, int y2) const {
       error += dx;
       y1 += sgny;
     }
-    if (!space[x1][y1].isTransparent()) {
+    if (!getSpace(x1, y1).isTransparent()) {
       return false;
     }
   }
 }
 
 bool Map::changeFloor(int dz, const SpaceType &type) {
-  if (space[playerX][playerY].typeIs(&type)) {
+  if (getSpace(playerX, playerY).typeIs(&type)) {
     return you.changeDepth(dz);
   }
   else {
@@ -255,7 +260,7 @@ void Map::executeToExplode() {
   if (toExplode.size()) {
     display();
     for ( auto &point : toExplode ) {
-      space[point.x][point.y].explode();
+      getSpace(point.x, point.y).explode();
       move(point.y, point.x);
       addc(Red('#'));
     }
@@ -267,7 +272,7 @@ void Map::executeToExplode() {
 
 void Map::executeToAttack() {
   for ( auto &point : toAttack ) {
-    space[point.x][point.y].attack(*this, point.x, point.y);
+    getSpace(point.x, point.y).attack(*this, point.x, point.y);
   }
   toAttack.clear();
 }
