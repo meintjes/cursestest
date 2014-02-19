@@ -11,8 +11,6 @@
 const int MAPWIDTH = 78;
 const int MAPHEIGHT = 21;
 
-typedef bool (Map::*DirectionalFn)(int x, int y);
-
 class Map {
   //defined in MapGen.cpp
  public:
@@ -64,5 +62,7 @@ class Map {
   
   static int distance(int x1, int y1, int x2, int y2);
 };
+
+typedef bool (Map::*DirectionalFn)(int x, int y);
 
 #endif

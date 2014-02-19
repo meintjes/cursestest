@@ -9,9 +9,10 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <cassert>
 
 void playGame();
-bool getInput(Map *map, const CommandMap cmap);
+bool getInput(Player &you, Map *map, const CommandMap cmap);
 
 Menu ControlsMenu({
   Option{"Move up/left", std::bind(changeControl, COMMAND_MOVE_UPLEFT)},
@@ -23,10 +24,15 @@ Menu ControlsMenu({
   Option{"Move down/left", std::bind(changeControl, COMMAND_MOVE_DOWNLEFT)},
   Option{"Move down", std::bind(changeControl, COMMAND_MOVE_DOWN)},
   Option{"Move down/right", std::bind(changeControl, COMMAND_MOVE_DOWNRIGHT)},
+
+  Option{"Use artifact", std::bind(changeControl, COMMAND_USE_ARTIFACT)},
   Option{"Use bomb", std::bind(changeControl, COMMAND_USE_BOMB)},
   Option{"Use torch", std::bind(changeControl, COMMAND_USE_TORCH)},
   Option{"Use arrow", std::bind(changeControl, COMMAND_USE_ARROW)},
   Option{"Use speed potion", std::bind(changeControl, COMMAND_USE_SPEEDPOTION)},
+
+  Option{"Drop artifact", std::bind(changeControl, COMMAND_DROP_ARTIFACT)},
+
   Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
   Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
 
@@ -87,7 +93,7 @@ void playGame() {
     you.display();
 
     //get input that would cause a turn to pass
-    while (!getInput(you.getCurrentFloor(), cmap));  
+    while (!getInput(you, you.getCurrentFloor(), cmap));  
     you.getCurrentFloor()->tick(); //then update game state
   }
 
@@ -97,9 +103,9 @@ void playGame() {
   getch();
 }
 
-bool getInput(Map *map, const CommandMap cmap) {
+bool getInput(Player &you, Map *map, const CommandMap cmap) {
   DirectionalFn dfn;
-  if (map->you.hasArrowMode()) {
+  if (you.hasArrowMode()) {
     dfn = &Map::shootArrow;
   }
   else {
@@ -107,6 +113,8 @@ bool getInput(Map *map, const CommandMap cmap) {
   }
 
   switch (cmap[getch()]) {
+  case COMMAND_FIRST: //unbound keys
+    return false;
   case COMMAND_MOVE_UPLEFT:
     return (map->*dfn)(-1, -1);
   case COMMAND_MOVE_UP:
@@ -126,21 +134,27 @@ bool getInput(Map *map, const CommandMap cmap) {
   case COMMAND_MOVE_DOWNRIGHT:
     return (map->*dfn)(1, 1);
 
+  case COMMAND_USE_ARTIFACT:
+    return you.useArtifact();
   case COMMAND_USE_BOMB:
     return map->dropBomb();
   case COMMAND_USE_TORCH:
-    return map->you.lightTorch();
+    return you.lightTorch();
   case COMMAND_USE_ARROW:
-    return map->you.drawArrow();
+    return you.drawArrow();
   case COMMAND_USE_SPEEDPOTION:
-    return map->you.quaffSpeedPotion();
+    return you.quaffSpeedPotion();
+
+  case COMMAND_DROP_ARTIFACT:
+    return you.dropArtifact();
 
   case COMMAND_INTERACT_STAIRSUP:
     return map->changeFloor(-1, StairsUp);
   case COMMAND_INTERACT_STAIRSDOWN:
     return map->changeFloor(+1, StairsDown);
 
-  default:
+  default: //some command isn't handled by this function
+    assert(false);
     return false;
   }
 }

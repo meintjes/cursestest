@@ -2,6 +2,8 @@
 #define __PLAYER_H__
 
 #include "Cch.h"
+#include "Artifact.h"
+#include <memory>
 
 struct Branch;
 struct Item;
@@ -22,11 +24,14 @@ class Player {
   Cch getGlyph() const;
   bool hasArrowMode() const;
 
+  bool useArtifact();
   bool lightTorch();
   bool dropBomb();
   bool drawArrow(); //toggles arrowmode
   bool shootArrow(); //returns whether you had arrowmode, then unsets it
   bool quaffSpeedPotion();
+
+  bool dropArtifact();
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
@@ -34,6 +39,7 @@ class Player {
   bool addTorches(int numIn);
   bool addArrows(int numIn);
   bool addSpeedPotions(int numIn);
+  void stopTime(int num);
 
   void setBranch(Branch *branch);
   bool changeDepth(int dz);
@@ -44,6 +50,7 @@ class Player {
 
   int hp;
   int hpMax;
+  std::unique_ptr<Artifact> currentArtifact;
   int numBombs;
   int numTorches;
   int numArrows;
