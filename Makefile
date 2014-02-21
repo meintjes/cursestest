@@ -1,13 +1,13 @@
 GXX=g++
 GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses
 
-cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Color.o
-	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Color.o -o $@
+cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Color.o Point.o
+	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Color.o Point.o -o $@
 
 main.o: main.cpp Map.o Space.o Enemy.o Player.o Command.o Menu.o
 	$(GXX) $(GXX_FLAGS) main.cpp
 
-Map.o: Map.cpp Space.o Cch.o Player.o functions.o
+Map.o: Map.cpp Space.o Cch.o Player.o functions.o Point.o
 	$(GXX) $(GXX_FLAGS) Map.cpp
 
 MapGen.o: MapGen.cpp Space.o functions.o
@@ -22,7 +22,7 @@ Cch.o: Cch.cpp
 Space.o: Space.cpp Enemy.o SpaceType.o
 	$(GXX) $(GXX_FLAGS) Space.cpp
 
-Enemy.o: Enemy.cpp
+Enemy.o: Enemy.cpp Point.o
 	$(GXX) $(GXX_FLAGS) Enemy.cpp
 
 Player.o: Player.cpp Cst.o Cch.o functions.o
@@ -46,6 +46,8 @@ Option.o: Option.cpp Cst.o
 Color.o: Color.cpp Cst.o Cch.o
 	$(GXX) $(GXX_FLAGS) Color.cpp
 
+Point.o: Point.cpp
+	$(GXX) $(GXX_FLAGS) Point.cpp
 
 clean:
 	rm -rf *.o cursestest

@@ -22,8 +22,7 @@ void Space::setItem(const Item &itemIn) {
 
 bool Space::moveEnemy(Space *target) {
   if (target->isPassable() && !target->hasEnemy()) {
-    target->enemy = this->enemy;
-    this->enemy = nullptr;
+    target->enemy = std::unique_ptr<Enemy>(std::move(this->enemy));
     return true;
   }
   else {
@@ -31,23 +30,24 @@ bool Space::moveEnemy(Space *target) {
   }
 }
 
-void Space::setEnemy(const Enemy &enemyIn) {
-  enemy = &enemyIn;
+void Space::setEnemy() {
+  enemy = std::unique_ptr<Enemy>(new Exploder);
 }
 
-void Space::setEnemy() {
+void Space::removeEnemy() {
   enemy = nullptr;
 }
 
 void Space::attack(Map &map, int x, int y) {
   if (enemy) {
-    enemy->attackFunction(map, x, y);
+    enemy->attack(map, x, y);
   }
 }
 
 void Space::kill(Map &map, int x, int y) {
   if (enemy) {
-    enemy->deathFunction(map, x, y);
+    enemy->die(map, x, y);
+    removeEnemy();
   }
 }
 
@@ -105,7 +105,7 @@ Cch Space::getGlyph(bool isVisible) const {
   }
 
   if (enemy) {
-    return enemy->glyph;
+    return enemy->getGlyph();
   }
   if (!type->passable) {
     return type->glyph;
@@ -158,7 +158,7 @@ bool Space::hasBomb() const {
 
 int Space::getRange() const {
   if (enemy) {
-    return enemy->range; 
+    return enemy->getRange(); 
   }
   else return 0;
 }

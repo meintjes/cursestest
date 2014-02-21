@@ -4,6 +4,7 @@
 #include "Item.h"
 #include "Enemy.h"
 #include "SpaceType.h"
+#include <memory> 
 
 class Player;
 class Map;
@@ -16,8 +17,8 @@ class Space {
   void setItem(const Item &itemIn);
 
   bool moveEnemy(Space *target);
-  void setEnemy(const Enemy &enemyIn);
   void setEnemy();
+  void removeEnemy();
   void attack(Map &map, int x, int y);
   void kill(Map &map, int x, int y);
 
@@ -44,7 +45,7 @@ class Space {
   const SpaceType *type;
   unsigned int gasDuration;
   unsigned int bombDuration;
-  const Enemy *enemy;
+  std::unique_ptr<Enemy> enemy;
   const Item *item;
 };
 

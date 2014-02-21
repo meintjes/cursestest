@@ -2,20 +2,32 @@
 #define __ENEMY_H__
 
 #include <functional>
-#include "Cch.h"
+#include "Point.h"
 
+class Cch;
 class Map;
 
-struct Enemy {
-  Enemy(Cch glyphIn,
-	int rangeIn,
-        std::function<void(Map&,int,int)> attackFunctionIn,
-        std::function<void(Map&,int,int)> deathFunctionIn);
+class Enemy {
+ public:
+  Enemy();
+  virtual Cch getGlyph() const = 0;
+  virtual int getRange() const;
+  virtual void attack(Map &map, int x, int y) = 0;
+  virtual void die(Map &map, int x, int y) = 0;
+  virtual ~Enemy();
+};
 
-  Cch glyph;
-  int range;
-  std::function<void(Map&,int,int)> attackFunction;
-  std::function<void(Map&,int,int)> deathFunction;
+
+
+class Exploder : public Enemy {
+ public:
+  Exploder();
+  Cch getGlyph() const;
+  int getRange() const;
+  void attack(Map &map, int x, int y);
+  void die(Map &map, int x, int y);
+ private:
+  bool isPrimed;
 };
 
 #endif

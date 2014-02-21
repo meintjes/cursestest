@@ -1,6 +1,5 @@
 #include "Map.h"
 #include "items.h"
-#include "enemies.h"
 #include "functions.h"
 
 #include <assert.h>
@@ -95,7 +94,7 @@ void Map::generateBoxes(int depth) {
     for (int y = 1; y <= MAPHEIGHT; y++) {
       if (getSpace(x, y).isPassable()) {
 	if (!randTo(50 - depth)) {
-	  getSpace(x, y).setEnemy(getRandomEnemy());
+	  getSpace(x, y).setEnemy();
 	}
 	else if (!randTo(80 - depth)){
 	  getSpace(x, y).setItem(getRandomItem());
@@ -103,18 +102,6 @@ void Map::generateBoxes(int depth) {
       }
     }
   }
-}
-
-const Enemy& Map::getRandomEnemy() {
-  int num = randTo(99);
-  if (num < 50)
-    return Zombie;
-  if (num < 75)
-    return BigZombie;
-  if (num < 90)
-    return Exploder;
-  
-  return Reacher;
 }
 
 const Item& Map::getRandomItem() {
@@ -137,7 +124,7 @@ void Map::sanitizeEntry() {
   for (int x = playerX - 2; x <= playerX + 2; x++) {
     for (int y = playerY - 2; y <= playerY + 2; y++) {
       if (isValidX(x) && isValidY(y)) {
-	getSpace(x, y).setEnemy();
+	getSpace(x, y).removeEnemy();
       }
     }
   }
