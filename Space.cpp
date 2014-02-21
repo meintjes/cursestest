@@ -46,8 +46,9 @@ void Space::attack(Map &map, int x, int y) {
 
 void Space::kill(Map &map, int x, int y) {
   if (enemy) {
+    //doesn't remove the enemy. die() is responsible for calling
+    //removeEnemy() if it needs to.
     enemy->die(map, x, y);
-    removeEnemy();
   }
 }
 

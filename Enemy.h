@@ -12,12 +12,21 @@ class Enemy {
   Enemy();
   virtual Cch getGlyph() const = 0;
   virtual int getRange() const;
-  virtual void attack(Map &map, int x, int y) = 0;
-  virtual void die(Map &map, int x, int y) = 0;
+  virtual void attack(Map &map, int x, int y);
+  virtual void die(Map &map, int x, int y);
   virtual ~Enemy();
 };
 
 
+
+class Zombie : public Enemy {
+ public:
+  Zombie();
+  Cch getGlyph() const;
+  void die(Map &map, int x, int y);
+ private:
+  int hp;
+};
 
 class Exploder : public Enemy {
  public:
@@ -28,6 +37,12 @@ class Exploder : public Enemy {
   void die(Map &map, int x, int y);
  private:
   bool isPrimed;
+};
+
+class Reacher : public Enemy {
+  using Enemy::Enemy;
+  Cch getGlyph() const;
+  int getRange() const;
 };
 
 #endif
