@@ -7,11 +7,13 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <cstring>
 #include <string>
 #include <functional>
 
 void playGame();
 bool getInput(Map *map, const CommandMap cmap);
+bool getLongPrompt(Map *map);
 
 Menu ControlsMenu({
   Option{"Move up/left", std::bind(changeControl, COMMAND_MOVE_UPLEFT)},
@@ -29,7 +31,7 @@ Menu ControlsMenu({
   Option{"Use speed potion", std::bind(changeControl, COMMAND_USE_SPEEDPOTION)},
   Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
   Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
-
+  Option{"Enter long command", std::bind(changeControl, COMMAND_LONG_PROMPT)},
   Option{Red("Reset all controls"), resetControls}
 });
 
@@ -140,7 +142,31 @@ bool getInput(Map *map, const CommandMap cmap) {
   case COMMAND_INTERACT_STAIRSDOWN:
     return map->changeFloor(+1, StairsDown);
 
+  case COMMAND_LONG_PROMPT:
+    return getLongPrompt(map);
+
   default:
     return false;
   }
+}
+
+bool getLongPrompt(Map *map) {
+  char command[79];
+  bool didTakeTurn = false;
+
+  erase();
+  map->display();
+  move(23, 0);
+  addc(DarkGray('#'));
+  echo();
+  getnstr(command, 79);
+  noecho();
+
+  if (std::strcmp(command, "die") == 0) {
+    map->you.damage(100);
+    didTakeTurn = true;
+  }
+
+  map->you.display();
+  return didTakeTurn;
 }

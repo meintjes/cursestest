@@ -69,17 +69,19 @@ void resetControls() {
   cmap['4'] = cmap['h'] = COMMAND_MOVE_LEFT;
   cmap['5'] = cmap['s'] = COMMAND_WAIT;
   cmap['6'] = cmap['l'] = COMMAND_MOVE_RIGHT;
-  cmap['1'] = cmap['b'] = COMMAND_MOVE_DOWNLEFT,
-  cmap['2'] = cmap['j'] = COMMAND_MOVE_DOWN,
-  cmap['3'] = cmap['n'] = COMMAND_MOVE_DOWNRIGHT,
+  cmap['1'] = cmap['b'] = COMMAND_MOVE_DOWNLEFT;
+  cmap['2'] = cmap['j'] = COMMAND_MOVE_DOWN;
+  cmap['3'] = cmap['n'] = COMMAND_MOVE_DOWNRIGHT;
 
-  cmap['q'] = COMMAND_USE_BOMB,
-  cmap['w'] = COMMAND_USE_TORCH,
-  cmap['e'] = COMMAND_USE_ARROW,
-  cmap['r'] = COMMAND_USE_SPEEDPOTION,
+  cmap['q'] = COMMAND_USE_BOMB;
+  cmap['w'] = COMMAND_USE_TORCH;
+  cmap['e'] = COMMAND_USE_ARROW;
+  cmap['r'] = COMMAND_USE_SPEEDPOTION;
 
-  cmap['<'] = COMMAND_INTERACT_STAIRSUP,
-  cmap['>'] = COMMAND_INTERACT_STAIRSDOWN,
+  cmap['<'] = COMMAND_INTERACT_STAIRSUP;
+  cmap['>'] = COMMAND_INTERACT_STAIRSDOWN;
+
+  cmap['#'] = COMMAND_LONG_PROMPT;
 
   writeControls(cmap);
 }
