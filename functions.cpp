@@ -8,7 +8,6 @@ int randTo(int x) {
 }
 
 int randRange(int min, int max) {
-  assert(min >= 0 && max >= 0);
   if (min > max) {
     return max;
   }

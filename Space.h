@@ -17,7 +17,8 @@ class Space {
   void setItem(const Item &itemIn);
 
   bool moveEnemy(Space *target);
-  void setEnemy();
+  void setEnemy(Enemy *enemyIn);
+  void setEnemy(std::unique_ptr<Enemy> enemyIn);
   void removeEnemy();
   void attack(Map &map, int x, int y);
   void kill(Map &map, int x, int y);
@@ -25,7 +26,7 @@ class Space {
   void addGas(unsigned int duration);
   void dropBomb();
   void pickup(Player &you);
-  void explode();
+  void explode(Map &map, int x, int y);
   bool tick();
 
   //note: sets the space as discovered the first time it's called. sorry

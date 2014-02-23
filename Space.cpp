@@ -30,8 +30,12 @@ bool Space::moveEnemy(Space *target) {
   }
 }
 
-void Space::setEnemy() {
-  enemy = std::unique_ptr<Enemy>(new Exploder);
+void Space::setEnemy(Enemy *enemyIn) {
+  enemy = std::unique_ptr<Enemy>(enemyIn);
+}
+
+void Space::setEnemy(std::unique_ptr<Enemy> enemyIn) {
+  enemy = std::move(enemyIn);
 }
 
 void Space::removeEnemy() {
@@ -66,11 +70,13 @@ void Space::pickup(Player &you) {
   }
 }
 
-void Space::explode() {
+void Space::explode(Map &map, int x, int y) {
   if (type->destructible) {
     type = &Floor;
   }
-  enemy = nullptr;
+  kill(map, x, y);
+  kill(map, x, y);
+  kill(map, x, y);
 }
 
 bool Space::tick() {
@@ -112,10 +118,6 @@ Cch Space::getGlyph(bool isVisible) const {
     return type->glyph;
   }
   
-  if (item) {
-    return item->glyph;
-  }
-
   if (gasDuration > 0) {
     if (gasDuration > 1) {
       return LightGreen('*');
@@ -123,6 +125,10 @@ Cch Space::getGlyph(bool isVisible) const {
     else {
       return DarkGreen('*');
     }
+  }
+
+  if (item) {
+    return item->glyph;
   }
 
   if (bombDuration > 0) {

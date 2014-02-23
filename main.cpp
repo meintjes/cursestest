@@ -91,9 +91,11 @@ void playGame() {
     you.getCurrentFloor()->tick(); //then update game state
   }
 
+  //after the player dies:
+  erase();
   you.getCurrentFloor()->display();
-  you.display();
-
+  move(23, 0);
+  addcs(Red("You have died..."));
   getch();
 }
 

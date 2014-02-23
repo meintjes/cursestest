@@ -3,6 +3,20 @@
 #include "Color.h"
 #include "Map.h"
 #include "Point.h"
+#include "functions.h"
+#include "items.h"
+
+std::unique_ptr<Enemy> getRandomEnemy() {
+  int num = randTo(99);
+  if (num < 70)
+    return std::unique_ptr<Enemy>(new Zombie);
+  else if (num < 90)
+    return std::unique_ptr<Enemy>(new Exploder);
+  else if (num < 99)
+    return std::unique_ptr<Enemy>(new Reacher);
+  else
+    return std::unique_ptr<Enemy>(new SpawnerBoss);
+}
 
 Enemy::Enemy() {
 
@@ -28,7 +42,7 @@ Enemy::~Enemy() {
 
 Zombie::Zombie() :
   Enemy(),
-  hp(3)
+  hp(randRange(1, 3))
 {}
 
 Cch Zombie::getGlyph() const {
@@ -43,10 +57,8 @@ Cch Zombie::getGlyph() const {
 }
 
 void Zombie::die(Map &map, int x, int y) {
-  if (hp > 0) {
-    hp--;
-  }
-  else {
+  hp--;
+  if (hp <= 0) {
     map.getSpace(x, y).removeEnemy();
   }
 }
@@ -103,4 +115,43 @@ Cch Reacher::getGlyph() const {
 
 int Reacher::getRange() const {
   return 2;
+}
+
+
+
+SpawnerBoss::SpawnerBoss() :
+  Enemy(),
+  hp(8)
+{}
+
+Cch SpawnerBoss::getGlyph() const {
+  if (hp > 3) {
+    return Orange('B');
+  }
+  else {
+    return Red('B');
+  }
+}
+
+int SpawnerBoss::getRange() const {
+  return 3;
+}
+
+void SpawnerBoss::attack(Map &map, int x, int y) {
+  x += sgn(map.getPlayerX() - x);
+  y += sgn(map.getPlayerY() - y);
+  if (x == map.getPlayerX() && y == map.getPlayerY()) {
+    map.you.damage();
+  }
+  else if (map.getSpace(x, y).isPassable() && !map.getSpace(x, y).hasEnemy()) {
+    map.getSpace(x, y).setEnemy(new Zombie);
+  }
+}
+
+void SpawnerBoss::die(Map &map, int x, int y) {
+  hp--;
+  if (hp <= randRange(-2, 2)) {
+    map.getSpace(x, y).removeEnemy();
+    map.getSpace(x, y).setItem(Ore);
+  }
 }

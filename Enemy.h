@@ -1,8 +1,8 @@
 #ifndef __ENEMY_H__
 #define __ENEMY_H__
 
-#include <functional>
 #include "Point.h"
+#include <memory>
 
 class Cch;
 class Map;
@@ -16,6 +16,8 @@ class Enemy {
   virtual void die(Map &map, int x, int y);
   virtual ~Enemy();
 };
+
+std::unique_ptr<Enemy> getRandomEnemy();
 
 
 
@@ -40,9 +42,21 @@ class Exploder : public Enemy {
 };
 
 class Reacher : public Enemy {
+ public:
   using Enemy::Enemy;
   Cch getGlyph() const;
   int getRange() const;
+};
+
+class SpawnerBoss : public Enemy {
+ public:
+  SpawnerBoss();
+  Cch getGlyph() const;
+  int getRange() const;
+  void attack(Map &map, int x, int y);
+  void die(Map &map, int x, int y);
+ private:
+  int hp;
 };
 
 #endif

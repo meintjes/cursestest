@@ -3,6 +3,13 @@
 
 #include "Item.h"
 
+const Item Ore {
+  Brown('$'),
+  [](Player &you) {
+    return true;
+  }
+};
+
 const Item Health {
   Red('+'),
   [](Player &you) {

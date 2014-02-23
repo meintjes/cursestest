@@ -166,6 +166,9 @@ void Map::tick() {
 	  toMove.push_back(Point{x, y});
 	}
       }
+      else if (!randTo(800) && !isVisible(x, y, you.getLOS())) {
+        getSpace(x, y).setEnemy(getRandomEnemy());
+      }
     }
   }
 
@@ -254,7 +257,7 @@ void Map::executeToExplode() {
   if (toExplode.size()) {
     display();
     for ( auto &point : toExplode ) {
-      getSpace(point.x, point.y).explode();
+      getSpace(point.x, point.y).explode(*this, point.x, point.y);
       move(point.y, point.x);
       addc(Red('#'));
     }
