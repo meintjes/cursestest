@@ -21,7 +21,6 @@ class Map {
   void drawBox(Point a, Point b, const SpaceType &type);
   void generateRoom(Point center, int maxRadius);
   void generateBoxes(int depth);
-  static const Item& getRandomItem(); 
   void sanitizeEntry(); //removes enemies within 2 spaces of player
 
   //defined in Map.cpp

@@ -1,7 +1,6 @@
 #include "Map.h"
-#include "items.h"
 #include "functions.h"
-
+#include "Item.h"
 #include <assert.h>
 
 //depth arg will eventually be used to scale difficulty. once different branches
@@ -102,22 +101,6 @@ void Map::generateBoxes(int depth) {
       }
     }
   }
-}
-
-const Item& Map::getRandomItem() {
-  int num = randTo(99);
-  if (num < 35)
-    return Health;
-  if (num < 45)
-    return BigHealth;
-  if (num < 65)
-    return TorchPack;
-  if (num < 80)
-    return BombPack;
-  if (num < 90)
-    return ArrowPack;
-
-  return SpeedPotionPack;
 }
 
 void Map::sanitizeEntry() {

@@ -4,7 +4,6 @@
 #include "Map.h"
 #include "Point.h"
 #include "functions.h"
-#include "items.h"
 
 std::unique_ptr<Enemy> getRandomEnemy() {
   int num = randTo(99);
@@ -172,6 +171,6 @@ void SpawnerBoss::die(Map &map, int x, int y) {
   hp--;
   if (hp <= randRange(-2, 2)) {
     map.getSpace(x, y).removeEnemy();
-    map.getSpace(x, y).setItem(Ore);
+    map.getSpace(x, y).setItem(std::unique_ptr<Item>(new Health));
   }
 }

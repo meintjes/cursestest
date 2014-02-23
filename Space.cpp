@@ -17,13 +17,13 @@ void Space::setType(const SpaceType &typeIn) {
   type = &typeIn;
 }
 
-void Space::setItem(const Item &itemIn) {
-  item = &itemIn;
+void Space::setItem(std::unique_ptr<Item> itemIn) {
+  item = std::move(itemIn);
 }
 
 bool Space::moveEnemy(Space *target) {
   if (target->isPassable() && !target->hasEnemy()) {
-    target->enemy = std::unique_ptr<Enemy>(std::move(this->enemy));
+    target->setEnemy(std::move(this->enemy));
     return true;
   }
   else {
@@ -66,8 +66,13 @@ void Space::dropBomb() {
 }
 
 void Space::pickup(Player &you) {
-  if (item && item->pickupFunction(you)) {
-    item = nullptr;
+  if (item && item->pickup(you)) {
+    if (item->destroyedOnPickup()) {
+      item = nullptr;
+    }
+    else {
+      item.release();
+    }
   }
 }
 
@@ -108,7 +113,7 @@ Cch Space::getGlyph(bool isVisible) const {
   }
   else if (!isVisible) {
     if (item) {
-      return item->glyph;
+      return item->getGlyph();
     }
     else {
       return DarkGray(type->glyph);
@@ -132,7 +137,7 @@ Cch Space::getGlyph(bool isVisible) const {
   }
 
   if (item) {
-    return item->glyph;
+    return item->getGlyph();
   }
 
   if (bombDuration > 0) {
@@ -165,6 +170,10 @@ bool Space::hasGas() const {
 
 bool Space::hasBomb() const {
   return (bombDuration > 0);
+}
+
+bool Space::hasItem() const {
+  return (item != nullptr);
 }
 
 void Space::renewMemory(Point playerPosition) {

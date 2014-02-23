@@ -172,7 +172,8 @@ void Map::tick() {
           toMove.push_back({x, y});
         }
       }
-      else if (!randTo(800) && !isVisible(x, y, you.getLOS())) {
+      else if (!randTo(800) && getSpace(x, y).isPassable()
+               && !isVisible(x, y, you.getLOS())) {
         getSpace(x, y).setEnemy(getRandomEnemy());
       }
     }

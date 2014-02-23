@@ -6,21 +6,24 @@
 #include <string>
 #include <ncurses.h>
 
-Player::Player() {
-  hp = 10;
-  hpMax = 10;
-  numBombs = 1;
-  numTorches = 3;
-  numArrows = 3;
-  numSpeedPotions = 0;
+Player::Player() :
+  hp(10),
+  hpMax(10),
+  currentArtifact(),
+  numBombs(1),
+  numTorches(3),
+  numArrows(3),
+  numSpeedPotions(0),
 
-  currentBranch = nullptr;
-  currentDepth = 0;
+  currentBranch(nullptr),
+  currentDepth(0),
 
-  arrowMode = false;
+  arrowMode(false),
+  speedDuration(0),
+  freeMovesDuration(0)
+
+{
   lightTorch();
-  speedDuration = 0;
-  freeMovesDuration = 0;
 }
 
 void Player::display() const {
@@ -36,13 +39,26 @@ void Player::display() const {
     addcs(DarkGray("[] "));
   }
 
+  //free up space so stuff updates correctly
+  move(23, 31);
+  for (int i = 31; i < 80; i++) {
+    addch(' ');
+  }
+
   //print current floor
   move(23, 31);
   addcs(currentBranch->name + ": ");
   addcs(White(std::to_string(1 + currentDepth)));
 
+  //print current artifact
+  if (currentArtifact) {
+    move(23, 44);
+    addc(currentArtifact->getGlyph());
+    addcs(" (" + currentArtifact->getDescriptor() + ")");
+  }
+
   //print item display
-  move(23, 79 - MAX_NUM_ITEMS);
+  move(23, 79 - getNumItems());
   for (int i = numBombs; i > 0; i--) {
     addc(Orange('*'));
   }
@@ -55,12 +71,13 @@ void Player::display() const {
   for (int i = numSpeedPotions; i > 0; i--) {
     addc(LightCyan('!'));
   }
-  for (int i = 78 - getNumItems(); i < 79; i++) {
-    addch(' ');
-  }
 }
 
 bool Player::tick() {
+  if (currentArtifact && currentArtifact->shouldDestroy()) {
+    currentArtifact = nullptr;
+  }
+
   if (torchDuration > 0) {
     torchDuration--;
   }
@@ -113,6 +130,11 @@ Cch Player::getGlyph() const {
 
 bool Player::hasArrowMode() const {
   return arrowMode;
+}
+
+bool Player::useArtifact() {
+  return (currentArtifact &&
+	  currentArtifact->use(getCurrentFloor()));
 }
 
 bool Player::lightTorch() {
@@ -172,6 +194,26 @@ bool Player::quaffSpeedPotion() {
   }
 }
 
+bool Player::hasArtifact() {
+  return (currentArtifact != nullptr);
+}
+
+void Player::setArtifact(std::unique_ptr<Artifact> artifact) {
+  currentArtifact = std::move(artifact);
+}
+
+bool Player::dropArtifact() {
+  if (currentArtifact) {
+    Map &floor = *getCurrentFloor();
+    floor.getSpace(floor.getPlayerX(),
+                   floor.getPlayerY()).setItem(std::move(currentArtifact));
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 void Player::damage(unsigned int num) {
   hp -= num;
 }
@@ -211,6 +253,10 @@ bool Player::addItem(int &item, int numIn) {
     item++;
   }
   return (num != numIn);
+}
+
+void Player::stopTime(int num) {
+  freeMovesDuration += num;
 }
 
 void Player::setBranch(Branch *branch) {

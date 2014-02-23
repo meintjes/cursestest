@@ -73,10 +73,13 @@ void resetControls() {
   cmap['2'] = cmap['j'] = COMMAND_MOVE_DOWN;
   cmap['3'] = cmap['n'] = COMMAND_MOVE_DOWNRIGHT;
 
-  cmap['q'] = COMMAND_USE_BOMB;
-  cmap['w'] = COMMAND_USE_TORCH;
-  cmap['e'] = COMMAND_USE_ARROW;
-  cmap['r'] = COMMAND_USE_SPEEDPOTION;
+  cmap['a'] = COMMAND_USE_ARTIFACT,
+  cmap['q'] = COMMAND_USE_BOMB,
+  cmap['w'] = COMMAND_USE_TORCH,
+  cmap['e'] = COMMAND_USE_ARROW,
+  cmap['r'] = COMMAND_USE_SPEEDPOTION,
+  
+  cmap['d'] = COMMAND_DROP_ARTIFACT,
 
   cmap['<'] = COMMAND_INTERACT_STAIRSUP;
   cmap['>'] = COMMAND_INTERACT_STAIRSDOWN;
