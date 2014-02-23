@@ -38,7 +38,11 @@ class Space {
   bool hasGas() const;
   bool hasBomb() const;
 
+  void renewMemory(Point playerPosition);
+  bool hasMemory() const;
+  Point getMemory() const;
   int getRange() const;
+
   bool typeIs(const SpaceType *typeIn) const;
 
  private:

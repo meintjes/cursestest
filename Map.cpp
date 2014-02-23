@@ -106,23 +106,24 @@ bool Map::dropBomb() {
 
 void Map::moveEnemy(int x, int y) {
   //try to move in diagonal direction
-  Space *target = &getSpace(x + sgn(playerX - x), y + sgn(playerY - y));
-  if (!getSpace(x, y).moveEnemy(target)) {
+  Point target = getSpace(x, y).getMemory();
+  Space *dest = &getSpace(x + sgn(target.x - x), y + sgn(target.y - y));
+  if (!getSpace(x, y).moveEnemy(dest)) {
     //if it fails, try to move in only one direction
     //note: where dx == dy, moves in y direction first.
     //this is probably not as good as randomizing it
-    if (abs(playerX - x) > abs(playerY - y)) { //move in x direction
-      target = &getSpace(x + sgn(playerX - x), y);
-      if (!getSpace(x, y).moveEnemy(target)) { //else move in y direction
-	target = &getSpace(x, y + sgn(playerY - y));
-	getSpace(x, y).moveEnemy(target);
+    if (abs(target.x - x) > abs(target.y - y)) { //move in x direction
+      dest = &getSpace(x + sgn(target.x - x), y);
+      if (!getSpace(x, y).moveEnemy(dest)) { //else move in y direction
+	dest = &getSpace(x, y + sgn(target.y - y));
+	getSpace(x, y).moveEnemy(dest);
       }
     }
     else { //move in y direction
-      target = &getSpace(x, y + sgn(playerY - y));
-      if (!getSpace(x, y).moveEnemy(target)) { // else move in x direction
-	target = &getSpace(x + sgn(playerX - x), y);
-	getSpace(x, y).moveEnemy(target);
+      dest = &getSpace(x, y + sgn(target.y - y));
+      if (!getSpace(x, y).moveEnemy(dest)) { // else move in x direction
+	dest = &getSpace(x + sgn(target.x - x), y);
+	getSpace(x, y).moveEnemy(dest);
       }
     }
   }
@@ -148,7 +149,7 @@ void Map::tick() {
     you.damage();
     damagedByGas = true;
   }
-
+  
   for (int x = 1; x <= MAPWIDTH; x++) {
     for (int y = 1; y <= MAPHEIGHT; y++) {
       //decrement durations of stuff on the space
@@ -159,12 +160,17 @@ void Map::tick() {
       if (getSpace(x, y).hasEnemy()) {
 	//enemies within range attack the player
 	if (isVisible(x, y, getSpace(x, y).getRange())) {
-	  toAttack.push_back(Point{x, y});
+          getSpace(x, y).renewMemory({playerX, playerY});
+	  toAttack.push_back({x, y});
 	}
 	//enemies outside range of the player try to move toward him
-	else if (isVisible(x, y, 7)) {
-	  toMove.push_back(Point{x, y});
+        else if (isVisible(x, y, 7)) {
+          getSpace(x, y).renewMemory({playerX, playerY});
+          toMove.push_back({x, y});
 	}
+        else if (getSpace(x, y).hasMemory()) {
+          toMove.push_back({x, y});
+        }
       }
       else if (!randTo(800) && !isVisible(x, y, you.getLOS())) {
         getSpace(x, y).setEnemy(getRandomEnemy());
@@ -247,7 +253,7 @@ void Map::explode(int x, int y, int radius) {
   for (int x2 = x - radius; x2 <= x + radius; x2++) {
     for (int y2 = y - radius; y2 <= y + radius; y2++) {
       if (isValidX(x) && isValidY(y)) {
-	toExplode.push_back(Point{x2, y2});
+	toExplode.push_back({x2, y2});
       }
     }
   }

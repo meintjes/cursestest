@@ -18,9 +18,10 @@ std::unique_ptr<Enemy> getRandomEnemy() {
     return std::unique_ptr<Enemy>(new SpawnerBoss);
 }
 
-Enemy::Enemy() {
-
-}
+Enemy::Enemy() :
+  memoryDuration(0),
+  memoryLocation({0, 0})
+{}
 
 int Enemy::getRange() const {
   return 1;
@@ -36,6 +37,25 @@ void Enemy::die(Map &map, int x, int y) {
 
 Enemy::~Enemy() {
 
+}
+
+void Enemy::renewMemory(Point playerLocation) {
+  memoryDuration = 5;
+  memoryLocation = playerLocation;
+}
+
+bool Enemy::hasMemory() const {
+  return (memoryDuration > 0);
+}
+
+Point Enemy::getMemory() const {
+  return memoryLocation;
+}
+
+void Enemy::tick() {
+  if (memoryDuration > 0) {
+    memoryDuration--;
+  }
 }
 
 

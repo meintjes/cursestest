@@ -1,3 +1,4 @@
+#include <cassert>
 #include "Space.h"
 #include "Cch.h"
 
@@ -83,13 +84,16 @@ bool Space::tick() {
   if (gasDuration > 0) {
     gasDuration--;
   }
+  if (enemy) {
+    enemy->tick();
+  }
   if (bombDuration > 0) {
     bombDuration--;
     if (bombDuration == 0) {
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -161,6 +165,21 @@ bool Space::hasGas() const {
 
 bool Space::hasBomb() const {
   return (bombDuration > 0);
+}
+
+void Space::renewMemory(Point playerPosition) {
+  assert(enemy);
+  enemy->renewMemory(playerPosition);
+}
+
+bool Space::hasMemory() const {
+  assert(enemy);
+  return enemy->hasMemory();
+}
+
+Point Space::getMemory() const {
+  assert(enemy);
+  return enemy->getMemory();
 }
 
 int Space::getRange() const {

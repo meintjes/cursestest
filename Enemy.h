@@ -15,6 +15,16 @@ class Enemy {
   virtual void attack(Map &map, int x, int y);
   virtual void die(Map &map, int x, int y);
   virtual ~Enemy();
+
+  void renewMemory(Point playerLocation);
+  bool hasMemory() const;
+  Point getMemory() const;
+
+  virtual void tick();
+
+ private:
+  int memoryDuration;
+  Point memoryLocation;
 };
 
 std::unique_ptr<Enemy> getRandomEnemy();
