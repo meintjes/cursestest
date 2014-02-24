@@ -46,6 +46,8 @@ class Player {
   void setBranch(Branch *branch);
   bool changeDepth(int dz);
 
+  void extinguishTorch();
+
  private:
   static const int MAX_NUM_ITEMS = 20;
   bool addItem(int &item, int numIn);

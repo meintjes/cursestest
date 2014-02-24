@@ -69,4 +69,11 @@ class SpawnerBoss : public Enemy {
   int hp;
 };
 
+class Douser : public Enemy {
+ public:
+  using Enemy::Enemy;
+  Cch getGlyph() const;
+  void attack(Map &map, int x, int y);
+};
+
 #endif

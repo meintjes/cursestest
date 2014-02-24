@@ -9,7 +9,7 @@
 Player::Player() :
   hp(10),
   hpMax(10),
-  currentArtifact(),
+  currentArtifact(new TimeStopper),
   numBombs(1),
   numTorches(3),
   numArrows(3),
@@ -288,4 +288,8 @@ bool Player::changeDepth(int dz) {
 
   //spend a turn in the general case
   return true;
+}
+
+void Player::extinguishTorch() {
+  torchDuration = 0;
 }

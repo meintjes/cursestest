@@ -7,10 +7,12 @@
 
 std::unique_ptr<Enemy> getRandomEnemy() {
   int num = randTo(99);
-  if (num < 70)
+  if (num < 60)
     return std::unique_ptr<Enemy>(new Zombie);
-  else if (num < 90)
+  else if (num < 80)
     return std::unique_ptr<Enemy>(new Exploder);
+  else if (num < 90)
+    return std::unique_ptr<Enemy>(new Douser);
   else if (num < 99)
     return std::unique_ptr<Enemy>(new Reacher);
   else
@@ -145,10 +147,10 @@ SpawnerBoss::SpawnerBoss() :
 
 Cch SpawnerBoss::getGlyph() const {
   if (hp > 3) {
-    return Orange('B');
+    return LightGreen('B');
   }
   else {
-    return Red('B');
+    return DarkGreen('B');
   }
 }
 
@@ -163,7 +165,7 @@ void SpawnerBoss::attack(Map &map, int x, int y) {
     map.you.damage();
   }
   else if (map.getSpace(x, y).isPassable() && !map.getSpace(x, y).hasEnemy()) {
-    map.getSpace(x, y).setEnemy(new Zombie);
+    map.getSpace(x, y).setEnemy(new Exploder);
   }
 }
 
@@ -173,4 +175,15 @@ void SpawnerBoss::die(Map &map, int x, int y) {
     map.getSpace(x, y).removeEnemy();
     map.getSpace(x, y).setItem(std::unique_ptr<Item>(new Health));
   }
+}
+
+
+
+Cch Douser::getGlyph() const {
+  return LightBlue('z');
+}
+
+void Douser::attack(Map &map, int x, int y) {
+  map.you.damage();
+  map.you.extinguishTorch();
 }

@@ -52,7 +52,7 @@ Point.o: Point.cpp
 Artifact.o: Artifact.cpp Player.o Cst.o Cst.o
 	$(GXX) $(GXX_FLAGS) Artifact.cpp
 
-Item.o: Item.cpp Cch.o Player.o
+Item.o: Item.cpp Cch.o Player.o functions.o
 	$(GXX) $(GXX_FLAGS) Item.cpp
 
 

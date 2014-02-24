@@ -9,27 +9,18 @@
 class Map;
 class Player;
 
-class Artifact : public Item {
+class Artifact : public DestructibleItem {
  public:
-  Artifact();
-
-  //inherited from Item, do not override:
-  bool destroyedOnPickup() const;
-  Cch getGlyph() const;
+  using DestructibleItem::DestructibleItem;
   bool pickup(Player &you);
-
-  Cst getName() const;
-  Cst getDescriptor() const;
-  void damage(unsigned int x);
-  bool shouldDestroy();
-
   virtual bool use(Map *map) = 0;
 
- private:
-  int durability;
-
+ protected:
   virtual std::string name() const = 0;
   virtual const Color& color() const = 0;
+
+ private:
+  char glyph() const;
 };
 
 
