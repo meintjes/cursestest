@@ -10,6 +10,12 @@ class Cst {
   Cst(const char *textIn);
   Cst(const std::string &textIn);
 
+  bool operator>(const Cst &rhs);
+  bool operator<(const Cst &rhs);
+  bool operator>=(const Cst &rhs);
+  bool operator<=(const Cst &rhs);
+  bool operator==(const Cst &rhs);
+
   friend void addcs(const Cst &cst);
   friend class Color;
   friend Cst operator+(const Cst &cst, const std::string &str);

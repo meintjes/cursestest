@@ -4,6 +4,7 @@
 #include "Cch.h"
 #include "Artifact.h"
 #include <memory>
+#include <list>
 
 struct Branch;
 struct Item;
@@ -20,7 +21,6 @@ class Player {
   int getHp() const;
   int getLOS() const;
   Map* getCurrentFloor() const;
-  int getNumItems() const;
   Cch getGlyph() const;
   bool hasArrowMode() const;
 
@@ -37,28 +37,21 @@ class Player {
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
-  bool addBombs(int numIn);
-  bool addTorches(int numIn);
-  bool addArrows(int numIn);
-  bool addSpeedPotions(int numIn);
+  bool addItem(Item *item);
+  
   void stopTime(int num);
-
+  void extinguishTorch();
+  
   void setBranch(Branch *branch);
   bool changeDepth(int dz);
 
-  void extinguishTorch();
-
  private:
   static const int MAX_NUM_ITEMS = 20;
-  bool addItem(int &item, int numIn);
+  std::list<std::unique_ptr<Item> > inventory;
 
   int hp;
   int hpMax;
   std::unique_ptr<Artifact> currentArtifact;
-  int numBombs;
-  int numTorches;
-  int numArrows;
-  int numSpeedPotions;
 
   Branch *currentBranch;
   int currentDepth;

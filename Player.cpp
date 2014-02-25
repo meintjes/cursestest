@@ -10,10 +10,6 @@ Player::Player() :
   hp(10),
   hpMax(10),
   currentArtifact(new TimeStopper),
-  numBombs(1),
-  numTorches(3),
-  numArrows(3),
-  numSpeedPotions(0),
 
   currentBranch(nullptr),
   currentDepth(0),
@@ -58,18 +54,9 @@ void Player::display() const {
   }
 
   //print item display
-  move(23, 79 - getNumItems());
-  for (int i = numBombs; i > 0; i--) {
-    addc(Orange('*'));
-  }
-  for (int i = numTorches; i > 0; i--) {
-    addc(Yellow('^'));
-  }
-  for (int i = numArrows; i > 0; i--) {
-    addc(Brown('|'));
-  }
-  for (int i = numSpeedPotions; i > 0; i--) {
-    addc(LightCyan('!'));
+  move(23, 79 - inventory.size());
+  for (auto it = inventory.begin(); it != inventory.end(); it++) {
+    addc((*it)->getGlyph());
   }
 }
 
@@ -107,10 +94,6 @@ Map* Player::getCurrentFloor() const {
   return &currentBranch->floors.at(currentDepth);
 }
 
-int Player::getNumItems() const {
-  return (numBombs + numTorches + numArrows + numSpeedPotions);
-}
-
 Cch Player::getGlyph() const {
   if (arrowMode) {
     if (freeMovesDuration > 0) {
@@ -138,17 +121,19 @@ bool Player::useArtifact() {
 }
 
 bool Player::lightTorch() {
-  if (numTorches > 0) {
+  /*if (numTorches > 0) {
     numTorches--;
     torchDuration = randRange(65, 85);
     return true;
   }
   else {
     return false;
-  }
+  }*/
+  return true;
 }
 
 bool Player::dropBomb() {
+  /*
   if (numBombs > 0) {
     numBombs--;
     return true;
@@ -156,9 +141,12 @@ bool Player::dropBomb() {
   else {
     return false;
   }
+  */
+  return true;
 }
 
 bool Player::drawArrow() {
+  /*
   if (arrowMode) {
     arrowMode = false;
     return true;
@@ -170,9 +158,12 @@ bool Player::drawArrow() {
   else {
     return false;
   }
+  */
+  return true;
 }
 
 bool Player::shootArrow() {
+  /*
   if (arrowMode && numArrows > 0) {
     numArrows--;
     arrowMode = false;
@@ -181,9 +172,12 @@ bool Player::shootArrow() {
   else {
     return false;
   }
+  */
+  return true;
 }
 
 bool Player::quaffSpeedPotion() {
+  /*
   if (numSpeedPotions > 0) {
     numSpeedPotions--;
     speedDuration = randRange(5, 6);
@@ -191,7 +185,8 @@ bool Player::quaffSpeedPotion() {
   }
   else {
     return false;
-  }
+  }*/
+  return true;
 }
 
 bool Player::hasArtifact() {
@@ -231,28 +226,21 @@ bool Player::heal(unsigned int num) {
   }
 }
 
-bool Player::addBombs(int numIn) {
-  return (addItem(numBombs, numIn));
-}
-
-bool Player::addTorches(int numIn) {
-  return (addItem(numTorches, numIn));
-}
-
-bool Player::addArrows(int numIn) {
-  return (addItem(numArrows, numIn));
-}
-
-bool Player::addSpeedPotions(int numIn) {
-  return (addItem(numSpeedPotions, numIn));
-}
-
-bool Player::addItem(int &item, int numIn) {
-  int num;
-  for (num = numIn; getNumItems() < MAX_NUM_ITEMS && num > 0; num--) {
-    item++;
+bool Player::addItem(Item *item) {
+  if (inventory.size() >= MAX_NUM_ITEMS) {
+    return false;
   }
-  return (num != numIn);
+
+  //sort the inventory alphabetically during insertion:
+  for (auto it = inventory.begin(); it != inventory.end(); it++) {
+    if ((*it)->getName() > item->getName()) {
+      inventory.insert(it, std::unique_ptr<Item>(item));
+      return true;
+    }
+  }
+  //if nothing comes after it, just insert it at the end:
+  inventory.insert(inventory.end(), std::unique_ptr<Item>(item));
+  return true;
 }
 
 void Player::stopTime(int num) {

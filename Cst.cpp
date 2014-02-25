@@ -11,6 +11,28 @@ Cst::Cst(const std::string &textIn)
 
 }
 
+bool Cst::operator>(const Cst &rhs) {
+  return this->text > rhs.text;
+}
+
+bool Cst::operator<(const Cst &rhs) {
+  return this->text < rhs.text;
+}
+
+bool Cst::operator>=(const Cst &rhs) {
+  return this->text >= rhs.text;
+}
+
+bool Cst::operator<=(const Cst &rhs) {
+  return this->text <= rhs.text;
+}
+
+bool Cst::operator==(const Cst &rhs) {
+  return this->text == rhs.text;
+}
+
+
+
 Cst::Cst(const std::string &textIn, const Color &colorIn)
   : text(textIn), color(colorIn) {
 
