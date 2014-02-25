@@ -32,12 +32,12 @@ class Player {
   bool quaffSpeedPotion();
 
   bool hasArtifact();
-  void setArtifact(std::unique_ptr<Artifact> artifact);
+  void setArtifact(Artifact * const artifact);
   bool dropArtifact();
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
-  bool addItem(Item *item);
+  bool addItem(Item * const item);
   
   void stopTime(int num);
   void extinguishTorch();

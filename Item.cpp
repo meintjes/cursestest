@@ -20,6 +20,10 @@ Item::~Item() {
 
 }
 
+bool Item::pickup(Player &you) {
+  return you.addItem(this);
+}
+
 
 
 DestructibleItem::DestructibleItem() :

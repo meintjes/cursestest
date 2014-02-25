@@ -5,7 +5,7 @@
 
 bool Artifact::pickup(Player &you) {
   if (!you.hasArtifact()) {
-    you.setArtifact(std::unique_ptr<Artifact>(this));
+    you.setArtifact(this);
     return true;
   }
   else {

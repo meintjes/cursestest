@@ -193,8 +193,8 @@ bool Player::hasArtifact() {
   return (currentArtifact != nullptr);
 }
 
-void Player::setArtifact(std::unique_ptr<Artifact> artifact) {
-  currentArtifact = std::move(artifact);
+void Player::setArtifact(Artifact * const artifact) {
+  currentArtifact = std::unique_ptr<Artifact>(artifact);
 }
 
 bool Player::dropArtifact() {

@@ -16,7 +16,7 @@ class Item {
 
   //return true if the item should be picked up, or false if not (e.g., if
   //the player can't use the thing or has a full inventory or something).
-  virtual bool pickup(Player &you) = 0;
+  virtual bool pickup(Player &you);
 
  protected:
   virtual char glyph() const = 0;
