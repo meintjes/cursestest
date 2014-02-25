@@ -14,7 +14,8 @@ class Space {
   Space();
 
   void setType(const SpaceType &typeIn);
-  void setItem(std::unique_ptr<Item> itemIn);
+  void setItem(SimpleItem * const itemIn);
+  void setItem(std::unique_ptr<SimpleItem> itemIn);
 
   bool moveEnemy(Space *target);
   void setEnemy(Enemy *enemyIn);
@@ -52,7 +53,7 @@ class Space {
   unsigned int gasDuration;
   unsigned int bombDuration;
   std::unique_ptr<Enemy> enemy;
-  std::unique_ptr<Item> item;
+  std::unique_ptr<SimpleItem> item;
 };
 
 #endif

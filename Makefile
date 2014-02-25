@@ -25,7 +25,7 @@ Space.o: Space.cpp Enemy.o SpaceType.o
 Enemy.o: Enemy.cpp Point.o functions.o
 	$(GXX) $(GXX_FLAGS) Enemy.cpp
 
-Player.o: Player.cpp Cst.o Cch.o functions.o
+Player.o: Player.cpp Cst.o Cch.o functions.o Item.o
 	$(GXX) $(GXX_FLAGS) Player.cpp
 
 functions.o: functions.cpp

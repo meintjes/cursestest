@@ -4,20 +4,24 @@
 #include "Cst.h"
 #include "functions.h"
 
-std::unique_ptr<Item> getRandomItem() {
-  return std::unique_ptr<Item>(new TimeStopper);
+std::unique_ptr<SimpleItem> getRandomItem() {
+  return std::unique_ptr<SimpleItem>(new TimeStopper);
 }
 
-Cst Item::getName() const {
-  return color()(name());
-}
 
-Cch Item::getGlyph() const {
+
+Cch SimpleItem::getGlyph() const {
   return color()(glyph());
 }
 
-Item::~Item() {
+SimpleItem::~SimpleItem() {
 
+}
+
+
+
+Cst Item::getName() const {
+  return color()(name());
 }
 
 bool Item::pickup(Player &you) {

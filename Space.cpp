@@ -17,7 +17,11 @@ void Space::setType(const SpaceType &typeIn) {
   type = &typeIn;
 }
 
-void Space::setItem(std::unique_ptr<Item> itemIn) {
+void Space::setItem(SimpleItem * const itemIn) {
+  item = std::unique_ptr<SimpleItem>(itemIn);
+}
+
+void Space::setItem(std::unique_ptr<SimpleItem> itemIn) {
   item = std::move(itemIn);
 }
 
