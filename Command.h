@@ -6,7 +6,7 @@
 #include <ncurses.h>
 
 //new commands must be defined here, given default values in resetControls,
-//and actually implemented in getInput.
+//actually implemented in getInput, and given a menu entry in CommandMenu.
 enum Command {COMMAND_FIRST, //exists so cmaps are initialized with an
 	                     //unused command rather than something useful
 	      COMMAND_MOVE_UPLEFT,
@@ -19,13 +19,13 @@ enum Command {COMMAND_FIRST, //exists so cmaps are initialized with an
 	      COMMAND_MOVE_DOWN,
 	      COMMAND_MOVE_DOWNRIGHT,
 
-	      COMMAND_USE_ARTIFACT,
+	      COMMAND_EVOKE_ARTIFACT,
 	      COMMAND_USE_BOMB,
 	      COMMAND_USE_TORCH,
 	      COMMAND_USE_ARROW,
 	      COMMAND_USE_SPEEDPOTION,
 
-	      COMMAND_DROP_ARTIFACT,
+              COMMAND_DROP_ITEM,
 
 	      COMMAND_INTERACT_STAIRSUP,
 	      COMMAND_INTERACT_STAIRSDOWN,

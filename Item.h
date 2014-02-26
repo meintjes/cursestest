@@ -7,6 +7,7 @@ class Cch;
 class Cst;
 class Color;
 class Player;
+class Map;
 
 //abstract class for items that exist on the ground but don't need names
 //because they can't go into the player's inventory.
@@ -24,12 +25,15 @@ class SimpleItem {
 class Item : public SimpleItem {
  public:
   Cst getName() const;
-
+ 
   //return true if the item should be picked up, or false if not (e.g., if
   //the player can't use the thing or has a full inventory or something).
   //default behavior puts the item in the player's regular inventory as long
   //as it isn't full.
   virtual bool pickup(Player &you);
+  
+  //executes when the player uses the item from their inventory.
+  virtual bool use(Map *map) = 0;
 
  protected:
   virtual std::string name() const = 0;
@@ -45,8 +49,6 @@ class DestructibleItem : public Item {
   void damage(unsigned int x);
   bool shouldDestroy() const;
  
-  virtual bool pickup(Player &you) = 0;
-
  protected:
   virtual char glyph() const = 0;
   virtual std::string name() const = 0;
@@ -55,6 +57,18 @@ class DestructibleItem : public Item {
  private:
   int durability;
   const int durabilityMin;
+};
+
+
+
+class Bomb : public Item {
+ public:
+  using Item::Item;
+  bool use(Map *map);
+ protected:
+  char glyph() const;
+  std::string name() const;
+  const Color& color() const;
 };
 
 #endif

@@ -173,7 +173,7 @@ void SpawnerBoss::die(Map &map, int x, int y) {
   hp--;
   if (hp <= randRange(-2, 2)) {
     map.getSpace(x, y).removeEnemy();
-    map.getSpace(x, y).setItem(new TimeStopper);
+    //TODO map.getSpace(x, y).setItem(new TimeStopper);
   }
 }
 

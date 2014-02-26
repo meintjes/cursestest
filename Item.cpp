@@ -1,7 +1,9 @@
 #include "Item.h"
 #include "Player.h"
+#include "Artifact.h"
 #include "Cch.h"
 #include "Cst.h"
+#include "Map.h"
 #include "functions.h"
 
 std::unique_ptr<SimpleItem> getRandomItem() {
@@ -31,6 +33,7 @@ bool Item::pickup(Player &you) {
 
 
 DestructibleItem::DestructibleItem() :
+  Item(),
   durability(100),
   durabilityMin(randRange(-10, 10))
 {}

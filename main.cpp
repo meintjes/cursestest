@@ -26,13 +26,13 @@ Menu ControlsMenu({
   Option{"Move down", std::bind(changeControl, COMMAND_MOVE_DOWN)},
   Option{"Move down/right", std::bind(changeControl, COMMAND_MOVE_DOWNRIGHT)},
 
-  Option{"Use artifact", std::bind(changeControl, COMMAND_USE_ARTIFACT)},
+  Option{"Evoke artifact", std::bind(changeControl, COMMAND_EVOKE_ARTIFACT)},
   Option{"Use bomb", std::bind(changeControl, COMMAND_USE_BOMB)},
   Option{"Use torch", std::bind(changeControl, COMMAND_USE_TORCH)},
   Option{"Use arrow", std::bind(changeControl, COMMAND_USE_ARROW)},
   Option{"Use speed potion", std::bind(changeControl, COMMAND_USE_SPEEDPOTION)},
 
-  Option{"Drop artifact", std::bind(changeControl, COMMAND_DROP_ARTIFACT)},
+  Option{"Drop item", std::bind(changeControl, COMMAND_DROP_ITEM)},
 
   Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
   Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
@@ -136,8 +136,8 @@ bool getInput(Map *map, const CommandMap cmap) {
   case COMMAND_MOVE_DOWNRIGHT:
     return (map->*dfn)(1, 1);
 
-  case COMMAND_USE_ARTIFACT:
-    return map->you.useArtifact();
+  case COMMAND_EVOKE_ARTIFACT:
+    return map->you.evokeArtifact();
   case COMMAND_USE_BOMB:
     return map->dropBomb();
   case COMMAND_USE_TORCH:
@@ -147,8 +147,9 @@ bool getInput(Map *map, const CommandMap cmap) {
   case COMMAND_USE_SPEEDPOTION:
     return map->you.quaffSpeedPotion();
 
-  case COMMAND_DROP_ARTIFACT:
-    return map->you.dropArtifact();
+  case COMMAND_DROP_ITEM:
+    return map->you.dropItem(map->getSpace(map->getPlayerX(),
+                                           map->getPlayerY()));
 
   case COMMAND_INTERACT_STAIRSUP:
     return map->changeFloor(-1, StairsUp);

@@ -3,13 +3,13 @@
 #include "Map.h"
 #include "Player.h"
 
-bool Artifact::pickup(Player &you) {
-  if (!you.hasArtifact()) {
-    you.setArtifact(this);
-    return true;
+bool Artifact::use(Map *map) {
+  if (map->you.getCurrentArtifact() == this) {
+    return false;
   }
   else {
-    return false;
+    map->you.setArtifact(this);
+    return true;
   }
 }
 
@@ -19,7 +19,7 @@ char Artifact::glyph() const {
 
 
 
-bool HealingOrb::use(Map *map) {
+bool HealingOrb::evoke(Map *map) {
   if (map->you.heal(1)) {
     damage(15);
     return true;
@@ -39,7 +39,7 @@ const Color& HealingOrb::color() const {
 
 
 
-bool TimeStopper::use(Map *map) {
+bool TimeStopper::evoke(Map *map) {
   map->you.stopTime(randRange(4, 6));
   damage(50);
   return true;

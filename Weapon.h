@@ -18,6 +18,6 @@ class Weapon : public DestructibleItem {
 
  private:
   char glyph() const;
-}
+};
 
 #endif

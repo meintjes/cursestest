@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "functions.h"
+#include "Space.h"
 #include "Branch.h"
 #include "Item.h"
 #include "Cst.h"
@@ -10,7 +11,7 @@
 Player::Player() :
   hp(10),
   hpMax(10),
-  currentArtifact(new TimeStopper),
+  currentArtifact(),
 
   currentBranch(nullptr),
   currentDepth(0),
@@ -56,8 +57,8 @@ void Player::display() const {
 
   //print item display
   move(23, 79 - inventory.size());
-  for (auto it = inventory.begin(); it != inventory.end(); it++) {
-    addc((*it)->getGlyph());
+  for (auto &item : inventory) {
+    addc(item->getGlyph());
   }
 }
 
@@ -116,9 +117,9 @@ bool Player::hasArrowMode() const {
   return arrowMode;
 }
 
-bool Player::useArtifact() {
+bool Player::evokeArtifact() {
   return (currentArtifact &&
-	  currentArtifact->use(getCurrentFloor()));
+	  currentArtifact->evoke(getCurrentFloor()));
 }
 
 bool Player::lightTorch() {
@@ -190,24 +191,12 @@ bool Player::quaffSpeedPotion() {
   return true;
 }
 
-bool Player::hasArtifact() {
-  return (currentArtifact != nullptr);
+const Artifact* const Player::getCurrentArtifact() const {
+  return currentArtifact.get();
 }
 
 void Player::setArtifact(Artifact * const artifact) {
   currentArtifact = std::unique_ptr<Artifact>(artifact);
-}
-
-bool Player::dropArtifact() {
-  if (currentArtifact) {
-    Map &floor = *getCurrentFloor();
-    floor.getSpace(floor.getPlayerX(),
-                   floor.getPlayerY()).setItem(std::move(currentArtifact));
-    return true;
-  }
-  else {
-    return false;
-  }
 }
 
 void Player::damage(unsigned int num) {
@@ -244,8 +233,27 @@ bool Player::addItem(Item *item) {
   return true;
 }
 
+bool Player::dropItem(Space &space) {
+  if (space.hasItem()) {
+    return false;
+  }
+  
+  auto item = getInventoryInput();
+  if (item == inventory.end()) {
+    return false;
+  }
+
+  space.setItem(std::move(*item));
+  inventory.erase(item);
+  return true;
+}
+
 void Player::stopTime(int num) {
   freeMovesDuration += num;
+}
+
+void Player::extinguishTorch() {
+  torchDuration = 0;
 }
 
 void Player::setBranch(Branch *branch) {
@@ -279,6 +287,49 @@ bool Player::changeDepth(int dz) {
   return true;
 }
 
-void Player::extinguishTorch() {
-  torchDuration = 0;
+const std::list<std::unique_ptr<Item> >::iterator
+  Player::getInventoryInput() {
+  if (inventory.size() == 0) {
+    return inventory.end();
+  }
+  erase();
+  move(23, 0);
+  addcs(Cyan("Which item? (w: current weapon, a: current artifact, q: quit)"));
+  //display inventory, assigning each item a key
+  {
+    int row = 0;
+    char index = 'b';
+    for (auto &item : inventory) {
+      move(row, 3);
+      addc(Cyan(index));
+      addcs(" " + item->getName());
+
+      row++; //display next line on next row
+      //increment the index and skip keys with special meaning
+      do {
+        index++;
+      }
+      while (index == 'w' || index == 'a' || index == 'q');
+    }
+  }
+  //then ask the player which item they want to pick
+  while (true) {
+    char input = getch();
+    if (input == 'q') {
+      return inventory.end();
+    }
+    {
+      char index = 'b';
+      for (auto it = inventory.begin(); it != inventory.end(); it++) {
+        if (input == index) {
+          return it;
+        } 
+        //increment the index and skip keys with special meaning 
+        do {
+          index++;
+        }
+        while (index == 'w' || index == 'a' || index == 'q');
+      }
+    }
+  }
 }
