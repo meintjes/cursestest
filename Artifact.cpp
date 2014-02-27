@@ -3,14 +3,9 @@
 #include "Map.h"
 #include "Player.h"
 
-bool Artifact::use(Map *map) {
-  if (map->you.getCurrentArtifact() == this) {
-    return false;
-  }
-  else {
-    map->you.setArtifact(this);
-    return true;
-  }
+Item::UseResult Artifact::use(Map *map) {
+  map->you.setArtifact(this);
+  return Item::Release;
 }
 
 char Artifact::glyph() const {

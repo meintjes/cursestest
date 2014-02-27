@@ -1,6 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+#include "Weapon.h"
 #include "Artifact.h"
 #include "Cch.h"
 #include <memory>
@@ -32,12 +33,15 @@ class Player {
   bool shootArrow(); //returns whether you had arrowmode, then unsets it
   bool quaffSpeedPotion();
 
+  const Weapon* const getCurrentWeapon() const;
+  void setWeapon(Weapon* const weapon);
   const Artifact* const getCurrentArtifact() const;
   void setArtifact(Artifact* const artifact);
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
   bool addItem(Item * const item);
+  bool useItem(Map *map);
   bool dropItem(Space &space);
 
   void stopTime(int num);
@@ -53,6 +57,7 @@ class Player {
   
   int hp;
   int hpMax;
+  std::unique_ptr<Weapon> currentWeapon;
   std::unique_ptr<Artifact> currentArtifact;
 
   Branch *currentBranch;

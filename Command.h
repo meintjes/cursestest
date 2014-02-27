@@ -20,11 +20,7 @@ enum Command {COMMAND_FIRST, //exists so cmaps are initialized with an
 	      COMMAND_MOVE_DOWNRIGHT,
 
 	      COMMAND_EVOKE_ARTIFACT,
-	      COMMAND_USE_BOMB,
-	      COMMAND_USE_TORCH,
-	      COMMAND_USE_ARROW,
-	      COMMAND_USE_SPEEDPOTION,
-
+              COMMAND_USE_ITEM,
               COMMAND_DROP_ITEM,
 
 	      COMMAND_INTERACT_STAIRSUP,

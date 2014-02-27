@@ -27,10 +27,7 @@ Menu ControlsMenu({
   Option{"Move down/right", std::bind(changeControl, COMMAND_MOVE_DOWNRIGHT)},
 
   Option{"Evoke artifact", std::bind(changeControl, COMMAND_EVOKE_ARTIFACT)},
-  Option{"Use bomb", std::bind(changeControl, COMMAND_USE_BOMB)},
-  Option{"Use torch", std::bind(changeControl, COMMAND_USE_TORCH)},
-  Option{"Use arrow", std::bind(changeControl, COMMAND_USE_ARROW)},
-  Option{"Use speed potion", std::bind(changeControl, COMMAND_USE_SPEEDPOTION)},
+  Option{"Use item", std::bind(changeControl, COMMAND_USE_ITEM)},
 
   Option{"Drop item", std::bind(changeControl, COMMAND_DROP_ITEM)},
 
@@ -88,12 +85,14 @@ void playGame() {
   CommandMap cmap = {COMMAND_FIRST};
   readControls(cmap);
 
+  //until you die:
   while (you.getHp() > 0) {
-    you.getCurrentFloor()->display();
-    you.display();
-
     //get input that would cause a turn to pass
-    while (!getInput(you.getCurrentFloor(), cmap));  
+    do {
+      you.getCurrentFloor()->display();
+      you.display();
+    }
+    while (!getInput(you.getCurrentFloor(), cmap));
     you.getCurrentFloor()->tick(); //then update game state
   }
 
@@ -138,15 +137,8 @@ bool getInput(Map *map, const CommandMap cmap) {
 
   case COMMAND_EVOKE_ARTIFACT:
     return map->you.evokeArtifact();
-  case COMMAND_USE_BOMB:
-    return map->dropBomb();
-  case COMMAND_USE_TORCH:
-    return map->you.lightTorch();
-  case COMMAND_USE_ARROW:
-    return map->you.drawArrow();
-  case COMMAND_USE_SPEEDPOTION:
-    return map->you.quaffSpeedPotion();
-
+  case COMMAND_USE_ITEM:
+    return map->you.useItem(map);
   case COMMAND_DROP_ITEM:
     return map->you.dropItem(map->getSpace(map->getPlayerX(),
                                            map->getPlayerY()));

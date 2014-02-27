@@ -2,14 +2,16 @@
 #define __WEAPON_H__
 
 #include "Item.h"
-#include "Player.h"
 
 class Map;
+class Player;
 
 class Weapon : public DestructibleItem {
  public:
   using DestructibleItem::DestructibleItem;
-  bool pickup(Player &you);
+
+  Item::UseResult use(Map *map);
+
   virtual bool attack(Map *map, int dx, int dy);
 
  protected:

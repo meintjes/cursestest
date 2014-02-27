@@ -191,6 +191,14 @@ bool Player::quaffSpeedPotion() {
   return true;
 }
 
+const Weapon* const Player::getCurrentWeapon() const {
+  return currentWeapon.get();
+}
+
+void Player::setWeapon(Weapon* const weapon) {
+  currentWeapon = std::unique_ptr<Weapon>(weapon);
+}
+
 const Artifact* const Player::getCurrentArtifact() const {
   return currentArtifact.get();
 }
@@ -230,6 +238,27 @@ bool Player::addItem(Item *item) {
   }
   //if nothing comes after it, just insert it at the end:
   inventory.insert(inventory.end(), std::unique_ptr<Item>(item));
+  return true;
+}
+
+bool Player::useItem(Map *map) {
+  auto item = getInventoryInput();
+  if (item == inventory.end()) {
+    return false;
+  }
+  
+  Item::UseResult result = (*item)->use(map);
+  if (result == Item::Fail) {
+    return false; //don't take a turn if the item can't be used
+  }
+
+  else if (result == Item::Release) {
+    item->release();
+    inventory.erase(item);
+  }
+  else if (result == Item::Destroy) {
+    inventory.erase(item);
+  } 
   return true;
 }
 
@@ -289,15 +318,22 @@ bool Player::changeDepth(int dz) {
 
 const std::list<std::unique_ptr<Item> >::iterator
   Player::getInventoryInput() {
-  if (inventory.size() == 0) {
+  if (inventory.size() == 0 && !currentArtifact && !currentWeapon) {
     return inventory.end();
   }
   erase();
-  move(23, 0);
-  addcs(Cyan("Which item? (w: current weapon, a: current artifact, q: quit)"));
+  move(0, 0);
+  addcs(Cyan("Which item? ("));
+  if (currentWeapon) {
+    addcs("w: " + currentWeapon->getName() + ", ");
+  }
+  if (currentArtifact) {
+    addcs("a: " + currentArtifact->getName() + ", ");
+  }
+  addcs(Cyan("q: quit)"));
   //display inventory, assigning each item a key
   {
-    int row = 0;
+    int row = 1;
     char index = 'b';
     for (auto &item : inventory) {
       move(row, 3);

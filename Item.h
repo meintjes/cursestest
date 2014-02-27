@@ -24,6 +24,7 @@ class SimpleItem {
 //abstract class for items that have names and go into the player's inventory
 class Item : public SimpleItem {
  public:
+  enum UseResult {Fail, None, Release, Destroy};
   Cst getName() const;
  
   //return true if the item should be picked up, or false if not (e.g., if
@@ -33,7 +34,7 @@ class Item : public SimpleItem {
   virtual bool pickup(Player &you);
   
   //executes when the player uses the item from their inventory.
-  virtual bool use(Map *map) = 0;
+  virtual Item::UseResult use(Map *map) = 0;
 
  protected:
   virtual std::string name() const = 0;
@@ -64,7 +65,7 @@ class DestructibleItem : public Item {
 class Bomb : public Item {
  public:
   using Item::Item;
-  bool use(Map *map);
+  Item::UseResult use(Map *map);
  protected:
   char glyph() const;
   std::string name() const;

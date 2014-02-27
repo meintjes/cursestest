@@ -13,7 +13,7 @@ class Artifact : public DestructibleItem {
  public:
   using DestructibleItem::DestructibleItem;
   
-  bool use(Map *map);
+  Item::UseResult use(Map *map);
 
   virtual bool evoke(Map *map) = 0;
 
