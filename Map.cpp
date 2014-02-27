@@ -171,11 +171,11 @@ void Map::tick() {
         else if (getSpace(x, y).hasMemory()) {
           toMove.push_back({x, y});
         }
-      }
+      }/*
       else if (!randTo(800) && getSpace(x, y).isPassable()
                && !isVisible(x, y, you.getLOS())) {
         getSpace(x, y).setEnemy(getRandomEnemy());
-      }
+      }*/
     }
   }
 

@@ -53,7 +53,12 @@ class Player {
  private:
   static const int MAX_NUM_ITEMS = 23;
   std::list<std::unique_ptr<Item> > inventory;
-  const std::list<std::unique_ptr<Item> >::iterator getInventoryInput();
+  struct InventoryInputResult {
+    enum Type {Inventory, CurrentArtifact, CurrentWeapon};
+    Type type;
+    std::list<std::unique_ptr<Item> >::iterator item;
+  };
+  Player::InventoryInputResult getInventoryInput();
   
   int hp;
   int hpMax;

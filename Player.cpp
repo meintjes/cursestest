@@ -7,6 +7,7 @@
 #include "Cch.h"
 #include <string>
 #include <ncurses.h>
+#include <cassert>
 
 Player::Player() :
   hp(10),
@@ -196,6 +197,9 @@ const Weapon* const Player::getCurrentWeapon() const {
 }
 
 void Player::setWeapon(Weapon* const weapon) {
+  if (currentWeapon) {
+    addItem(currentWeapon.release());
+  }
   currentWeapon = std::unique_ptr<Weapon>(weapon);
 }
 
@@ -204,6 +208,9 @@ const Artifact* const Player::getCurrentArtifact() const {
 }
 
 void Player::setArtifact(Artifact * const artifact) {
+  if (currentArtifact) {
+    addItem(currentArtifact.release());
+  }
   currentArtifact = std::unique_ptr<Artifact>(artifact);
 }
 
@@ -242,39 +249,71 @@ bool Player::addItem(Item *item) {
 }
 
 bool Player::useItem(Map *map) {
-  auto item = getInventoryInput();
-  if (item == inventory.end()) {
-    return false;
-  }
+  //figure out which item the player wants to use
+  InventoryInputResult input = getInventoryInput();
   
-  Item::UseResult result = (*item)->use(map);
-  if (result == Item::Fail) {
-    return false; //don't take a turn if the item can't be used
+  //if the player chose an item in their general inventory:
+  if (input.type == InventoryInputResult::Inventory) {
+    if (input.item == inventory.end()) {
+      return false;
+    }
+    
+    Item::UseResult result = (*input.item)->use(map);
+    if (result == Item::Fail) {
+      return false; //don't take a turn if the item can't be used
+    }
+
+    else if (result == Item::Release) {
+      input.item->release();
+      inventory.erase(input.item);
+    }
+    else if (result == Item::Destroy) {
+      inventory.erase(input.item);
+    } 
+    return true;
   }
 
-  else if (result == Item::Release) {
-    item->release();
-    inventory.erase(item);
+  //if the player instead wanted to use their current weapon or artifact:
+  else if (input.type == InventoryInputResult::CurrentWeapon) {
+    Item::UseResult result = currentWeapon->use(map);
+    assert(result == Item::Release); //currently this is always true. if it
+                                     //ever changes, this is so I won't forget
+    currentWeapon.release();
+    return true;
   }
-  else if (result == Item::Destroy) {
-    inventory.erase(item);
-  } 
-  return true;
+
+  else { //CurrentArtifact
+    Item::UseResult result = currentArtifact->use(map);
+    assert(result == Item::Release);
+    currentArtifact.release();
+    return true;
+  }
 }
 
 bool Player::dropItem(Space &space) {
   if (space.hasItem()) {
     return false;
   }
-  
-  auto item = getInventoryInput();
-  if (item == inventory.end()) {
-    return false;
+
+  InventoryInputResult input = getInventoryInput();
+  if (input.type == InventoryInputResult::Inventory) { 
+    if (input.item == inventory.end()) {
+      return false;
+    }
+    space.setItem(std::move(*input.item));
+    inventory.erase(input.item);
+    return true;
   }
 
-  space.setItem(std::move(*item));
-  inventory.erase(item);
-  return true;
+  else if (input.type == InventoryInputResult::CurrentWeapon) {
+    space.setItem(std::move(currentWeapon));
+    return true;
+  }
+
+  else { //CurrentArtifact
+    space.setItem(std::move(currentArtifact));
+    return true;
+  }
 }
 
 void Player::stopTime(int num) {
@@ -316,10 +355,11 @@ bool Player::changeDepth(int dz) {
   return true;
 }
 
-const std::list<std::unique_ptr<Item> >::iterator
-  Player::getInventoryInput() {
+Player::InventoryInputResult Player::getInventoryInput() {
+  InventoryInputResult result {InventoryInputResult::Inventory,
+                               inventory.end()};
   if (inventory.size() == 0 && !currentArtifact && !currentWeapon) {
-    return inventory.end();
+    return result;
   }
   erase();
   move(0, 0);
@@ -352,13 +392,22 @@ const std::list<std::unique_ptr<Item> >::iterator
   while (true) {
     char input = getch();
     if (input == 'q') {
-      return inventory.end();
+      return result;
+    }
+    else if (input == 'w') {
+      result.type = InventoryInputResult::CurrentWeapon;
+      return result;
+    }
+    else if (input == 'a') {
+      result.type = InventoryInputResult::CurrentArtifact;
+      return result;
     }
     {
       char index = 'b';
       for (auto it = inventory.begin(); it != inventory.end(); it++) {
         if (input == index) {
-          return it;
+          result.item = it;
+          return result;
         } 
         //increment the index and skip keys with special meaning 
         do {

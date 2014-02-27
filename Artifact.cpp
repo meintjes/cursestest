@@ -4,7 +4,12 @@
 #include "Player.h"
 
 Item::UseResult Artifact::use(Map *map) {
-  map->you.setArtifact(this);
+  if (map->you.getCurrentArtifact() == this) {
+    map->you.addItem(this);
+  }
+  else {
+    map->you.setArtifact(this);
+  }
   return Item::Release;
 }
 

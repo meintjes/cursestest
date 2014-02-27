@@ -3,7 +3,12 @@
 #include "Map.h"
 
 Item::UseResult Weapon::use(Map *map) {
-  map->you.setWeapon(this);
+  if (map->you.getCurrentWeapon() == this) {
+    map->you.addItem(this);
+  }
+  else {
+    map->you.setWeapon(this);
+  }
   return Item::Release;
 } 
 
