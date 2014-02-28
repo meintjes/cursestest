@@ -7,7 +7,7 @@
 #include "functions.h"
 
 std::unique_ptr<SimpleItem> getRandomItem() {
-  return std::unique_ptr<SimpleItem>(new TimeStopper);
+  return std::unique_ptr<SimpleItem>(new Bomb);
 }
 
 
@@ -53,4 +53,70 @@ void DestructibleItem::damage(unsigned int x) {
 
 bool DestructibleItem::shouldDestroy() const {
   return (durability <= durabilityMin);
+}
+
+
+
+Item::UseResult Bomb::use(Map *map) {
+  if (map->dropBomb()) {
+    return Item::Destroy;
+  }
+  else {
+    return Item::Fail;
+  }
+}
+
+char Bomb::glyph() const {
+  return '!';
+}
+
+std::string Bomb::name() const {
+  return "bomb";
+}
+
+const Color& Bomb::color() const {
+  return Red;
+}
+
+
+
+Item::UseResult Torch::use(Map *map) {
+  //TODO: make things happen
+  return Item::Destroy;
+}
+
+char Torch::glyph() const {
+  return '^';
+}
+
+std::string Torch::name() const {
+  return "torch";
+}
+
+const Color& Torch::color() const {
+  return Yellow;
+}
+
+
+
+Item::UseResult Arrow::use(Map *map) {
+  if (map->you.hasArrowMode()) {
+    //TODO: make things happen
+    return Item::Destroy;
+  }
+  else {
+    return Item::None;
+  }
+}
+
+char Arrow::glyph() const {
+  return '|';
+}
+
+std::string Arrow::name() const {
+  return "arrow";
+}
+
+const Color& Arrow::color() const {
+  return Brown;
 }

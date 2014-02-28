@@ -72,4 +72,24 @@ class Bomb : public Item {
   const Color& color() const;
 };
 
+class Torch : public Item {
+ public:
+  using Item::Item;
+  Item::UseResult use(Map *map);
+ protected:
+  char glyph() const;
+  std::string name() const;
+  const Color& color() const;
+};
+
+class Arrow : public Item {
+ public:
+  using Item::Item;
+  Item::UseResult use(Map *map);
+ protected:
+  char glyph() const;
+  std::string name() const;
+  const Color& color() const; 
+};
+
 #endif

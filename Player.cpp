@@ -357,10 +357,13 @@ bool Player::changeDepth(int dz) {
 Player::InventoryInputResult Player::getInventoryInput() {
   InventoryInputResult result {InventoryInputResult::Inventory,
                                inventory.end()};
+  //if you don't have any items, don't ask which one you want to pick
   if (inventory.size() == 0 && !currentArtifact && !currentWeapon) {
     return result;
   }
   erase();
+
+  //menu header and current weapon/artifact display
   move(0, 0);
   addcs(Cyan("Which item? ("));
   if (currentWeapon) {
@@ -370,13 +373,16 @@ Player::InventoryInputResult Player::getInventoryInput() {
     addcs("a: " + currentArtifact->getName() + ", ");
   }
   addcs(Cyan("q: quit)"));
-  //display inventory, assigning each item a key
+
+  //display regular inventory, assigning each item a key
   {
     int row = 1;
     char index = 'b';
     for (auto &item : inventory) {
       move(row, 3);
       addc(Cyan(index));
+      move(row, 5);
+      addc(item->getGlyph());
       addcs(" " + item->getName());
 
       row++; //display next line on next row
