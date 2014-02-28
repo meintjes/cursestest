@@ -394,11 +394,11 @@ Player::InventoryInputResult Player::getInventoryInput() {
     if (input == 'q') {
       return result;
     }
-    else if (input == 'w') {
+    else if (input == 'w' && currentWeapon) {
       result.type = InventoryInputResult::CurrentWeapon;
       return result;
     }
-    else if (input == 'a') {
+    else if (input == 'a' && currentArtifact) {
       result.type = InventoryInputResult::CurrentArtifact;
       return result;
     }
