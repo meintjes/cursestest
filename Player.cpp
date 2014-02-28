@@ -18,12 +18,11 @@ Player::Player() :
   currentDepth(0),
 
   arrowMode(false),
+  torchDuration(0),
   speedDuration(0),
   freeMovesDuration(0)
 
-{
-  lightTorch();
-}
+{}
 
 void Player::display() const {
   move(23, 0);
