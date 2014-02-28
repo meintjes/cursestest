@@ -7,7 +7,7 @@
 #include "functions.h"
 
 std::unique_ptr<SimpleItem> getRandomItem() {
-  return std::unique_ptr<SimpleItem>(new Bomb);
+  return std::unique_ptr<SimpleItem>(new Arrow);
 }
 
 
@@ -101,10 +101,10 @@ const Color& Torch::color() const {
 
 Item::UseResult Arrow::use(Map *map) {
   if (map->you.hasArrowMode()) {
-    //TODO: make things happen
-    return Item::Destroy;
+    return Item::Fail;
   }
   else {
+    map->you.drawArrow();
     return Item::None;
   }
 }

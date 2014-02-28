@@ -122,73 +122,8 @@ bool Player::evokeArtifact() {
 	  currentArtifact->evoke(getCurrentFloor()));
 }
 
-bool Player::lightTorch() {
-  /*if (numTorches > 0) {
-    numTorches--;
-    torchDuration = randRange(65, 85);
-    return true;
-  }
-  else {
-    return false;
-  }*/
-  return true;
-}
-
-bool Player::dropBomb() {
-  /*
-  if (numBombs > 0) {
-    numBombs--;
-    return true;
-  }
-  else {
-    return false;
-  }
-  */
-  return true;
-}
-
-bool Player::drawArrow() {
-  /*
-  if (arrowMode) {
-    arrowMode = false;
-    return true;
-  }
-  else if (numArrows > 0) {
-    arrowMode = true;
-    return true;
-  }
-  else {
-    return false;
-  }
-  */
-  return true;
-}
-
-bool Player::shootArrow() {
-  /*
-  if (arrowMode && numArrows > 0) {
-    numArrows--;
-    arrowMode = false;
-    return true;
-  }
-  else {
-    return false;
-  }
-  */
-  return true;
-}
-
-bool Player::quaffSpeedPotion() {
-  /*
-  if (numSpeedPotions > 0) {
-    numSpeedPotions--;
-    speedDuration = randRange(5, 6);
-    return true;
-  }
-  else {
-    return false;
-  }*/
-  return true;
+void Player::drawArrow() {
+  arrowMode = !arrowMode;
 }
 
 const Weapon* const Player::getCurrentWeapon() const {

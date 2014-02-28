@@ -27,12 +27,8 @@ class Player {
   bool hasArrowMode() const;
 
   bool evokeArtifact();
-  bool lightTorch();
-  bool dropBomb();
-  bool drawArrow(); //toggles arrowmode
-  bool shootArrow(); //returns whether you had arrowmode, then unsets it
-  bool quaffSpeedPotion();
-
+  void drawArrow(); //toggles arrowmode
+  
   const Weapon* const getCurrentWeapon() const;
   void setWeapon(Weapon* const weapon);
   const Artifact* const getCurrentArtifact() const;

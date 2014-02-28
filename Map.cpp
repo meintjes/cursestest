@@ -53,49 +53,47 @@ bool Map::movePlayer(int dx, int dy) {
 }
 
 bool Map::shootArrow(int dx, int dy) {
-  if (you.shootArrow()) {
-    // Decide the glyph for the arrow shot.
-    char arrowChar;
-    if (dx == 0) {
-      arrowChar = '|';
-    }
-    else if (dy == 0) {
-      arrowChar = '-';
-    }
-    else if ((dx < 0 && dy > 0) || (dx > 0 && dy < 0)) {
-      arrowChar = '/';
-    }
-    else {
-      arrowChar = '\\';
-    }
-    Cch arrowGlyph(Brown(arrowChar));
-
-    for (int i = 0, x = playerX, y = playerY;
-	 i < 6 && getSpace(x, y).isPassable(); i++) {
-      getSpace(x, y).kill(*this, x, y);
-      x += dx;
-      y += dy;
-      
-      if (isVisible(x, y, you.getLOS()) && getSpace(x, y).isPassable()) {
-        // Rewrite the actual state of things.
-        display();
-
-        // Write the arrow glyph.
-        move(y, x);
-        addc(arrowGlyph);
-        refresh();
-
-        // Pause for a moment to let the user see the animation.
-        napms(25);
-      }
-    }
-    return true;
+  // Decide the glyph for the arrow shot.
+  char arrowChar;
+  if (dx == 0) {
+    arrowChar = '|';
   }
+  else if (dy == 0) {
+    arrowChar = '-';
+  }
+  else if ((dx < 0 && dy > 0) || (dx > 0 && dy < 0)) {
+    arrowChar = '/';
+  }
+  else {
+    arrowChar = '\\';
+  }
+  Cch arrowGlyph(Brown(arrowChar));
+
+  for (int i = 0, x = playerX, y = playerY;
+       i < 6 && getSpace(x, y).isPassable(); i++) {
+    getSpace(x, y).kill(*this, x, y);
+    x += dx;
+    y += dy;
+    
+    if (isVisible(x, y, you.getLOS()) && getSpace(x, y).isPassable()) {
+      // Rewrite the actual state of things.
+      display();
+
+      // Write the arrow glyph.
+      move(y, x);
+      addc(arrowGlyph);
+      refresh();
+
+      // Pause for a moment to let the user see the animation.
+      napms(25);
+    }
+  }
+  you.drawArrow();
   return true;
 }
 
 bool Map::dropBomb() {
-  if (!getSpace(playerX, playerY).hasBomb() && you.dropBomb()) {
+  if (!getSpace(playerX, playerY).hasBomb()) {
     getSpace(playerX, playerY).dropBomb();
     return true;
   }
