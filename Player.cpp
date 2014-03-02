@@ -303,6 +303,7 @@ bool Player::changeDepth(int dz) {
 }
 
 Player::InventoryInputResult Player::getInventoryInput() {
+  assert(inventory.size() <= MAX_NUM_ITEMS);
   InventoryInputResult result {InventoryInputResult::Inventory,
                                inventory.end()};
   //if you don't have any items, don't ask which one you want to pick
