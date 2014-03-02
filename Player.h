@@ -36,12 +36,12 @@ class Player {
 
   void damage(unsigned int num = 1);
   bool heal(unsigned int num);
-  bool addItem(Item * const item);
+  bool addItem(Item * const item, bool checkMaxItems);
   bool useItem(Map *map);
   bool dropItem(Space &space);
 
   void stopTime(int num);
-  void extinguishTorch();
+  void setTorchDuration(int num);
   
   void setBranch(Branch *branch);
   bool changeDepth(int dz);

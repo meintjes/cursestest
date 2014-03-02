@@ -7,7 +7,7 @@
 #include "functions.h"
 
 std::unique_ptr<SimpleItem> getRandomItem() {
-  return std::unique_ptr<SimpleItem>(new Arrow);
+  return std::unique_ptr<SimpleItem>(new Torch);
 }
 
 
@@ -27,7 +27,7 @@ Cst Item::getName() const {
 }
 
 bool Item::pickup(Player &you) {
-  return you.addItem(this);
+  return you.addItem(this, true);
 }
 
 
@@ -81,7 +81,7 @@ const Color& Bomb::color() const {
 
 
 Item::UseResult Torch::use(Map *map) {
-  //TODO: make things happen
+  map->you.setTorchDuration(randRange(125, 175));
   return Item::Destroy;
 }
 

@@ -4,7 +4,12 @@
 
 Item::UseResult Weapon::use(Map *map) {
   if (map->you.getCurrentWeapon() == this) {
-    map->you.addItem(this);
+    if (map->you.addItem(this, true)) {
+      return Item::Release;
+    }
+    else {
+      return Item::Fail;
+    }
   }
   else {
     map->you.setWeapon(this);

@@ -173,7 +173,7 @@ void SpawnerBoss::die(Map &map, int x, int y) {
   hp--;
   if (hp <= randRange(-2, 2)) {
     map.getSpace(x, y).removeEnemy();
-    //TODO map.getSpace(x, y).setItem(new TimeStopper);
+    map.getSpace(x, y).setItem(new TimeStopper);
   }
 }
 
@@ -185,5 +185,5 @@ Cch Douser::getGlyph() const {
 
 void Douser::attack(Map &map, int x, int y) {
   map.you.damage();
-  map.you.extinguishTorch();
+  map.you.setTorchDuration(0);
 }

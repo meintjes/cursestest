@@ -5,12 +5,17 @@
 
 Item::UseResult Artifact::use(Map *map) {
   if (map->you.getCurrentArtifact() == this) {
-    map->you.addItem(this);
+    if (map->you.addItem(this, true)) {
+      return Item::Release;
+    }
+    else {
+      return Item::Fail;
+    }
   }
   else {
     map->you.setArtifact(this);
+    return Item::Release;
   }
-  return Item::Release;
 }
 
 char Artifact::glyph() const {

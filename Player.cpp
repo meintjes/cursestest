@@ -132,7 +132,7 @@ const Weapon* const Player::getCurrentWeapon() const {
 
 void Player::setWeapon(Weapon* const weapon) {
   if (currentWeapon) {
-    addItem(currentWeapon.release());
+    addItem(currentWeapon.release(), false);
   }
   currentWeapon = std::unique_ptr<Weapon>(weapon);
 }
@@ -143,7 +143,7 @@ const Artifact* const Player::getCurrentArtifact() const {
 
 void Player::setArtifact(Artifact * const artifact) {
   if (currentArtifact) {
-    addItem(currentArtifact.release());
+    addItem(currentArtifact.release(), false);
   }
   currentArtifact = std::unique_ptr<Artifact>(artifact);
 }
@@ -165,8 +165,8 @@ bool Player::heal(unsigned int num) {
   }
 }
 
-bool Player::addItem(Item *item) {
-  if (inventory.size() >= MAX_NUM_ITEMS) {
+bool Player::addItem(Item *item, bool checkMaxItems) {
+  if (checkMaxItems && inventory.size() >= MAX_NUM_ITEMS) {
     return false;
   }
 
@@ -210,17 +210,30 @@ bool Player::useItem(Map *map) {
   //if the player instead wanted to use their current weapon or artifact:
   else if (input.type == InventoryInputResult::CurrentWeapon) {
     Item::UseResult result = currentWeapon->use(map);
-    assert(result == Item::Release); //currently this is always true. if it
-                                     //ever changes, this is so I won't forget
-    currentWeapon.release();
-    return true;
+    if (result == Item::Release) {
+      currentArtifact.release();
+      return true;
+    }
+    else if (result == Item::Fail) {
+      return false;
+    }
+    else {
+      assert(false);
+    }
   }
 
   else { //CurrentArtifact
     Item::UseResult result = currentArtifact->use(map);
-    assert(result == Item::Release);
-    currentArtifact.release();
-    return true;
+    if (result == Item::Release) {
+      currentArtifact.release();
+      return true;
+    }
+    else if (result == Item::Fail) {
+      return false;
+    }
+    else {
+      assert(false);
+    }
   }
 }
 
@@ -254,8 +267,8 @@ void Player::stopTime(int num) {
   freeMovesDuration += num;
 }
 
-void Player::extinguishTorch() {
-  torchDuration = 0;
+void Player::setTorchDuration(int num) {
+  torchDuration = num;
 }
 
 void Player::setBranch(Branch *branch) {
