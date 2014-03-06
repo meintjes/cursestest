@@ -21,7 +21,8 @@ std::unique_ptr<Enemy> getRandomEnemy() {
 
 Enemy::Enemy() :
   memoryDuration(0),
-  memoryLocation({0, 0})
+  memoryLocation({0, 0}),
+  stunDuration(0)
 {}
 
 int Enemy::getRange() const {
@@ -53,9 +54,20 @@ Point Enemy::getMemory() const {
   return memoryLocation;
 }
 
+bool Enemy::isStunned() const {
+  return (stunDuration > 0);
+}
+
+void Enemy::stun(unsigned int turns) {
+  stunDuration += turns;
+}
+
 void Enemy::tick() {
   if (memoryDuration > 0) {
     memoryDuration--;
+  }
+  if (stunDuration > 0) {
+    stunDuration--;
   }
 }
 

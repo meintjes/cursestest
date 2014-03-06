@@ -108,11 +108,14 @@ bool Map::throwHook(int dx, int dy) {
     if (!getSpace(x, y).isPassable()) {
       playerX = x - dx;
       playerY = y - dy;
+      you.setMode(Player::Mode::Move);
       return true;
     }
     //if the hook hits an enemy, pull the enemy toward the player and stop
     else if (getSpace(x, y).hasEnemy()) {
       getSpace(x, y).moveEnemy(&getSpace(playerX + dx, playerY + dy));
+      getSpace(x, y).stun(3);
+      you.setMode(Player::Mode::Move);
       return true;
     }
     //if the hook hits nothing, draw the animation
@@ -125,8 +128,6 @@ bool Map::throwHook(int dx, int dy) {
       }
     }
   }
-  //if the hook reaches the end of its range without hitting anything, put it away
-  you.setMode(Player::Mode::Move);
   return true;
 }
 
@@ -193,7 +194,7 @@ void Map::tick() {
 	explode(x, y, 1); //if a bomb went off
       }
 
-      if (getSpace(x, y).hasEnemy()) {
+      if (getSpace(x, y).hasEnemy() && !getSpace(x, y).isStunned()) {
 	//enemies within range attack the player
 	if (isVisible(x, y, getSpace(x, y).getRange())) {
           getSpace(x, y).renewMemory({playerX, playerY});
@@ -207,11 +208,11 @@ void Map::tick() {
         else if (getSpace(x, y).hasMemory()) {
           toMove.push_back({x, y});
         }
-      }/*
+      }
       else if (!randTo(800) && getSpace(x, y).isPassable()
                && !isVisible(x, y, you.getLOS())) {
         getSpace(x, y).setEnemy(getRandomEnemy());
-      }*/
+      }
     }
   }
 

@@ -44,6 +44,8 @@ class Space {
   bool hasMemory() const;
   Point getMemory() const;
   int getRange() const;
+  bool isStunned() const;
+  void stun(unsigned int turns);
 
   bool typeIs(const SpaceType *typeIn) const;
 

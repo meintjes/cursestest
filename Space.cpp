@@ -197,6 +197,16 @@ int Space::getRange() const {
   else return 0;
 }
 
+bool Space::isStunned() const {
+  return (enemy && enemy->isStunned() > 0);
+}
+
+void Space::stun(unsigned int turns) {
+  if (enemy) {
+    enemy->stun(turns);
+  }
+}
+
 bool Space::typeIs(const SpaceType *typeIn) const {
   return *type == *typeIn;
 }

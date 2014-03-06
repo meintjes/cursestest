@@ -19,12 +19,15 @@ class Enemy {
   void renewMemory(Point playerLocation);
   bool hasMemory() const;
   Point getMemory() const;
+  bool isStunned() const;
+  void stun(unsigned int turns);
 
   virtual void tick();
 
  private:
   int memoryDuration;
   Point memoryLocation;
+  int stunDuration;
 };
 
 std::unique_ptr<Enemy> getRandomEnemy();
