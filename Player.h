@@ -31,6 +31,7 @@ class Player {
   Map* getCurrentFloor() const;
   Cch getGlyph() const;
 
+  void attack(int dx, int dy);
   bool evokeArtifact();
   Mode getMode() const;
   void setMode(Mode modeIn);

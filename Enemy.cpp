@@ -59,6 +59,9 @@ bool Enemy::isStunned() const {
 }
 
 void Enemy::stun(unsigned int turns) {
+  if (stunDuration <= 0) {
+    stunDuration++;
+  }
   stunDuration += turns;
 }
 

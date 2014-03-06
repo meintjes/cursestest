@@ -12,7 +12,7 @@ class Weapon : public DestructibleItem {
 
   Item::UseResult use(Map *map);
 
-  virtual bool attack(Map *map, int dx, int dy);
+  virtual void attack(Map *map, int dx, int dy) = 0;
 
  protected:
   virtual std::string name() const = 0;
@@ -20,6 +20,17 @@ class Weapon : public DestructibleItem {
 
  private:
   char glyph() const;
+};
+
+class Bludgeon : public Weapon {
+ public:
+  using DestructibleItem::DestructibleItem;
+
+  void attack(Map *map, int dx, int dy);
+
+ protected:
+  std::string name() const;
+  const Color& color() const;
 };
 
 #endif

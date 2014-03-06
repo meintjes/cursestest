@@ -13,14 +13,27 @@ Item::UseResult Weapon::use(Map *map) {
   }
   else {
     map->you.setWeapon(this);
+    return Item::Release;
   }
-  return Item::Release;
 } 
-
-bool Weapon::attack(Map *map, int dx, int dy) {
-  return true;
-}
 
 char Weapon::glyph() const {
   return ')';
+}
+
+
+
+void Bludgeon::attack(Map *map, int dx, int dy) {
+  int x = map->getPlayerX() + dx;
+  int y = map->getPlayerY() + dy;
+  map->getSpace(x, y).kill(*map, x, y);
+  map->getSpace(x, y).stun(1);
+}
+
+std::string Bludgeon::name() const {
+  return "bludgeon";
+}
+
+const Color& Bludgeon::color() const {
+  return Brown;
 }

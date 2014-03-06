@@ -63,10 +63,6 @@ void Player::display() const {
 }
 
 bool Player::tick() {
-  if (currentArtifact && currentArtifact->shouldDestroy()) {
-    currentArtifact = nullptr;
-  }
-
   if (torchDuration > 0) {
     torchDuration--;
   }
@@ -123,9 +119,32 @@ Cch Player::getGlyph() const {
   }
 }
 
+void Player::attack(int dx, int dy) {
+  Map *currentFloor = getCurrentFloor();
+  if (!currentWeapon) {
+    int x = currentFloor->getPlayerX() + dx;
+    int y = currentFloor->getPlayerY() + dy;
+    currentFloor->getSpace(x, y).kill(*currentFloor, x, y);
+  }
+  else {
+    currentWeapon->attack(currentFloor, dx, dy);
+    if (currentWeapon->shouldDestroy()) {
+      currentWeapon = nullptr;
+    }
+  }
+}
+
 bool Player::evokeArtifact() {
-  return (currentArtifact &&
-	  currentArtifact->evoke(getCurrentFloor()));
+  if (currentArtifact &&
+      currentArtifact->evoke(getCurrentFloor())) {
+    if (currentArtifact->shouldDestroy()) {
+      currentArtifact = nullptr;
+    }
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 Player::Mode Player::getMode() const {
@@ -221,7 +240,7 @@ bool Player::useItem(Map *map) {
   else if (input.type == InventoryInputResult::CurrentWeapon) {
     Item::UseResult result = currentWeapon->use(map);
     if (result == Item::Release) {
-      currentArtifact.release();
+      currentWeapon.release();
       return true;
     }
     else if (result == Item::Fail) {

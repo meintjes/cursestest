@@ -38,7 +38,7 @@ int Map::getPlayerY() const {
 bool Map::movePlayer(int dx, int dy) {
   Space *target = &getSpace(playerX + dx, playerY + dy);
   if (target->hasEnemy()) {
-    target->kill(*this, playerX + dx, playerY + dy);
+    you.attack(dx, dy);
     return true;
   }
   else if (target->isPassable()) {
