@@ -14,6 +14,12 @@ class Space;
 
 class Player {
  public:
+  enum class Mode {
+    Move,
+    Arrow,
+    Hook
+  };
+
   Player();
 
   void display() const;
@@ -24,10 +30,10 @@ class Player {
   int getLOS() const;
   Map* getCurrentFloor() const;
   Cch getGlyph() const;
-  bool hasArrowMode() const;
 
   bool evokeArtifact();
-  void drawArrow(); //toggles arrowmode
+  Mode getMode() const;
+  void setMode(Mode modeIn);
   
   const Weapon* const getCurrentWeapon() const;
   void setWeapon(Weapon* const weapon);
@@ -51,7 +57,7 @@ class Player {
   std::list<std::unique_ptr<Item> > inventory;
 
   struct InventoryInputResult {
-  enum Type {Inventory, CurrentArtifact, CurrentWeapon};
+    enum Type {Inventory, CurrentArtifact, CurrentWeapon};
     Type type;
     std::list<std::unique_ptr<Item> >::iterator item;
   };
@@ -61,11 +67,11 @@ class Player {
   int hpMax;
   std::unique_ptr<Weapon> currentWeapon;
   std::unique_ptr<Artifact> currentArtifact;
+  Mode mode;
 
   Branch *currentBranch;
   int currentDepth;
 
-  bool arrowMode;
   int torchDuration;
   int speedDuration;
   int freeMovesDuration;

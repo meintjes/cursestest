@@ -39,5 +39,7 @@ const Color BlackOnGreen {11, false};
 const Color BlackOnBrown {12, false};
 const Color BlackOnCyan {13, false};
 const Color BrownOnCyan {14, false};
+const Color DarkGrayOnCyan {13, true};
+const Color WhiteOnGray {15, true};
 
 #endif

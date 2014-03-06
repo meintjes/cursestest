@@ -7,7 +7,7 @@
 #include "functions.h"
 
 std::unique_ptr<SimpleItem> getRandomItem() {
-  return std::unique_ptr<SimpleItem>(new Torch);
+  return std::unique_ptr<SimpleItem>(new Hook);
 }
 
 
@@ -35,7 +35,7 @@ bool Item::pickup(Player &you) {
 DestructibleItem::DestructibleItem() :
   Item(),
   durability(100),
-  durabilityMin(randRange(-10, 10))
+  durabilityMin(randRange(-25, 25))
 {}
 
 Cst DestructibleItem::getDescriptor() const {
@@ -100,11 +100,12 @@ const Color& Torch::color() const {
 
 
 Item::UseResult Arrow::use(Map *map) {
-  if (map->you.hasArrowMode()) {
-    return Item::Fail;
+  if (map->you.getMode() == Player::Mode::Arrow) {
+    map->you.setMode(Player::Mode::Move);
+    return Item::None;
   }
   else {
-    map->you.drawArrow();
+    map->you.setMode(Player::Mode::Arrow);
     return Item::None;
   }
 }
@@ -119,4 +120,29 @@ std::string Arrow::name() const {
 
 const Color& Arrow::color() const {
   return Brown;
+}
+
+
+
+Item::UseResult Hook::use(Map *map) {
+  if (map->you.getMode() == Player::Mode::Hook) {
+    map->you.setMode(Player::Mode::Move);
+    return Item::None;
+  }
+  else {
+    map->you.setMode(Player::Mode::Hook);
+    return Item::None;
+  }
+}
+
+char Hook::glyph() const {
+  return '&';
+}
+
+std::string Hook::name() const {
+  return "hook";
+}
+
+const Color& Hook::color() const {
+  return LightGray;
 }

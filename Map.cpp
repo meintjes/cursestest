@@ -88,7 +88,45 @@ bool Map::shootArrow(int dx, int dy) {
       napms(25);
     }
   }
-  you.drawArrow();
+  you.setMode(Player::Mode::Move);
+  return true;
+}
+
+bool Map::throwHook(int dx, int dy) {
+  Cch hookGlyph = LightGray('&');
+  Cch chainGlyph = LightGray('*');
+  for (int i = 0, x = playerX, y = playerY; i < 6; i++) {
+    x += dx;
+    y += dy;
+    bool visible = isVisible(x, y, you.getLOS());
+    if (visible) {
+      move(y, x);
+      addc(hookGlyph);
+    }
+
+    //if the hook hits a wall, pull the player toward it and stop
+    if (!getSpace(x, y).isPassable()) {
+      playerX = x - dx;
+      playerY = y - dy;
+      return true;
+    }
+    //if the hook hits an enemy, pull the enemy toward the player and stop
+    else if (getSpace(x, y).hasEnemy()) {
+      getSpace(x, y).moveEnemy(&getSpace(playerX + dx, playerY + dy));
+      return true;
+    }
+    //if the hook hits nothing, draw the animation
+    else {
+      refresh();
+      napms(80);
+      if (visible) {
+        move(y, x);
+        addc(chainGlyph);
+      }
+    }
+  }
+  //if the hook reaches the end of its range without hitting anything, put it away
+  you.setMode(Player::Mode::Move);
   return true;
 }
 

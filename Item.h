@@ -92,4 +92,14 @@ class Arrow : public Item {
   const Color& color() const; 
 };
 
+class Hook : public DestructibleItem {
+ public:
+  using DestructibleItem::DestructibleItem;
+  Item::UseResult use(Map *map);
+ protected:
+  char glyph() const;
+  std::string name() const;
+  const Color& color() const;
+};
+
 #endif

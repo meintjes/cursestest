@@ -29,6 +29,8 @@ class Map {
 
   bool movePlayer(int dx, int dy);
   bool shootArrow(int dx, int dy);
+  bool throwHook(int dx, int dy);
+
   bool dropBomb();
 
   void moveEnemy(int x, int y);

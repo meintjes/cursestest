@@ -13,11 +13,11 @@ Player::Player() :
   hp(10),
   hpMax(10),
   currentArtifact(),
+  mode(Mode::Move),
 
   currentBranch(nullptr),
   currentDepth(0),
 
-  arrowMode(false),
   torchDuration(0),
   speedDuration(0),
   freeMovesDuration(0)
@@ -97,7 +97,7 @@ Map* Player::getCurrentFloor() const {
 }
 
 Cch Player::getGlyph() const {
-  if (arrowMode) {
+  if (mode == Mode::Arrow) {
     if (freeMovesDuration > 0) {
       return BrownOnCyan('@');
     }
@@ -105,6 +105,16 @@ Cch Player::getGlyph() const {
       return BlackOnBrown('@');
     }
   }
+
+  else if (mode == Mode::Hook) {
+    if (freeMovesDuration > 0) {
+      return DarkGrayOnCyan('@');
+    }
+    else {
+      return WhiteOnGray('@');
+    }
+  }
+
   else if (freeMovesDuration > 0) {
     return BlackOnCyan('@');
   }
@@ -113,17 +123,17 @@ Cch Player::getGlyph() const {
   }
 }
 
-bool Player::hasArrowMode() const {
-  return arrowMode;
-}
-
 bool Player::evokeArtifact() {
   return (currentArtifact &&
 	  currentArtifact->evoke(getCurrentFloor()));
 }
 
-void Player::drawArrow() {
-  arrowMode = !arrowMode;
+Player::Mode Player::getMode() const {
+  return mode;
+}
+
+void Player::setMode(Player::Mode modeIn) {
+  mode = modeIn;
 }
 
 const Weapon* const Player::getCurrentWeapon() const {
@@ -243,21 +253,25 @@ bool Player::dropItem(Space &space) {
   }
 
   InventoryInputResult input = getInventoryInput();
+  //dropping normal inventory items:
   if (input.type == InventoryInputResult::Inventory) { 
     if (input.item == inventory.end()) {
       return false;
     }
     space.setItem(std::move(*input.item));
     inventory.erase(input.item);
+    //in case the player drops an arrow or something:
+    setMode(Mode::Move);
     return true;
   }
 
+  //drop current weapon:
   else if (input.type == InventoryInputResult::CurrentWeapon) {
     space.setItem(std::move(currentWeapon));
     return true;
   }
 
-  else { //CurrentArtifact
+  else { //drop current artifact:
     space.setItem(std::move(currentArtifact));
     return true;
   }

@@ -58,6 +58,7 @@ int main() {
   init_pair(12, COLOR_BLACK, COLOR_YELLOW);
   init_pair(13, COLOR_BLACK, COLOR_CYAN);
   init_pair(14, COLOR_YELLOW, COLOR_CYAN);
+  init_pair(15, COLOR_WHITE, COLOR_WHITE);
 
   Menu MainMenu({
     Option{"Play game", playGame},
@@ -106,11 +107,18 @@ void playGame() {
 
 bool getInput(Map *map, const CommandMap cmap) {
   DirectionalFn dfn;
-  if (map->you.hasArrowMode()) {
-    dfn = &Map::shootArrow;
-  }
-  else {
-    dfn = &Map::movePlayer;
+  switch (map->you.getMode()) {
+    case Player::Mode::Move:
+      dfn = &Map::movePlayer;
+      break;
+    case Player::Mode::Arrow:
+      dfn = &Map::shootArrow;
+      break;
+    case Player::Mode::Hook:
+      dfn = &Map::throwHook;
+      break;
+    default:
+      assert(false);
   }
 
   switch (cmap[getch()]) {
