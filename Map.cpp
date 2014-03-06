@@ -113,8 +113,10 @@ bool Map::throwHook(int dx, int dy) {
     }
     //if the hook hits an enemy, pull the enemy toward the player and stop
     else if (getSpace(x, y).hasEnemy()) {
-      getSpace(x, y).moveEnemy(&getSpace(playerX + dx, playerY + dy));
-      getSpace(x, y).stun(3);
+      if (i > 0) { //don't stun enemies that are standing directly next to you
+        getSpace(x, y).stun(3);
+        getSpace(x, y).moveEnemy(&getSpace(playerX + dx, playerY + dy));
+      }
       you.setMode(Player::Mode::Move);
       return true;
     }
