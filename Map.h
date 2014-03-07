@@ -43,12 +43,13 @@ class Map {
   int getPlayerY() const;
   bool changeFloor(int dz, const SpaceType &type);
 
+  static bool isValidX(int x);
+  static bool isValidY(int y);
+ 
  private:
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
 
-  static bool isValidX(int x);
-  static bool isValidY(int y);
   bool isVisible(int x, int y, int LOS) const;
   bool hasLOS(int x1, int y1, int x2, int y2) const;
 

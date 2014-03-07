@@ -31,7 +31,15 @@ std::unique_ptr<SimpleItem> getRandomItem() {
     return std::unique_ptr<SimpleItem>(new Bludgeon);
   }
   */
-  return std::unique_ptr<SimpleItem>(new Bludgeon);
+  if (!randTo(2)) {
+    return std::unique_ptr<SimpleItem>(new Axe);
+  }
+  else if (randTo(1)) {
+    return std::unique_ptr<SimpleItem>(new Lance);
+  }
+  else {
+    return std::unique_ptr<SimpleItem>(new Spear);
+  }
 }
 
 

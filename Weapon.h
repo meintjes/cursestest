@@ -22,12 +22,42 @@ class Weapon : public DestructibleItem {
   char glyph() const;
 };
 
+class Axe : public Weapon {
+ public:
+  using DestructibleItem::DestructibleItem;
+
+  void attack(Map *map, int dx, int dy);
+ protected:
+  std::string name() const;
+  const Color& color() const;
+};
+
 class Bludgeon : public Weapon {
  public:
   using DestructibleItem::DestructibleItem;
 
   void attack(Map *map, int dx, int dy);
 
+ protected:
+  std::string name() const;
+  const Color& color() const;
+};
+
+class Lance : public Weapon {
+ public:
+  using DestructibleItem::DestructibleItem;
+
+  void attack(Map *map, int dx, int dy);
+ protected:
+  std::string name() const;
+  const Color& color() const;
+};
+
+class Spear : public Weapon {
+ public:
+  using DestructibleItem::DestructibleItem;
+
+  void attack(Map *map, int dx, int dy);
  protected:
   std::string name() const;
   const Color& color() const;
