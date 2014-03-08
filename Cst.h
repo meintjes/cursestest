@@ -2,13 +2,14 @@
 #define __CST_H__
 
 #include <string>
-#include "Color.h"
 
 class Cst {
  public:
   //constructor for implicit conversion from strings literal.
-  Cst(const char *textIn);
-  Cst(const std::string &textIn);
+  Cst(const char *textIn)
+    : text(textIn), hue(8), bold(false) {}
+  Cst(const std::string &textIn)
+    : text(textIn), hue(8), bold(false) {}
 
   bool operator>(const Cst &rhs);
   bool operator<(const Cst &rhs);
@@ -22,10 +23,13 @@ class Cst {
   friend Cst operator+(const std::string &str, const Cst &cst);
  private:
   //constructor is private. use Color::operator()
-  Cst(const std::string &textIn, const Color &colorIn);
+  Cst(const std::string &textIn,
+      const int &hueIn, const bool &boldIn)
+    : text(textIn), hue(hueIn), bold(boldIn) {}
 
   const std::string text;
-  const Color &color;
+  const int hue;
+  const bool bold;
 };
 
 #endif

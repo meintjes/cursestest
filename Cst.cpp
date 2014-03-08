@@ -1,16 +1,6 @@
 #include "Cst.h"
 #include <ncurses.h>
 
-Cst::Cst(const char *textIn)
-  : text(textIn), color(LightGray) {
-
-}
-
-Cst::Cst(const std::string &textIn)
-  : text(textIn), color(LightGray) {
-
-}
-
 bool Cst::operator>(const Cst &rhs) {
   return this->text > rhs.text;
 }
@@ -33,30 +23,25 @@ bool Cst::operator==(const Cst &rhs) {
 
 
 
-Cst::Cst(const std::string &textIn, const Color &colorIn)
-  : text(textIn), color(colorIn) {
-
-}
-
 void addcs(const Cst &cst) {
-  if (cst.color.bold) {
+  if (cst.bold) {
     attron(A_BOLD);
-    attron(COLOR_PAIR(cst.color.hue));
+    attron(COLOR_PAIR(cst.hue));
     addstr(cst.text.c_str());
-    attroff(COLOR_PAIR(cst.color.hue));
+    attroff(COLOR_PAIR(cst.hue));
     attroff(A_BOLD);
   }
   else {
-    attron(COLOR_PAIR(cst.color.hue));
+    attron(COLOR_PAIR(cst.hue));
     addstr(cst.text.c_str());
-    attroff(COLOR_PAIR(cst.color.hue));
+    attroff(COLOR_PAIR(cst.hue));
   }
 }
 
 Cst operator+(const Cst &cst, const std::string &str) {
-  return cst.color(cst.text + str);
+  return Cst(cst.text + str, cst.hue, cst.bold);
 }
 
 Cst operator+(const std::string &str, const Cst &cst) {
-  return cst.color(str + cst.text);
+  return Cst(str + cst.text, cst.hue, cst.bold);
 }

@@ -1,13 +1,13 @@
 #ifndef __OPTION_H__
 #define __OPTION_H__
 
-#include "Cst.h"
 #include <functional>
 #include <string>
+#include "Cst.h"
 
 class Option {
  public:
-  Option(Cst nameIn, std::function<void(void)> fnIn);
+  Option(const Cst &nameIn, std::function<void(void)> fnIn);
   Option(std::function<Cst(void)> textfnIn, std::function<void(void)> fnIn);
   void operator()() const;
   Cst getText() const;

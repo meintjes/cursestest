@@ -2,19 +2,20 @@
 #define __COLOR_H__
 
 #include <string>
-
-class Cst;
-class Cch;
+#include "Cst.h"
+#include "Cch.h"
 
 struct Color {
   int hue;
   bool bold;
 
-  const Cst operator()(const Cst &cst) const;
-  const Cch operator()(const Cch &cch) const;
-  bool operator==(const Color &other) const;
+  const Cst operator()(const Cst &cst) const {
+    return Cst(cst.text, this->hue, this->bold);
+  }
 
-  friend void addc(const Cst &cst);
+  constexpr const Cch operator()(const Cch &cch) const {
+    return Cch(cch.glyph, this->hue, this->bold);
+  }
 };
 
 const Color DarkGray {1, true};

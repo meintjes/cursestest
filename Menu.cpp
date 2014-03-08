@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include "Cch.h"
 #include "Cst.h"
+#include "Color.h"
 #include <ncurses.h>
 
 Menu::Menu(std::vector<Option> optionsIn) :

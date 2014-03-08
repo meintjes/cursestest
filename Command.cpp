@@ -1,4 +1,5 @@
 #include "Command.h"
+#include "Color.h"
 #include <fstream>
 
 bool readControls(CommandMap cmap) {

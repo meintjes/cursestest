@@ -1,21 +1,23 @@
 #ifndef __CCH_H__
 #define __CCH_H__
 
-class Color;
-
 class Cch {
  public:
-  Cch(const char &glyphIn);
+  constexpr Cch(const char &glyphIn)
+    : glyph(glyphIn), hue(8), bold(false) {}
+
   friend void addc(const Cch &cch);
   friend class Color;
 
   bool operator==(const Cch &other) const;
  private:
   //constructor is private. use Color::operator()
-  Cch(const char &glyphIn, const Color &colorIn);
+  constexpr Cch(const char &glyphIn, const int &hueIn, const bool &boldIn)
+    : glyph(glyphIn), hue(hueIn), bold(boldIn) {}
 
   const char glyph;
-  const Color &color;
+  const int hue;
+  const bool bold;
 };
 
 #endif

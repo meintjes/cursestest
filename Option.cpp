@@ -1,6 +1,7 @@
 #include "Option.h"
+#include "Color.h"
 
-Option::Option(Cst nameIn, std::function<void(void)> fnIn) :
+Option::Option(const Cst &nameIn, std::function<void(void)> fnIn) :
   text(nameIn), textfn(nullptr), fn(fnIn) {
 }
 
