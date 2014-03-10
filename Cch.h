@@ -20,4 +20,6 @@ class Cch {
   const bool bold;
 };
 
+void addc(int y, int x, const Cch &cch);
+
 #endif

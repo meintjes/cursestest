@@ -21,15 +21,16 @@ bool Cst::operator==(const Cst &rhs) {
   return this->text == rhs.text;
 }
 
-
+void addcs(int y, int x, const Cst &cst) {
+  move(y, x);
+  addcs(cst);
+}
 
 void addcs(const Cst &cst) {
   if (cst.bold) {
-    attron(A_BOLD);
-    attron(COLOR_PAIR(cst.hue));
+    attron(A_BOLD | COLOR_PAIR(cst.hue));
     addstr(cst.text.c_str());
-    attroff(COLOR_PAIR(cst.hue));
-    attroff(A_BOLD);
+    attroff(A_BOLD | COLOR_PAIR(cst.hue));
   }
   else {
     attron(COLOR_PAIR(cst.hue));
