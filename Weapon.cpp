@@ -2,9 +2,9 @@
 #include "Player.h"
 #include "Map.h"
 
-Item::UseResult Weapon::use(Map *map) {
-  if (map->you.getCurrentWeapon() == this) {
-    if (map->you.addItem(this, true)) {
+Item::UseResult Weapon::use(Map &map) {
+  if (map.you.getCurrentWeapon() == this) {
+    if (map.you.addItem(this, true)) {
       return Item::Release;
     }
     else {
@@ -12,7 +12,7 @@ Item::UseResult Weapon::use(Map *map) {
     }
   }
   else {
-    map->you.setWeapon(this);
+    map.you.setWeapon(this);
     return Item::Release;
   }
 } 
@@ -23,10 +23,10 @@ char Weapon::glyph() const {
 
 
 
-bool Axe::attack(Map *map, int dx, int dy) {
+bool Axe::attack(Map &map, int dx, int dy) {
   Point spaces[3];
-  int playerX = map->getPlayerX();
-  int playerY = map->getPlayerY();
+  int playerX = map.getPlayerX();
+  int playerY = map.getPlayerY();
   //figure out which three spaces to hit
   if (dx == 0) {
     spaces[0] = {playerX - 1, playerY + dy};
@@ -46,8 +46,9 @@ bool Axe::attack(Map *map, int dx, int dy) {
 
   //hit each of those spaces
   for (Point &space : spaces) {
-    map->getSpace(space.x, space.y).kill(*map, space.x, space.y);
+    map(space.x, space.y).kill(map, space.x, space.y);
   }
+  damage(2);
   return true;
 }
 
@@ -61,11 +62,12 @@ const Color& Axe::color() const {
 
 
 
-bool Bludgeon::attack(Map *map, int dx, int dy) {
-  int x = map->getPlayerX() + dx;
-  int y = map->getPlayerY() + dy;
-  map->getSpace(x, y).kill(*map, x, y);
-  map->getSpace(x, y).stun(1);
+bool Bludgeon::attack(Map &map, int dx, int dy) {
+  int x = map.getPlayerX() + dx;
+  int y = map.getPlayerY() + dy;
+  map(x, y).kill(map, x, y);
+  map(x, y).stun(1);
+  damage(2);
   return true;
 }
 
@@ -79,12 +81,16 @@ const Color& Bludgeon::color() const {
 
 
 
-bool Lance::attack(Map *map, int dx, int dy) {
-  int x = map->getPlayerX() + dx;
-  int y = map->getPlayerY() + dy;
-  map->getSpace(x, y).kill(*map, x, y);
-  bool shouldSpendTurn = (map->you.getLastMoveDirection() != Point{dx, dy});
-  map->you.setLastMoveDirection({0, 0});
+bool Lance::attack(Map &map, int dx, int dy) {
+  int x = map.getPlayerX() + dx;
+  int y = map.getPlayerY() + dy;
+  map(x, y).kill(map, x, y);
+  bool shouldSpendTurn = (map.you.getLastMoveDirection() != Point{dx, dy});
+  map.you.setLastMoveDirection({0, 0});
+  damage(2);
+  if (!shouldSpendTurn) {
+    map(x, y).kill(map, x, y);
+  }
   return shouldSpendTurn;
 }
 
@@ -98,15 +104,16 @@ const Color& Lance::color() const {
 
 
 
-bool Spear::attack(Map *map, int dx, int dy) {
-  int x = map->getPlayerX() + dx;
-  int y = map->getPlayerY() + dy;
-  map->getSpace(x, y).kill(*map, x, y);
+bool Spear::attack(Map &map, int dx, int dy) {
+  int x = map.getPlayerX() + dx;
+  int y = map.getPlayerY() + dy;
+  map(x, y).kill(map, x, y);
   x += dx;
   y += dy;
   if (Map::isValidX(x) && Map::isValidY(y)) {
-    map->getSpace(x, y).kill(*map, x, y);
+    map(x, y).kill(map, x, y);
   }
+  damage(2);
   return true;
 }
 

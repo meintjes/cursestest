@@ -34,7 +34,7 @@ void Enemy::attack(Map &map, int x, int y) {
 }
 
 void Enemy::die(Map &map, int x, int y) {
-  map.getSpace(x, y).removeEnemy();
+  map(x, y).removeEnemy();
 }
 
 Enemy::~Enemy() {
@@ -95,7 +95,7 @@ Cch Zombie::getGlyph() const {
 void Zombie::die(Map &map, int x, int y) {
   hp--;
   if (hp <= 0) {
-    map.getSpace(x, y).removeEnemy();
+    map(x, y).removeEnemy();
   }
 }
 
@@ -126,7 +126,7 @@ int Exploder::getRange() const {
 
 void Exploder::attack(Map &map, int x, int y) {
   if (isPrimed) {
-    map.getSpace(x, y).kill(map, x, y);
+    map(x, y).kill(map, x, y);
   }
   else {
     isPrimed = true;
@@ -137,10 +137,10 @@ void Exploder::die(Map &map, int x, int y) {
   Point p = {x, y};
   for (int x = p.x - 1; x <= p.x + 1; x++) {
     for (int y = p.y - 1; y <= p.y + 1; y++) {
-      map.getSpace(x, y).addGas(4);
+      map(x, y).addGas(4);
     }
   }
-  map.getSpace(x, y).removeEnemy();
+  map(x, y).removeEnemy();
 }
 
 
@@ -179,16 +179,16 @@ void SpawnerBoss::attack(Map &map, int x, int y) {
   if (x == map.getPlayerX() && y == map.getPlayerY()) {
     map.you.damage(1);
   }
-  else if (map.getSpace(x, y).isPassable() && !map.getSpace(x, y).hasEnemy()) {
-    map.getSpace(x, y).setEnemy(new Exploder);
+  else if (map(x, y).isPassable() && !map(x, y).hasEnemy()) {
+    map(x, y).setEnemy(new Exploder);
   }
 }
 
 void SpawnerBoss::die(Map &map, int x, int y) {
   hp--;
   if (hp <= randRange(-2, 2)) {
-    map.getSpace(x, y).removeEnemy();
-    map.getSpace(x, y).setItem(new TimeStopper);
+    map(x, y).removeEnemy();
+    map(x, y).setItem(new TimeStopper);
   }
 }
 

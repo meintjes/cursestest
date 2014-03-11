@@ -29,7 +29,7 @@ class Player {
 
   int getHp() const;
   int getLOS() const;
-  Map* getCurrentFloor() const;
+  Map& getCurrentFloor() const;
   Cch getGlyph() const;
 
   bool attack(int dx, int dy);
@@ -49,7 +49,7 @@ class Player {
   bool removeStamina(int num);
   bool restoreStamina(int num);
   bool addItem(Item * const item, bool checkMaxItems);
-  bool useItem(Map *map);
+  bool useItem(Map &map);
   bool dropItem(Space &space);
 
   void stopTime(int num);

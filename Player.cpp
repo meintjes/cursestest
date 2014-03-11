@@ -113,8 +113,8 @@ int Player::getLOS() const {
   return ((torchDuration > 0) ? 6 : 3);
 }
 
-Map* Player::getCurrentFloor() const {
-  return &currentBranch->floors.at(currentDepth);
+Map& Player::getCurrentFloor() const {
+  return currentBranch->floors.at(currentDepth);
 }
 
 Cch Player::getGlyph() const {
@@ -145,11 +145,11 @@ Cch Player::getGlyph() const {
 }
 
 bool Player::attack(int dx, int dy) {
-  Map *currentFloor = getCurrentFloor();
+  Map &currentFloor = getCurrentFloor();
   if (!currentWeapon) {
-    int x = currentFloor->getPlayerX() + dx;
-    int y = currentFloor->getPlayerY() + dy;
-    currentFloor->getSpace(x, y).kill(*currentFloor, x, y);
+    int x = currentFloor.getPlayerX() + dx;
+    int y = currentFloor.getPlayerY() + dy;
+    currentFloor(x, y).kill(currentFloor, x, y);
     return true;
   }
   else {
@@ -267,7 +267,7 @@ bool Player::addItem(Item *item, bool checkMaxItems) {
   return true;
 }
 
-bool Player::useItem(Map *map) {
+bool Player::useItem(Map &map) {
   //figure out which item the player wants to use
   InventoryInputResult input = getInventoryInput();
   

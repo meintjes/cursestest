@@ -12,7 +12,7 @@ Map::Map(Player &player, int depth) : you(player) {
     generateBoxes(depth);
   }
 
-  getSpace(playerX, playerY).setType(StairsUp);
+  (*this)(playerX, playerY).setType(StairsUp);
   sanitizeEntry();
 }
 
@@ -22,7 +22,7 @@ void Map::drawLine(Point a, const Point b, const SpaceType &type) {
   //this is horrific style, but fuck it
   if (randTo(1)) {
     while (a.x - b.x) {
-      getSpace(a.x, a.y).setType(type);
+      (*this)(a.x, a.y).setType(type);
       a.x += sgn(b.x - a.x);
       if (!randTo(10)) { //creates wavy lines rather than straight angles
 	drawLine(a, b, type);
@@ -30,13 +30,13 @@ void Map::drawLine(Point a, const Point b, const SpaceType &type) {
       }
     }
     while (a.y - b.y) {
-      getSpace(a.x, a.y).setType(type);
+      (*this)(a.x, a.y).setType(type);
       a.y += sgn(b.y - a.y);
     }
   }
   else {
     while (a.y - b.y) {
-      getSpace(a.x, a.y).setType(type);
+      (*this)(a.x, a.y).setType(type);
       a.y += sgn(b.y - a.y);
       if (!randTo(10)) { //creates wavy lines rather than straight angles
 	drawLine(a, b, type);
@@ -44,11 +44,11 @@ void Map::drawLine(Point a, const Point b, const SpaceType &type) {
       }
     }
     while (a.x - b.x) {
-      getSpace(a.x, a.y).setType(type);
+      (*this)(a.x, a.y).setType(type);
       a.x += sgn(b.x - a.x);
     }
   }
-  getSpace(a.x, a.y).setType(type);
+  (*this)(a.x, a.y).setType(type);
 }
 
 void Map::drawBox(Point a, Point b, const SpaceType &type) {
@@ -58,7 +58,7 @@ void Map::drawBox(Point a, Point b, const SpaceType &type) {
   int yMax = std::max(a.y, b.y);
   for (int x = std::min(a.x, b.x); x <= xMax; x++) {
     for (int y = std::min(a.y, b.y); y <= yMax; y++) {
-      getSpace(x, y).setType(type);
+      (*this)(x, y).setType(type);
     }
   }
 }
@@ -91,12 +91,12 @@ void Map::generateBoxes(int depth) {
 
   for (int x = 1; x <= MAPWIDTH; x++) {
     for (int y = 1; y <= MAPHEIGHT; y++) {
-      if (getSpace(x, y).isPassable()) {
+      if ((*this)(x, y).isPassable()) {
 	if (!randTo(50 - depth)) {
-	  //getSpace(x, y).setEnemy(getRandomEnemy());
+	  //(*this)(x, y).setEnemy(getRandomEnemy());
 	}
 	else if (!randTo(/*80*/ 20 - depth)){
-	  getSpace(x, y).setItem(getRandomItem());
+	  (*this)(x, y).setItem(getRandomItem());
 	}
       }
     }
@@ -107,7 +107,7 @@ void Map::sanitizeEntry() {
   for (int x = playerX - 2; x <= playerX + 2; x++) {
     for (int y = playerY - 2; y <= playerY + 2; y++) {
       if (isValidX(x) && isValidY(y)) {
-	getSpace(x, y).removeEnemy();
+	(*this)(x, y).removeEnemy();
       }
     }
   }

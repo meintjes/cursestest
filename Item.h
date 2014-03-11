@@ -34,7 +34,7 @@ class Item : public SimpleItem {
   virtual bool pickup(Player &you);
   
   //executes when the player uses the item from their inventory.
-  virtual Item::UseResult use(Map *map) = 0;
+  virtual Item::UseResult use(Map &map) = 0;
 
  protected:
   virtual std::string name() const = 0;
@@ -65,7 +65,7 @@ class DestructibleItem : public Item {
 class Bomb : public Item {
  public:
   using Item::Item;
-  Item::UseResult use(Map *map);
+  Item::UseResult use(Map &map);
  protected:
   char glyph() const;
   std::string name() const;
@@ -75,7 +75,7 @@ class Bomb : public Item {
 class Torch : public Item {
  public:
   using Item::Item;
-  Item::UseResult use(Map *map);
+  Item::UseResult use(Map &map);
  protected:
   char glyph() const;
   std::string name() const;
@@ -85,7 +85,7 @@ class Torch : public Item {
 class Arrow : public Item {
  public:
   using Item::Item;
-  Item::UseResult use(Map *map);
+  Item::UseResult use(Map &map);
  protected:
   char glyph() const;
   std::string name() const;
@@ -95,7 +95,7 @@ class Arrow : public Item {
 class Hook : public DestructibleItem {
  public:
   using DestructibleItem::DestructibleItem;
-  Item::UseResult use(Map *map);
+  Item::UseResult use(Map &map);
  protected:
   char glyph() const;
   std::string name() const;

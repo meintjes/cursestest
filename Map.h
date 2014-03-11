@@ -34,8 +34,8 @@ class Map {
   bool dropBomb();
 
   void moveEnemy(int x, int y);
-  Space& getSpace(int x, int y);
-  const Space& getSpace(int x, int y) const;
+  Space& operator()(int x, int y);
+  const Space& operator()(int x, int y) const;
   void tick();
 
   Player &you;

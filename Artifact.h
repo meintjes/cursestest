@@ -13,9 +13,9 @@ class Artifact : public DestructibleItem {
  public:
   using DestructibleItem::DestructibleItem;
   
-  Item::UseResult use(Map *map);
+  Item::UseResult use(Map &map);
 
-  virtual bool evoke(Map *map) = 0;
+  virtual bool evoke(Map &map) = 0;
 
  protected:
   virtual std::string name() const = 0;
@@ -30,7 +30,7 @@ class Artifact : public DestructibleItem {
 class HealingOrb : public Artifact {
  public:
   using Artifact::Artifact;
-  bool evoke(Map *map);
+  bool evoke(Map &map);
  private:
   std::string name() const;
   const Color& color() const;
@@ -41,7 +41,7 @@ class HealingOrb : public Artifact {
 class TimeStopper : public Artifact {
  public:
   using Artifact::Artifact;
-  bool evoke(Map *map);
+  bool evoke(Map &map);
  private:
   std::string name() const;
   const Color& color() const;

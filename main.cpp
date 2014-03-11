@@ -12,8 +12,8 @@
 #include <cassert>
 
 void playGame();
-bool getInput(Map *map, const CommandMap cmap);
-bool getLongPrompt(Map *map);
+bool getInput(Map &map, const CommandMap cmap);
+bool getLongPrompt(Map &map);
 
 Menu ControlsMenu({
   Option{"Move up/left", std::bind(changeControl, COMMAND_MOVE_UPLEFT)},
@@ -90,23 +90,23 @@ void playGame() {
   while (you.getHp() > 0) {
     //get input that would cause a turn to pass
     do {
-      you.getCurrentFloor()->display();
+      you.getCurrentFloor().display();
       you.display();
     }
     while (!getInput(you.getCurrentFloor(), cmap));
-    you.getCurrentFloor()->tick(); //then update game state
+    you.getCurrentFloor().tick(); //then update game state
   }
 
   //after the player dies:
   erase();
-  you.getCurrentFloor()->display();
-  addcs(0, 23, Red("You have died..."));
+  you.getCurrentFloor().display();
+  addcs(0, 22, Red("You have died..."));
   getch();
 }
 
-bool getInput(Map *map, const CommandMap cmap) {
+bool getInput(Map &map, const CommandMap cmap) {
   DirectionalFn dfn;
-  switch (map->you.getMode()) {
+  switch (map.you.getMode()) {
     case Player::Mode::Move:
       dfn = &Map::movePlayer;
       break;
@@ -124,36 +124,36 @@ bool getInput(Map *map, const CommandMap cmap) {
   case COMMAND_FIRST: //unbound keys
     return false;
   case COMMAND_MOVE_UPLEFT:
-    return (map->*dfn)(-1, -1);
+    return (map.*dfn)(-1, -1);
   case COMMAND_MOVE_UP:
-    return (map->*dfn)(0, -1);
+    return (map.*dfn)(0, -1);
   case COMMAND_MOVE_UPRIGHT:
-    return (map->*dfn)(1, -1);
+    return (map.*dfn)(1, -1);
   case COMMAND_MOVE_LEFT:
-    return (map->*dfn)(-1, 0);
+    return (map.*dfn)(-1, 0);
   case COMMAND_WAIT:
     return true;
   case COMMAND_MOVE_RIGHT:
-    return (map->*dfn)(1, 0);
+    return (map.*dfn)(1, 0);
   case COMMAND_MOVE_DOWNLEFT:
-    return (map->*dfn)(-1, 1);
+    return (map.*dfn)(-1, 1);
   case COMMAND_MOVE_DOWN:
-    return (map->*dfn)(0, 1);
+    return (map.*dfn)(0, 1);
   case COMMAND_MOVE_DOWNRIGHT:
-    return (map->*dfn)(1, 1);
+    return (map.*dfn)(1, 1);
 
   case COMMAND_EVOKE_ARTIFACT:
-    return map->you.evokeArtifact();
+    return map.you.evokeArtifact();
   case COMMAND_USE_ITEM:
-    return map->you.useItem(map);
+    return map.you.useItem(map);
   case COMMAND_DROP_ITEM:
-    return map->you.dropItem(map->getSpace(map->getPlayerX(),
-                                           map->getPlayerY()));
+    return map.you.dropItem(map(map.getPlayerX(),
+                                map.getPlayerY()));
 
   case COMMAND_INTERACT_STAIRSUP:
-    return map->changeFloor(-1, StairsUp);
+    return map.changeFloor(-1, StairsUp);
   case COMMAND_INTERACT_STAIRSDOWN:
-    return map->changeFloor(+1, StairsDown);
+    return map.changeFloor(+1, StairsDown);
 
   case COMMAND_LONG_PROMPT:
     return getLongPrompt(map);
@@ -164,22 +164,22 @@ bool getInput(Map *map, const CommandMap cmap) {
   }
 }
 
-bool getLongPrompt(Map *map) {
+bool getLongPrompt(Map &map) {
   char command[79];
   bool didTakeTurn = false;
 
   erase();
-  map->display();
+  map.display();
   addc(0, 23, DarkGray('#'));
   echo();
   getnstr(command, 79);
   noecho();
 
   if (std::strcmp(command, "die") == 0) {
-    map->you.damage(100);
+    map.you.damage(100);
     didTakeTurn = true;
   }
 
-  map->you.display();
+  map.you.display();
   return didTakeTurn;
 }
