@@ -3,7 +3,6 @@
 
 #include "Menu.h"
 #include <string>
-#include <ncurses.h>
 
 //new commands must be defined here, given default values in resetControls,
 //actually implemented in getInput, and given a menu entry in CommandMenu.

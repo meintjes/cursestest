@@ -23,7 +23,7 @@ char Weapon::glyph() const {
 
 
 
-void Axe::attack(Map *map, int dx, int dy) {
+bool Axe::attack(Map *map, int dx, int dy) {
   Point spaces[3];
   int playerX = map->getPlayerX();
   int playerY = map->getPlayerY();
@@ -48,6 +48,7 @@ void Axe::attack(Map *map, int dx, int dy) {
   for (Point &space : spaces) {
     map->getSpace(space.x, space.y).kill(*map, space.x, space.y);
   }
+  return true;
 }
 
 std::string Axe::name() const {
@@ -60,11 +61,12 @@ const Color& Axe::color() const {
 
 
 
-void Bludgeon::attack(Map *map, int dx, int dy) {
+bool Bludgeon::attack(Map *map, int dx, int dy) {
   int x = map->getPlayerX() + dx;
   int y = map->getPlayerY() + dy;
   map->getSpace(x, y).kill(*map, x, y);
   map->getSpace(x, y).stun(1);
+  return true;
 }
 
 std::string Bludgeon::name() const {
@@ -77,10 +79,13 @@ const Color& Bludgeon::color() const {
 
 
 
-void Lance::attack(Map *map, int dx, int dy) {
+bool Lance::attack(Map *map, int dx, int dy) {
   int x = map->getPlayerX() + dx;
   int y = map->getPlayerY() + dy;
   map->getSpace(x, y).kill(*map, x, y);
+  bool shouldSpendTurn = (map->you.getLastMoveDirection() != Point{dx, dy});
+  map->you.setLastMoveDirection({0, 0});
+  return shouldSpendTurn;
 }
 
 std::string Lance::name() const {
@@ -93,7 +98,7 @@ const Color& Lance::color() const {
 
 
 
-void Spear::attack(Map *map, int dx, int dy) {
+bool Spear::attack(Map *map, int dx, int dy) {
   int x = map->getPlayerX() + dx;
   int y = map->getPlayerY() + dy;
   map->getSpace(x, y).kill(*map, x, y);
@@ -102,6 +107,7 @@ void Spear::attack(Map *map, int dx, int dy) {
   if (Map::isValidX(x) && Map::isValidY(y)) {
     map->getSpace(x, y).kill(*map, x, y);
   }
+  return true;
 }
 
 std::string Spear::name() const {

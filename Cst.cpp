@@ -21,7 +21,7 @@ bool Cst::operator==(const Cst &rhs) {
   return this->text == rhs.text;
 }
 
-void addcs(int y, int x, const Cst &cst) {
+void addcs(int x, int y, const Cst &cst) {
   move(y, x);
   addcs(cst);
 }

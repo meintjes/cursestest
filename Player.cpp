@@ -10,10 +10,12 @@
 #include <cassert>
 
 Player::Player() :
-  hp(10),
   hpMax(10),
-  currentArtifact(),
+  hp(hpMax),
+  staminaMax(10),
+  stamina(staminaMax),
   mode(Mode::Move),
+  lastMoveDirection({0, 0}),
 
   currentBranch(nullptr),
   currentDepth(0),
@@ -24,45 +26,68 @@ Player::Player() :
 
 {}
 
+
+
 void Player::display() const {
-  move(23, 0);
-  //print hp bar, colored according to your current hp
-  const Color &hpColor = ((hp * 10) / hpMax > 1) ? BlackOnGreen : BlackOnRed;
-  int i = 0;
-  for (; i < (hp * 10) / hpMax; i++) {
-    addcs(hpColor("  "));
-    addc(DarkGray(' '));
-  } //print rest of bar for reference
-  for (; i < 10; i++) {
-    addcs(DarkGray("[] "));
+  //overwrite old information so everything updates correctly
+  for (int i = 0; i < 80; i++) {
+    addc(i, 22, ' ');
+    addc(i, 23, ' ');
   }
 
-  //free up space so stuff updates correctly
-  move(23, 31);
-  for (int i = 31; i < 80; i++) {
-    addch(' ');
+  //at low hp, change bar colors
+  const Color &hpColor = ((hp * 2) / hpMax) ?
+    BlackOnGreen : BlackOnRed;
+  const Color &staminaColor = ((stamina * 2) / staminaMax) ?
+    BlackOnBrown : BlackOnRed;
+  
+  //print hp and stamina bars
+  for (int i = 21; i >= 0; i--) {
+    addc(78, 21 - i, ((i <= 21 * hp / hpMax) ? hpColor : LightGray)(' '));
+    addc(((i <= 21 * stamina / staminaMax) ? staminaColor : LightGray)(' '));
   }
 
-  //print current floor
-  move(23, 31);
-  addcs(currentBranch->name + ": ");
+  //print numerical displays at bottom right corner
+  std::string hpDisplay = std::to_string(hp)
+                        + '/'
+                        + std::to_string(hpMax);
+  addcs(80 - hpDisplay.length(), 22, hpColor(hpDisplay));
+
+  std::string staminaDisplay = std::to_string(stamina)
+                             + '/'
+                             + std::to_string(staminaMax);
+  addcs(80 - staminaDisplay.length(), 23, staminaColor(staminaDisplay));
+
+  //print current location
+  addcs(0, 23, currentBranch->name + ": ");
   addcs(White(std::to_string(1 + currentDepth)));
 
-  //print current artifact
+  //print current weapon and artifact
+  if (currentWeapon) {
+    addc(20, 22, currentWeapon->getGlyph());
+    addcs(" (" + currentWeapon->getDescriptor() + ")");
+  }
   if (currentArtifact) {
-    move(23, 44);
-    addc(currentArtifact->getGlyph());
+    addc(20, 23, currentArtifact->getGlyph());
     addcs(" (" + currentArtifact->getDescriptor() + ")");
   }
 
   //print item display
-  move(23, 79 - inventory.size());
+  move(22, 60);
   for (auto &item : inventory) {
     addc(item->getGlyph());
   }
 }
 
 bool Player::tick() {
+  if (movedLastTurn) {
+    movedLastTurn = false;
+  }
+  else {
+    lastMoveDirection = {0, 0};
+    restoreStamina(1);
+  }
+  
   if (torchDuration > 0) {
     torchDuration--;
   }
@@ -119,18 +144,20 @@ Cch Player::getGlyph() const {
   }
 }
 
-void Player::attack(int dx, int dy) {
+bool Player::attack(int dx, int dy) {
   Map *currentFloor = getCurrentFloor();
   if (!currentWeapon) {
     int x = currentFloor->getPlayerX() + dx;
     int y = currentFloor->getPlayerY() + dy;
     currentFloor->getSpace(x, y).kill(*currentFloor, x, y);
+    return true;
   }
   else {
-    currentWeapon->attack(currentFloor, dx, dy);
+    bool shouldSpendTurn = currentWeapon->attack(currentFloor, dx, dy);
     if (currentWeapon->shouldDestroy()) {
       currentWeapon = nullptr;
     }
+    return shouldSpendTurn;
   }
 }
 
@@ -153,6 +180,15 @@ Player::Mode Player::getMode() const {
 
 void Player::setMode(Player::Mode modeIn) {
   mode = modeIn;
+}
+
+void Player::setLastMoveDirection(const Point &direction) {
+  lastMoveDirection = direction;
+  movedLastTurn = true;
+}
+
+Point Player::getLastMoveDirection() const {
+  return lastMoveDirection;
 }
 
 const Weapon* const Player::getCurrentWeapon() const {
@@ -182,13 +218,33 @@ void Player::damage(unsigned int num) {
 }
 
 bool Player::heal(unsigned int num) {
-  if (hp >= hpMax) {
+  return restoreAttribute(hp, hpMax, num);
+}
+
+bool Player::removeStamina(int num) {
+  assert(num > 0);
+  if (stamina < num) {
     return false;
   }
   else {
-    hp += num;
-    if (hp > hpMax) { //don't allow overhealing
-      hp = hpMax;
+    stamina -= num;
+    return true;
+  }
+}
+
+bool Player::restoreStamina(int num) {
+  assert(num > 0);
+  return restoreAttribute(stamina, staminaMax, num);
+}
+
+bool Player::restoreAttribute(int &att, int &attMax, int num) {
+  if (att >= attMax) {
+    return false;
+  }
+  else {
+    att += num;
+    if (att > attMax) { //don't allow overhealing or whatever
+      att = attMax;
     }
     return true;
   }
@@ -346,8 +402,7 @@ Player::InventoryInputResult Player::getInventoryInput() {
   erase();
 
   //menu header and current weapon/artifact display
-  move(0, 0);
-  addcs(Cyan("Which item? ("));
+  addcs(0, 0, Cyan("Which item? ("));
   if (currentWeapon) {
     addcs("w: " + currentWeapon->getName() + ", ");
   }
@@ -361,10 +416,8 @@ Player::InventoryInputResult Player::getInventoryInput() {
     int row = 1;
     char index = 'b';
     for (auto &item : inventory) {
-      move(row, 3);
-      addc(Cyan(index));
-      move(row, 5);
-      addc(item->getGlyph());
+      addc(3, row, Cyan(index));
+      addc(5, row, item->getGlyph());
       addcs(" " + item->getName());
 
       row++; //display next line on next row

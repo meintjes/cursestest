@@ -12,7 +12,7 @@ class Weapon : public DestructibleItem {
 
   Item::UseResult use(Map *map);
 
-  virtual void attack(Map *map, int dx, int dy) = 0;
+  virtual bool attack(Map *map, int dx, int dy) = 0;
 
  protected:
   virtual std::string name() const = 0;
@@ -26,7 +26,7 @@ class Axe : public Weapon {
  public:
   using DestructibleItem::DestructibleItem;
 
-  void attack(Map *map, int dx, int dy);
+  bool attack(Map *map, int dx, int dy);
  protected:
   std::string name() const;
   const Color& color() const;
@@ -36,7 +36,7 @@ class Bludgeon : public Weapon {
  public:
   using DestructibleItem::DestructibleItem;
 
-  void attack(Map *map, int dx, int dy);
+  bool attack(Map *map, int dx, int dy);
 
  protected:
   std::string name() const;
@@ -47,7 +47,7 @@ class Lance : public Weapon {
  public:
   using DestructibleItem::DestructibleItem;
 
-  void attack(Map *map, int dx, int dy);
+  bool attack(Map *map, int dx, int dy);
  protected:
   std::string name() const;
   const Color& color() const;
@@ -57,7 +57,7 @@ class Spear : public Weapon {
  public:
   using DestructibleItem::DestructibleItem;
 
-  void attack(Map *map, int dx, int dy);
+  bool attack(Map *map, int dx, int dy);
  protected:
   std::string name() const;
   const Color& color() const;

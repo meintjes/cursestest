@@ -100,8 +100,7 @@ void playGame() {
   //after the player dies:
   erase();
   you.getCurrentFloor()->display();
-  move(23, 0);
-  addcs(Red("You have died..."));
+  addcs(0, 23, Red("You have died..."));
   getch();
 }
 
@@ -171,8 +170,7 @@ bool getLongPrompt(Map *map) {
 
   erase();
   map->display();
-  move(23, 0);
-  addc(DarkGray('#'));
+  addc(0, 23, DarkGray('#'));
   echo();
   getnstr(command, 79);
   noecho();

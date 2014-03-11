@@ -10,18 +10,17 @@
 
 void Map::display() const {
   for (int y = 0; y <= MAPHEIGHT + 1; y++) {
-    move(y, 0);
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
       if (isVisible(x, y, you.getLOS())) {
 	if (x == playerX && y == playerY) {
-	  addc(you.getGlyph());
+	  addc(x, y, you.getGlyph());
 	}
 	else {
-	  addc(getSpace(x, y).getGlyph(true));
+	  addc(x, y, getSpace(x, y).getGlyph(true));
 	}
       }
       else {
-	addc(getSpace(x, y).getGlyph(false));
+	addc(x, y, getSpace(x, y).getGlyph(false));
       }
     }
   }
@@ -38,12 +37,12 @@ int Map::getPlayerY() const {
 bool Map::movePlayer(int dx, int dy) {
   Space *target = &getSpace(playerX + dx, playerY + dy);
   if (target->hasEnemy()) {
-    you.attack(dx, dy);
-    return true;
+    return you.attack(dx, dy);
   }
   else if (target->isPassable()) {
     playerX += dx;
     playerY += dy;
+    you.setLastMoveDirection({dx, dy});
     target->pickup(you);
     return true;
   }
@@ -80,8 +79,7 @@ bool Map::shootArrow(int dx, int dy) {
       display();
 
       // Write the arrow glyph.
-      move(y, x);
-      addc(arrowGlyph);
+      addc(x, y, arrowGlyph);
       refresh();
 
       // Pause for a moment to let the user see the animation.
@@ -100,8 +98,7 @@ bool Map::throwHook(int dx, int dy) {
     y += dy;
     bool visible = isVisible(x, y, you.getLOS());
     if (visible) {
-      move(y, x);
-      addc(hookGlyph);
+      addc(x, y, hookGlyph);
     }
 
     //if the hook hits a wall, pull the player toward it and stop
@@ -125,8 +122,7 @@ bool Map::throwHook(int dx, int dy) {
       refresh();
       napms(80);
       if (visible) {
-        move(y, x);
-        addc(chainGlyph);
+        addc(x, y, chainGlyph);
       }
     }
   }
@@ -185,7 +181,7 @@ void Map::tick() {
 
   bool damagedByGas = false;
   if (getSpace(playerX, playerY).hasGas()) {
-    you.damage();
+    you.damage(1);
     damagedByGas = true;
   }
   
@@ -224,7 +220,7 @@ void Map::tick() {
 
   //kludge to handle gas clouds appearing as part of an attack
   if (getSpace(playerX, playerY).hasGas() && !damagedByGas) {
-    you.damage();
+    you.damage(1);
   }
 }
 
@@ -304,8 +300,7 @@ void Map::executeToExplode() {
     display();
     for ( auto &point : toExplode ) {
       getSpace(point.x, point.y).explode(*this, point.x, point.y);
-      move(point.y, point.x);
-      addc(Red('#'));
+      addc(point.x, point.y, Red('#'));
     }
     refresh();
     napms(150);

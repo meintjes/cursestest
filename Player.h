@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Artifact.h"
 #include "Cch.h"
+#include "Point.h"
 #include <memory>
 #include <list>
 
@@ -31,18 +32,22 @@ class Player {
   Map* getCurrentFloor() const;
   Cch getGlyph() const;
 
-  void attack(int dx, int dy);
+  bool attack(int dx, int dy);
   bool evokeArtifact();
   Mode getMode() const;
   void setMode(Mode modeIn);
-  
+  void setLastMoveDirection(const Point &direction);
+  Point getLastMoveDirection() const;
+
   const Weapon* const getCurrentWeapon() const;
   void setWeapon(Weapon* const weapon);
   const Artifact* const getCurrentArtifact() const;
   void setArtifact(Artifact* const artifact);
 
-  void damage(unsigned int num = 1);
+  void damage(unsigned int num);
   bool heal(unsigned int num);
+  bool removeStamina(int num);
+  bool restoreStamina(int num);
   bool addItem(Item * const item, bool checkMaxItems);
   bool useItem(Map *map);
   bool dropItem(Space &space);
@@ -64,11 +69,17 @@ class Player {
   };
   Player::InventoryInputResult getInventoryInput();
   
-  int hp;
+  bool restoreAttribute(int &att, int &attMax, int num);
+
   int hpMax;
+  int hp;
+  int staminaMax;
+  int stamina;
   std::unique_ptr<Weapon> currentWeapon;
   std::unique_ptr<Artifact> currentArtifact;
   Mode mode;
+  Point lastMoveDirection;
+  bool movedLastTurn;
 
   Branch *currentBranch;
   int currentDepth;

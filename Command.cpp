@@ -1,6 +1,7 @@
 #include "Command.h"
 #include "Color.h"
 #include <fstream>
+#include <ncurses.h>
 
 bool readControls(CommandMap cmap) {
   std::ifstream file;
@@ -36,9 +37,8 @@ void writeControls(CommandMap cmap) {
 
 void changeControl(Command command) {
   CommandMap cmap = {COMMAND_FIRST};
-  move(11, 26);
   if (readControls(cmap)) {
-    addcs(White("Press a key to bind to control (escape to clear)."));
+    addcs(26, 11, White("Press a key to bind to control (escape to clear)."));
     unsigned char ch = getch();
     if (ch == 27) {
       clearControl(command, cmap);
@@ -49,7 +49,7 @@ void changeControl(Command command) {
     writeControls(cmap);
   }
   else {
-    addcs(Red("Failed to load controls."));
+    addcs(26, 11, Red("Failed to load controls."));
   }
 }
 

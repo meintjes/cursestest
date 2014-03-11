@@ -28,31 +28,27 @@ void Menu::displayMenu() {
 
   //cool scrollbar
   for (int y = 1; y < 22; y++) {
-    move(y, 1);
-    addc(DarkGray('|'));
+    addc(1, y, DarkGray('|'));
   }
   if (options.size() > 1) {
-    move(1 + ((20*currentOption) / (options.size() - 1)), 1);
+    addc(1, 1 + ((20*currentOption) / (options.size() - 1)), BlackOnWhite(' '));
   }
   else {
-    move(11, 1);
+    addc(1, 11, BlackOnWhite(' '));
   }
-  addc(BlackOnWhite(' '));
 
   for (int i = -11; i <= 11; i++) {
     if (currentOption + i >= 0 &&
 	currentOption + i < static_cast<int>(options.size())) {
-      move(11 + i, 4);
       if (i == 0) {
-	addcs(BlackOnWhite(options.at(currentOption + i).getText()));
+	addcs(4, 11, BlackOnWhite(options.at(currentOption + i).getText()));
       }
       else {
-	addcs(options.at(currentOption + i).getText());
+	addcs(4, 11 + i, options.at(currentOption + i).getText());
       }
     }
   }
-  move(23, 1);
-  addcs(Cyan("hjkl/numpad to select options"));
+  addcs(1, 23, Cyan("hjkl/numpad to select options"));
   refresh();
 }
 

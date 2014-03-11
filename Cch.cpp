@@ -6,7 +6,7 @@ bool Cch::operator==(const Cch &other) const {
     return glyph == other.glyph && hue == other.hue && bold == other.bold;
 }
 
-void addc(int y, int x, const Cch &cch) {
+void addc(int x, int y, const Cch &cch) {
   move(y, x);
   addc(cch);
 }

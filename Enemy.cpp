@@ -30,7 +30,7 @@ int Enemy::getRange() const {
 }
 
 void Enemy::attack(Map &map, int x, int y) {
-  map.you.damage();
+  map.you.damage(1);
 }
 
 void Enemy::die(Map &map, int x, int y) {
@@ -177,7 +177,7 @@ void SpawnerBoss::attack(Map &map, int x, int y) {
   x += sgn(map.getPlayerX() - x);
   y += sgn(map.getPlayerY() - y);
   if (x == map.getPlayerX() && y == map.getPlayerY()) {
-    map.you.damage();
+    map.you.damage(1);
   }
   else if (map.getSpace(x, y).isPassable() && !map.getSpace(x, y).hasEnemy()) {
     map.getSpace(x, y).setEnemy(new Exploder);
@@ -199,6 +199,6 @@ Cch Douser::getGlyph() const {
 }
 
 void Douser::attack(Map &map, int x, int y) {
-  map.you.damage();
+  map.you.damage(1);
   map.you.setTorchDuration(0);
 }

@@ -8,8 +8,8 @@
 #include <vector>
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
-const int MAPWIDTH = 78;
-const int MAPHEIGHT = 21;
+const int MAPWIDTH = 76;
+const int MAPHEIGHT = 20;
 
 class Map {
   //defined in MapGen.cpp
