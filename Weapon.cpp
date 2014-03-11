@@ -1,6 +1,7 @@
 #include "Weapon.h"
 #include "Player.h"
 #include "Map.h"
+#include <cassert>
 
 Item::UseResult Weapon::use(Map &map) {
   if (map.you.getCurrentWeapon() == this) {

@@ -1,8 +1,8 @@
 GXX=g++
 GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses
 
-cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o
-	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o -o $@
+cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o
+	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o -o $@
 
 less:
 	make 2>&1 | less
@@ -13,7 +13,7 @@ main.o: main.cpp Map.o Space.o Enemy.o Player.o Command.o Menu.o
 Map.o: Map.cpp Space.o Cch.o Player.o functions.o Point.o
 	$(GXX) $(GXX_FLAGS) Map.cpp
 
-MapGen.o: MapGen.cpp Space.o functions.o Item.o
+MapGen.o: MapGen.cpp Space.o functions.o Item.o generation.o
 	$(GXX) $(GXX_FLAGS) MapGen.cpp
 
 Cst.o: Cst.cpp
@@ -58,6 +58,8 @@ Artifact.o: Artifact.cpp Player.o Cst.o Cst.o Item.o
 Weapon.o: Weapon.cpp Item.o Map.o
 	$(GXX) $(GXX_FLAGS) Weapon.cpp
 
+generation.o: generation.cpp Item.o Weapon.o Artifact.o functions.o
+	$(GXX) $(GXX_FLAGS) generation.cpp
 
 clean:
 	rm -rf *.o cursestest

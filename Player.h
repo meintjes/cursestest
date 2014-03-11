@@ -1,8 +1,6 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "Weapon.h"
-#include "Artifact.h"
 #include "Cch.h"
 #include "Point.h"
 #include <memory>
@@ -10,6 +8,8 @@
 
 struct Branch;
 class Item;
+class Weapon;
+class Artifact;
 class Map;
 class Space;
 
@@ -22,6 +22,7 @@ class Player {
   };
 
   Player();
+  ~Player(); //necessary for unique_ptr to incomplete type
 
   void display() const;
 

@@ -1,48 +1,9 @@
 #include "Item.h"
 #include "Player.h"
-#include "Artifact.h"
 #include "Cch.h"
 #include "Cst.h"
 #include "Map.h"
 #include "functions.h"
-
-std::unique_ptr<SimpleItem> getRandomItem() {
-  /*
-  int num = randTo(99); 
-  if (num < 20) {
-    return std::unique_ptr<SimpleItem>(new Bomb);
-  }
-  else if (num < 40) {
-    return std::unique_ptr<SimpleItem>(new Torch);
-  }
-  else if (num < 60) {
-    return std::unique_ptr<SimpleItem>(new Arrow);
-  }
-  else if (num < 75) {
-    return std::unique_ptr<SimpleItem>(new Hook);
-  }
-  else if (num < 85) {
-    return std::unique_ptr<SimpleItem>(new HealingOrb);
-  }
-  else if (num < 95) {
-    return std::unique_ptr<SimpleItem>(new TimeStopper);
-  }
-  else {
-    return std::unique_ptr<SimpleItem>(new Bludgeon);
-  }
-  */
-  if (!randTo(2)) {
-    return std::unique_ptr<SimpleItem>(new Axe);
-  }
-  else if (randTo(1)) {
-    return std::unique_ptr<SimpleItem>(new Lance);
-  }
-  else {
-    return std::unique_ptr<SimpleItem>(new Spear);
-  }
-}
-
-
 
 Cch SimpleItem::getGlyph() const {
   return color()(glyph());

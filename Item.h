@@ -40,7 +40,6 @@ class Item : public SimpleItem {
   virtual std::string name() const = 0;
 };
 
-std::unique_ptr<SimpleItem> getRandomItem();
 
 //base class for artifacts and weapons
 class DestructibleItem : public Item {

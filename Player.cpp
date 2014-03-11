@@ -3,6 +3,8 @@
 #include "Space.h"
 #include "Branch.h"
 #include "Item.h"
+#include "Weapon.h"
+#include "Artifact.h"
 #include "Cst.h"
 #include "Cch.h"
 #include <string>
@@ -26,7 +28,7 @@ Player::Player() :
 
 {}
 
-
+Player::~Player() {}
 
 void Player::display() const {
   //overwrite old information so everything updates correctly

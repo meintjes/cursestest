@@ -1,6 +1,6 @@
 #include "Map.h"
 #include "functions.h"
-#include "Item.h"
+#include "generation.h"
 #include <assert.h>
 
 //depth arg will eventually be used to scale difficulty. once different branches
