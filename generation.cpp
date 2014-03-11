@@ -3,6 +3,7 @@
 #include "Item.h"
 #include "Weapon.h"
 #include "Artifact.h"
+#include "Enemy.h"
 #include <cassert>
 
 std::unique_ptr<SimpleItem> getRandomItem() {
@@ -54,3 +55,18 @@ std::unique_ptr<SimpleItem> getRandomArtifact() {
     return std::unique_ptr<SimpleItem>(new TimeStopper);
   }
 }
+
+std::unique_ptr<Enemy> getRandomEnemy() {
+  int num = randTo(99);
+  if (num < 60)
+    return std::unique_ptr<Enemy>(new Zombie);
+  else if (num < 80)
+    return std::unique_ptr<Enemy>(new Exploder);
+  else if (num < 90)
+    return std::unique_ptr<Enemy>(new Douser);
+  else if (num < 99)
+    return std::unique_ptr<Enemy>(new Reacher);
+  else
+    return std::unique_ptr<Enemy>(new SpawnerBoss);
+}
+

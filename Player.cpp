@@ -12,6 +12,7 @@
 #include <cassert>
 
 Player::Player() :
+  ore(0),
   hpMax(30),
   hp(hpMax),
   staminaMax(30),
@@ -267,6 +268,22 @@ bool Player::addItem(Item *item, bool checkMaxItems) {
   //if nothing comes after it, just insert it at the end:
   inventory.insert(inventory.end(), std::unique_ptr<Item>(item));
   return true;
+}
+
+void Player::addOre(int num) {
+  assert(ore >= 0);
+  ore += num;
+}
+
+bool Player::removeOre(int num) {
+  assert (num >= 0);
+  if (ore < num) {
+    return false;
+  }
+  else {
+    ore -= num;
+    return true;
+  }
 }
 
 bool Player::useItem(Map &map) {

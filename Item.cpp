@@ -50,6 +50,21 @@ bool DestructibleItem::shouldDestroy() const {
 
 
 
+bool Ore::pickup(Player &you) {
+  you.addOre(1);
+  return true;
+}
+
+char Ore::glyph() const {
+  return '$';
+}
+
+const Color& Ore::color() const {
+  return Brown;
+}
+
+
+
 Item::UseResult Bomb::use(Map &map) {
   if (map.dropBomb()) {
     return Item::Destroy;

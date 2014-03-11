@@ -61,6 +61,17 @@ class DestructibleItem : public Item {
 
 
 
+class Ore : public SimpleItem {
+ public:
+  using SimpleItem::SimpleItem;
+  bool pickup(Player &you);
+ protected:
+  char glyph() const;
+  const Color& color() const;
+};
+
+
+
 class Bomb : public Item {
  public:
   using Item::Item;

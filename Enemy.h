@@ -30,8 +30,6 @@ class Enemy {
   int stunDuration;
 };
 
-std::unique_ptr<Enemy> getRandomEnemy();
-
 
 
 class Zombie : public Enemy {

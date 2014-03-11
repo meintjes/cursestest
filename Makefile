@@ -13,7 +13,7 @@ main.o: main.cpp Map.o Space.o Enemy.o Player.o Command.o Menu.o
 Map.o: Map.cpp Space.o Cch.o Player.o functions.o Point.o
 	$(GXX) $(GXX_FLAGS) Map.cpp
 
-MapGen.o: MapGen.cpp Space.o functions.o Item.o generation.o
+MapGen.o: MapGen.cpp Space.o functions.o generation.o
 	$(GXX) $(GXX_FLAGS) MapGen.cpp
 
 Cst.o: Cst.cpp
@@ -25,7 +25,7 @@ Cch.o: Cch.cpp
 Space.o: Space.cpp Enemy.o SpaceType.o
 	$(GXX) $(GXX_FLAGS) Space.cpp
 
-Enemy.o: Enemy.cpp Point.o Map.o functions.o
+Enemy.o: Enemy.cpp Point.o Map.o functions.o generation.o
 	$(GXX) $(GXX_FLAGS) Enemy.cpp
 
 Player.o: Player.cpp Cst.o Cch.o functions.o Item.o
@@ -58,7 +58,7 @@ Artifact.o: Artifact.cpp Player.o Cst.o Cst.o Item.o
 Weapon.o: Weapon.cpp Item.o Map.o
 	$(GXX) $(GXX_FLAGS) Weapon.cpp
 
-generation.o: generation.cpp Item.o Weapon.o Artifact.o functions.o
+generation.o: generation.cpp Item.o Enemy.o Weapon.o Artifact.o functions.o
 	$(GXX) $(GXX_FLAGS) generation.cpp
 
 clean:

@@ -2,22 +2,9 @@
 #include "Cch.h"
 #include "Color.h"
 #include "Map.h"
+#include "Item.h"
 #include "Point.h"
 #include "functions.h"
-
-std::unique_ptr<Enemy> getRandomEnemy() {
-  int num = randTo(99);
-  if (num < 60)
-    return std::unique_ptr<Enemy>(new Zombie);
-  else if (num < 80)
-    return std::unique_ptr<Enemy>(new Exploder);
-  else if (num < 90)
-    return std::unique_ptr<Enemy>(new Douser);
-  else if (num < 99)
-    return std::unique_ptr<Enemy>(new Reacher);
-  else
-    return std::unique_ptr<Enemy>(new SpawnerBoss);
-}
 
 Enemy::Enemy() :
   memoryDuration(0),
@@ -188,7 +175,7 @@ void SpawnerBoss::die(Map &map, int x, int y) {
   hp--;
   if (hp <= randRange(-2, 2)) {
     map(x, y).removeEnemy();
-    map(x, y).setItem(new TimeStopper);
+    map(x, y).setItem(new Ore);
   }
 }
 

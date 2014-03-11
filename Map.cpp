@@ -5,7 +5,7 @@
 #include "Command.h"
 #include <ncurses.h>
 #include <algorithm>
-
+#include "generation.h"
 #include <assert.h>
 
 void Map::display() const {

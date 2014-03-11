@@ -50,6 +50,8 @@ class Player {
   bool removeStamina(int num);
   bool restoreStamina(int num);
   bool addItem(Item * const item, bool checkMaxItems);
+  void addOre(int num);
+  bool removeOre(int num);
   bool useItem(Map &map);
   bool dropItem(Space &space);
 
@@ -62,6 +64,7 @@ class Player {
  private:
   static const int MAX_NUM_ITEMS = 23;
   std::list<std::unique_ptr<Item> > inventory;
+  int ore;
 
   struct InventoryInputResult {
     enum Type {Inventory, CurrentArtifact, CurrentWeapon};
