@@ -41,7 +41,6 @@ class Map {
   Player &you;
   int getPlayerX() const;
   int getPlayerY() const;
-  bool changeFloor(int dz, const SpaceType &type);
 
   static bool isValidX(int x);
   static bool isValidY(int y);

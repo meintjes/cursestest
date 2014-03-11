@@ -10,9 +10,9 @@
 #include <cassert>
 
 Player::Player() :
-  hpMax(10),
+  hpMax(30),
   hp(hpMax),
-  staminaMax(10),
+  staminaMax(30),
   stamina(staminaMax),
   mode(Mode::Move),
   lastMoveDirection({0, 0}),

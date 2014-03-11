@@ -275,15 +275,6 @@ bool Map::hasLOS(int x1, int y1, int x2, int y2) const {
   }
 }
 
-bool Map::changeFloor(int dz, const SpaceType &type) {
-  if ((*this)(playerX, playerY).typeIs(&type)) {
-    return you.changeDepth(dz);
-  }
-  else {
-    return false;
-  }
-}
-
 void Map::explode(int x, int y, int radius) {
   assert(radius >= 0);
   for (int x2 = x - radius; x2 <= x + radius; x2++) {

@@ -151,9 +151,11 @@ bool getInput(Map &map, const CommandMap cmap) {
                                 map.getPlayerY()));
 
   case COMMAND_INTERACT_STAIRSUP:
-    return map.changeFloor(-1, StairsUp);
+    return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsUp)
+           && map.you.changeDepth(-1);
   case COMMAND_INTERACT_STAIRSDOWN:
-    return map.changeFloor(+1, StairsDown);
+    return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsDown)
+           && map.you.changeDepth(+1);
 
   case COMMAND_LONG_PROMPT:
     return getLongPrompt(map);

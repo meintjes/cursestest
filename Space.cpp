@@ -207,6 +207,6 @@ void Space::stun(unsigned int turns) {
   }
 }
 
-bool Space::typeIs(const SpaceType *typeIn) const {
-  return *type == *typeIn;
+bool Space::typeIs(const SpaceType &typeIn) const {
+  return *type == typeIn;
 }

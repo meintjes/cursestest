@@ -47,7 +47,7 @@ class Space {
   bool isStunned() const;
   void stun(unsigned int turns);
 
-  bool typeIs(const SpaceType *typeIn) const;
+  bool typeIs(const SpaceType &typeIn) const;
 
  private:
   mutable bool discovered;
