@@ -7,6 +7,7 @@
 #include "functions.h"
 
 Enemy::Enemy() :
+  hp(1),
   memoryDuration(0),
   memoryLocation({0, 0}),
   stunDuration(0)
@@ -18,6 +19,13 @@ int Enemy::getRange() const {
 
 void Enemy::attack(Map &map, int x, int y) {
   map.you.damage(1);
+}
+
+void Enemy::damage(int num, Map &map, int x, int y) {
+  hp--;
+  if (hp <= 0) {
+    die(map, x, y);
+  }
 }
 
 void Enemy::die(Map &map, int x, int y) {
@@ -79,13 +87,6 @@ Cch Zombie::getGlyph() const {
   }
 }
 
-void Zombie::die(Map &map, int x, int y) {
-  hp--;
-  if (hp <= 0) {
-    map(x, y).removeEnemy();
-  }
-}
-
 
 
 Exploder::Exploder() :
@@ -113,7 +114,7 @@ int Exploder::getRange() const {
 
 void Exploder::attack(Map &map, int x, int y) {
   if (isPrimed) {
-    map(x, y).kill(map, x, y);
+    die(map, x, y);
   }
   else {
     isPrimed = true;
@@ -168,15 +169,13 @@ void SpawnerBoss::attack(Map &map, int x, int y) {
   }
   else if (map(x, y).isPassable() && !map(x, y).hasEnemy()) {
     map(x, y).setEnemy(new Exploder);
+    stun(2);
   }
 }
 
 void SpawnerBoss::die(Map &map, int x, int y) {
-  hp--;
-  if (hp <= randRange(-2, 2)) {
-    map(x, y).removeEnemy();
-    map(x, y).setItem(new Ore);
-  }
+  map(x, y).removeEnemy();
+  map(x, y).setItem(new Ore);
 }
 
 

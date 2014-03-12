@@ -22,7 +22,7 @@ class Space {
   void setEnemy(std::unique_ptr<Enemy> enemyIn);
   void removeEnemy();
   void attack(Map &map, int x, int y);
-  void kill(Map &map, int x, int y);
+  void damage(int num, Map &map, int x, int y);
 
   void addGas(unsigned int duration);
   void dropBomb();

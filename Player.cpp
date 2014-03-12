@@ -152,7 +152,7 @@ bool Player::attack(int dx, int dy) {
   if (!currentWeapon) {
     int x = currentFloor.getPlayerX() + dx;
     int y = currentFloor.getPlayerY() + dy;
-    currentFloor(x, y).kill(currentFloor, x, y);
+    currentFloor(x, y).damage(1, currentFloor, x, y);
     return true;
   }
   else {

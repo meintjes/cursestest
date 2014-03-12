@@ -70,7 +70,7 @@ bool Map::shootArrow(int dx, int dy) {
 
   for (int i = 0, x = playerX, y = playerY;
        i < 6 && (*this)(x, y).isPassable(); i++) {
-    (*this)(x, y).kill(*this, x, y);
+    (*this)(x, y).damage(1, *this, x, y);
     x += dx;
     y += dy;
     

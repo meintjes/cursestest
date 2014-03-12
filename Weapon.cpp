@@ -47,7 +47,7 @@ bool Axe::attack(Map &map, int dx, int dy) {
 
   //hit each of those spaces
   for (Point &space : spaces) {
-    map(space.x, space.y).kill(map, space.x, space.y);
+    map(space.x, space.y).damage(1, map, space.x, space.y);
   }
   damage(2);
   return true;
@@ -66,7 +66,7 @@ const Color& Axe::color() const {
 bool Bludgeon::attack(Map &map, int dx, int dy) {
   int x = map.getPlayerX() + dx;
   int y = map.getPlayerY() + dy;
-  map(x, y).kill(map, x, y);
+  map(x, y).damage(1, map, x, y);
   map(x, y).stun(1);
   damage(2);
   return true;
@@ -85,13 +85,15 @@ const Color& Bludgeon::color() const {
 bool Lance::attack(Map &map, int dx, int dy) {
   int x = map.getPlayerX() + dx;
   int y = map.getPlayerY() + dy;
-  map(x, y).kill(map, x, y);
   bool shouldSpendTurn = (map.you.getLastMoveDirection() != Point{dx, dy});
   map.you.setLastMoveDirection({0, 0});
-  damage(2);
   if (!shouldSpendTurn) {
-    map(x, y).kill(map, x, y);
+    map(x, y).damage(2, map, x, y);
   }
+  else {
+    map(x, y).damage(1, map, x, y);
+  }
+  damage(2);
   return shouldSpendTurn;
 }
 
@@ -108,11 +110,11 @@ const Color& Lance::color() const {
 bool Spear::attack(Map &map, int dx, int dy) {
   int x = map.getPlayerX() + dx;
   int y = map.getPlayerY() + dy;
-  map(x, y).kill(map, x, y);
+  map(x, y).damage(1, map, x, y);
   x += dx;
   y += dy;
   if (Map::isValidX(x) && Map::isValidY(y)) {
-    map(x, y).kill(map, x, y);
+    map(x, y).damage(1, map, x, y);
   }
   damage(2);
   return true;

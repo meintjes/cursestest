@@ -53,11 +53,11 @@ void Space::attack(Map &map, int x, int y) {
   }
 }
 
-void Space::kill(Map &map, int x, int y) {
+void Space::damage(int num, Map &map, int x, int y) {
   if (enemy) {
-    //doesn't remove the enemy. die() is responsible for calling
+    //doesn't remove the enemy. the enemy is responsible for calling
     //removeEnemy() if it needs to.
-    enemy->die(map, x, y);
+    enemy->damage(num, map, x, y);
   }
 }
 
@@ -79,9 +79,7 @@ void Space::explode(Map &map, int x, int y) {
   if (type->destructible) {
     type = &Floor;
   }
-  kill(map, x, y);
-  kill(map, x, y);
-  kill(map, x, y);
+  damage(3, map, x, y);
 }
 
 bool Space::tick() {
