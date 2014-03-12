@@ -65,8 +65,14 @@ void Space::addGas(unsigned int duration) {
   gasDuration += duration;
 }
 
-void Space::dropBomb() {
-  bombDuration = 4;
+bool Space::dropBomb() {
+  if (bombDuration <= 0) {
+    bombDuration = 4;
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 void Space::pickup(Player &you) {
@@ -163,10 +169,6 @@ bool Space::hasEnemy() const {
 
 bool Space::hasGas() const {
   return (gasDuration > 0);
-}
-
-bool Space::hasBomb() const {
-  return (bombDuration > 0);
 }
 
 bool Space::hasItem() const {

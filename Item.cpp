@@ -66,7 +66,7 @@ const Color& Ore::color() const {
 
 
 Item::UseResult Bomb::use(Map &map) {
-  if (map.dropBomb()) {
+  if (map(map.getPlayerX(), map.getPlayerY()).dropBomb()) {
     return Item::Destroy;
   }
   else {

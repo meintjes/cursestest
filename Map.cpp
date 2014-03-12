@@ -129,16 +129,6 @@ bool Map::throwHook(int dx, int dy) {
   return true;
 }
 
-bool Map::dropBomb() {
-  if (!(*this)(playerX, playerY).hasBomb()) {
-    (*this)(playerX, playerY).dropBomb();
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
 void Map::moveEnemy(int x, int y) {
   //try to move in diagonal direction
   Point target = (*this)(x, y).getMemory();

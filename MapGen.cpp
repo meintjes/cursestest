@@ -95,7 +95,7 @@ void Map::generateBoxes(int depth) {
 	if (!randTo(35 - depth)) {
 	  (*this)(x, y).setEnemy(getRandomEnemy());
 	}
-	else if (!randTo(40 - depth)){
+	else if (!randTo(35 - depth)){
 	  (*this)(x, y).setItem(getRandomItem());
 	}
       }

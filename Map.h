@@ -25,23 +25,34 @@ class Map {
 
   //defined in Map.cpp
  public:
+  //displays the map (and only the map) and refreshes the screen. overwrites
+  //the entire map area each turn; for animations, use ncurses directly.
   void display() const;
 
-  bool movePlayer(int dx, int dy);
+  //directional functions. return true if the action should spend a turn,
+  //or false if it shouldn't spend a turn.
+  bool movePlayer(int dx, int dy); //normal movement and attacking
   bool shootArrow(int dx, int dy);
   bool throwHook(int dx, int dy);
 
-  bool dropBomb();
-
+  //causes the enemy at the given coordinates to attempt to move toward the
+  //player (or the last place it saw the player). 
   void moveEnemy(int x, int y);
+
+  //get a reference (or const reference) to the space located at coords x, y.
+  //causes an assertion failure if the space is beyond those coordinates.
   Space& operator()(int x, int y);
   const Space& operator()(int x, int y) const;
+
+  //main function for updating game state, for everything from the player
+  //to the spaces and the enemies contained within.
   void tick();
 
   Player &you;
   int getPlayerX() const;
   int getPlayerY() const;
 
+  //verify that the given coordinate isn't beyond the bounds of the map.
   static bool isValidX(int x);
   static bool isValidY(int y);
  
