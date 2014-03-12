@@ -207,10 +207,7 @@ void Map::tick() {
           toMove.push_back({x, y});
         }
       }
-      else if (!randTo(800) && (*this)(x, y).isPassable()
-               && !isVisible(x, y, you.getLOS())) {
-        (*this)(x, y).setEnemy(getRandomEnemy());
-      }
+      //random enemy generation goes here?  
     }
   }
 

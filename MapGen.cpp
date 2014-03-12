@@ -92,10 +92,10 @@ void Map::generateBoxes(int depth) {
   for (int x = 1; x <= MAPWIDTH; x++) {
     for (int y = 1; y <= MAPHEIGHT; y++) {
       if ((*this)(x, y).isPassable()) {
-	if (!randTo(50 - depth)) {
-	  //(*this)(x, y).setEnemy(getRandomEnemy());
+	if (!randTo(35 - depth)) {
+	  (*this)(x, y).setEnemy(getRandomEnemy());
 	}
-	else if (!randTo(/*80*/ 20 - depth)){
+	else if (!randTo(40 - depth)){
 	  (*this)(x, y).setItem(getRandomItem());
 	}
       }
@@ -104,8 +104,8 @@ void Map::generateBoxes(int depth) {
 }
 
 void Map::sanitizeEntry() {
-  for (int x = playerX - 2; x <= playerX + 2; x++) {
-    for (int y = playerY - 2; y <= playerY + 2; y++) {
+  for (int x = playerX - 3; x <= playerX + 3; x++) {
+    for (int y = playerY - 3; y <= playerY + 3; y++) {
       if (isValidX(x) && isValidY(y)) {
 	(*this)(x, y).removeEnemy();
       }
