@@ -9,22 +9,25 @@
 std::unique_ptr<SimpleItem> getRandomItem() {
   int num = randTo(99); 
   if (num < 20) {
+    return std::unique_ptr<SimpleItem>(new Ore);
+  }
+  else if (num < 36) {
     return std::unique_ptr<SimpleItem>(new Bomb);
   }
-  else if (num < 40) {
+  else if (num < 52) {
     return std::unique_ptr<SimpleItem>(new Torch);
   }
-  else if (num < 60) {
+  else if (num < 68) {
     return std::unique_ptr<SimpleItem>(new Arrow);
   }
-  else if (num < 75) {
+  else if (num < 84) {
     return std::unique_ptr<SimpleItem>(new Hook);
   }
-  else if (num < 85) {
-    return getRandomArtifact();
+  else if (num < 92) {
+    return getRandomWeapon();
   }
   else {
-    return getRandomWeapon();
+    return getRandomArtifact();
   }
 }
 
