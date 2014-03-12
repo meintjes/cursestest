@@ -20,7 +20,7 @@ Cst Item::getName() const {
 }
 
 bool Item::pickup(Player &you) {
-  return you.addItem(this, true);
+  return you.addItem(this);
 }
 
 

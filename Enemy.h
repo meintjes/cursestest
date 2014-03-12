@@ -9,7 +9,7 @@ class Map;
 
 class Enemy {
  public:
-  Enemy();
+  Enemy(int hpIn = 1);
 
   //returns the glyph for the class. must override.
   virtual Cch getGlyph() const = 0;
@@ -56,8 +56,6 @@ class Zombie : public Enemy {
  public:
   Zombie();
   Cch getGlyph() const;
- private:
-  int hp;
 };
 
 class Exploder : public Enemy {
@@ -85,8 +83,6 @@ class SpawnerBoss : public Enemy {
   int getRange() const;
   void attack(Map &map, int x, int y);
   void die(Map &map, int x, int y);
- private:
-  int hp;
 };
 
 class Douser : public Enemy {

@@ -5,7 +5,7 @@
 
 Item::UseResult Weapon::use(Map &map) {
   if (map.you.getCurrentWeapon() == this) {
-    if (map.you.addItem(this, true)) {
+    if (map.you.addItem(this)) {
       return Item::Release;
     }
     else {

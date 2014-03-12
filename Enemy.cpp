@@ -6,8 +6,8 @@
 #include "Point.h"
 #include "functions.h"
 
-Enemy::Enemy() :
-  hp(1),
+Enemy::Enemy(int hpIn) :
+  hp(hpIn),
   memoryDuration(0),
   memoryLocation({0, 0}),
   stunDuration(0)
@@ -72,8 +72,7 @@ void Enemy::tick() {
 
 
 Zombie::Zombie() :
-  Enemy(),
-  hp(randRange(1, 3))
+  Enemy(randRange(1, 3))
 {}
 
 Cch Zombie::getGlyph() const {
@@ -144,8 +143,7 @@ int Reacher::getRange() const {
 
 
 SpawnerBoss::SpawnerBoss() :
-  Enemy(),
-  hp(8)
+  Enemy(randRange(7, 9))
 {}
 
 Cch SpawnerBoss::getGlyph() const {

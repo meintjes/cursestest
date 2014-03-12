@@ -19,6 +19,7 @@ Player::Player() :
   stamina(staminaMax),
   mode(Mode::Move),
   lastMoveDirection({0, 0}),
+  damageTimer(0),
 
   currentBranch(nullptr),
   currentDepth(0),
@@ -39,9 +40,9 @@ void Player::display() const {
   }
 
   //at low hp, change bar colors
-  const Color &hpColor = ((hp * 2) / hpMax) ?
+  const Color &hpColor = ((hp * 3) / hpMax) ?
     BlackOnGreen : BlackOnRed;
-  const Color &staminaColor = ((stamina * 2) / staminaMax) ?
+  const Color &staminaColor = ((stamina * 3) / staminaMax) ?
     BlackOnBrown : BlackOnRed;
   
   //print hp and stamina bars
@@ -83,12 +84,24 @@ void Player::display() const {
 }
 
 bool Player::tick() {
+  if (!movedLastTurn) {
+    if (!damageTimer && stamina >= staminaMax) {
+      heal(1);
+    }
+    else {
+      restoreStamina(1);
+    }
+  }
+
   if (movedLastTurn) {
     movedLastTurn = false;
   }
   else {
     lastMoveDirection = {0, 0};
-    restoreStamina(1);
+  }
+
+  if (damageTimer > 0) {
+    damageTimer--;
   }
   
   if (torchDuration > 0) {
@@ -149,6 +162,7 @@ Cch Player::getGlyph() const {
 
 bool Player::attack(int dx, int dy) {
   Map &currentFloor = getCurrentFloor();
+  removeStamina(2);
   if (!currentWeapon) {
     int x = currentFloor.getPlayerX() + dx;
     int y = currentFloor.getPlayerY() + dy;
@@ -200,7 +214,7 @@ const Weapon* const Player::getCurrentWeapon() const {
 
 void Player::setWeapon(Weapon* const weapon) {
   if (currentWeapon) {
-    addItem(currentWeapon.release(), false);
+    addItemUnsafe(currentWeapon.release());
   }
   currentWeapon = std::unique_ptr<Weapon>(weapon);
 }
@@ -211,13 +225,14 @@ const Artifact* const Player::getCurrentArtifact() const {
 
 void Player::setArtifact(Artifact * const artifact) {
   if (currentArtifact) {
-    addItem(currentArtifact.release(), false);
+    addItemUnsafe(currentArtifact.release());
   }
   currentArtifact = std::unique_ptr<Artifact>(artifact);
 }
 
 void Player::damage(unsigned int num) {
   hp -= num;
+  damageTimer = 3;
 }
 
 bool Player::heal(unsigned int num) {
@@ -253,21 +268,26 @@ bool Player::restoreAttribute(int &att, int &attMax, int num) {
   }
 }
 
-bool Player::addItem(Item *item, bool checkMaxItems) {
-  if (checkMaxItems && inventory.size() >= MAX_NUM_ITEMS) {
+bool Player::addItem(Item *item) {
+  if (inventory.size() >= MAX_NUM_ITEMS) {
     return false;
   }
+  else {
+    addItemUnsafe(item);
+    return true;
+  }
+}
 
+void Player::addItemUnsafe(Item *item) {
   //sort the inventory alphabetically during insertion:
   for (auto it = inventory.begin(); it != inventory.end(); it++) {
     if ((*it)->getName() > item->getName()) {
       inventory.insert(it, std::unique_ptr<Item>(item));
-      return true;
+      return;
     }
   }
   //if nothing comes after it, just insert it at the end:
   inventory.insert(inventory.end(), std::unique_ptr<Item>(item));
-  return true;
 }
 
 void Player::addOre(int num) {

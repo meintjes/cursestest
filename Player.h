@@ -49,7 +49,7 @@ class Player {
   bool heal(unsigned int num);
   bool removeStamina(int num);
   bool restoreStamina(int num);
-  bool addItem(Item * const item, bool checkMaxItems);
+  bool addItem(Item * const item);
   void addOre(int num);
   bool removeOre(int num);
   bool useItem(Map &map);
@@ -64,6 +64,8 @@ class Player {
  private:
   static const int MAX_NUM_ITEMS = 23;
   std::list<std::unique_ptr<Item> > inventory;
+  //adds an item with no bounds checking
+  void addItemUnsafe(Item * const item);
   int ore;
 
   struct InventoryInputResult {
@@ -84,6 +86,7 @@ class Player {
   Mode mode;
   Point lastMoveDirection;
   bool movedLastTurn;
+  int damageTimer;
 
   Branch *currentBranch;
   int currentDepth;

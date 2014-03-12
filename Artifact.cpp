@@ -5,7 +5,7 @@
 
 Item::UseResult Artifact::use(Map &map) {
   if (map.you.getCurrentArtifact() == this) {
-    if (map.you.addItem(this, true)) {
+    if (map.you.addItem(this)) {
       return Item::Release;
     }
     else {
