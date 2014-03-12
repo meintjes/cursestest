@@ -69,18 +69,21 @@ void Player::display() const {
   //print current weapon and artifact
   if (currentWeapon) {
     addc(20, 22, currentWeapon->getGlyph());
+    addcs(currentWeapon->getName());
     addcs(" (" + currentWeapon->getDescriptor() + ")");
   }
   if (currentArtifact) {
     addc(20, 23, currentArtifact->getGlyph());
+    addcs(currentArtifact->getName());
     addcs(" (" + currentArtifact->getDescriptor() + ")");
   }
 
   //print item display
-  move(22, 60);
+  move(22, 50);
   for (auto &item : inventory) {
     addc(item->getGlyph());
   }
+  addcs(50, 23, Brown(std::to_string(ore) + " x Ore"));
 }
 
 bool Player::tick() {
