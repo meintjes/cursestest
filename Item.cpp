@@ -19,8 +19,13 @@ Cst Item::getName() const {
   return color()(name());
 }
 
-bool Item::pickup(Player &you) {
-  return you.addItem(this);
+Item::UseResult Item::pickup(Player &you) {
+  if (you.addItem(this)) {
+    return Item::Release;
+  }
+  else {
+    return Item::Fail;
+  }
 }
 
 
@@ -40,19 +45,19 @@ Cst DestructibleItem::getDescriptor() const {
     return Orange("cracked");
 }
 
-void DestructibleItem::damage(unsigned int x) {
-  durability -= x;
-}
-
 bool DestructibleItem::shouldDestroy() const {
   return (durability <= durabilityMin);
 }
 
+void DestructibleItem::damage(unsigned int x) {
+  durability -= x;
+}
 
 
-bool Ore::pickup(Player &you) {
+
+SimpleItem::UseResult Ore::pickup(Player &you) {
   you.addOre(1);
-  return true;
+  return SimpleItem::Destroy;
 }
 
 char Ore::glyph() const {

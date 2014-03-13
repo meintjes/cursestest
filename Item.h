@@ -13,30 +13,46 @@ class Map;
 //because they can't go into the player's inventory.
 class SimpleItem {
  public:
-  Cch getGlyph() const;
   virtual ~SimpleItem();
-  virtual bool pickup(Player &you) = 0;
+
+  //figures out and returns the item's glyph. note that it's not virtual; you
+  //don't want to override this, you want to define glyph() and color().
+  Cch getGlyph() const;
+  
+  //return Release if the item's ownership is going to be transfered somewhere
+  //else (e.g. the player's inventory), Destroy if the item is going into
+  //the void, or Fail or None if the item can't be picked up for some reason.
+  enum UseResult {Fail, None, Release, Destroy};
+  virtual SimpleItem::UseResult pickup(Player &you) = 0;
+
  protected:
+  //returns the basic (uncolored) glyph used to signify the item
   virtual char glyph() const = 0;
+  //returns the color of the item
   virtual const Color& color() const = 0;
 };
 
 //abstract class for items that have names and go into the player's inventory
 class Item : public SimpleItem {
  public:
-  enum UseResult {Fail, None, Release, Destroy};
+  //note: not virtual. don't override this, override name().
   Cst getName() const;
  
-  //return true if the item should be picked up, or false if not (e.g., if
-  //the player can't use the thing or has a full inventory or something).
   //default behavior puts the item in the player's regular inventory as long
-  //as it isn't full.
-  virtual bool pickup(Player &you);
+  //as it isn't full, then returns Release if that succeeded and Fail if not
+  virtual Item::UseResult pickup(Player &you);
   
-  //executes when the player uses the item from their inventory.
+  //Item::use executes when the player uses the item from their inventory.
+  //the UseResult indicates what should happen as a result of the item's use:
+  //Fail means don't spend a turn, None means spend a turn but don't do
+  //anything to the item, Release indicates the player should relinquish
+  //ownership of the item (for example, so it can be moved from the inventory
+  //to the current weapon slot), and Destroy indicates that the item should
+  //be destroyed and forgotten.
   virtual Item::UseResult use(Map &map) = 0;
 
  protected:
+  //returns the basic (uncolored) name of the item
   virtual std::string name() const = 0;
 };
 
@@ -45,10 +61,18 @@ class Item : public SimpleItem {
 class DestructibleItem : public Item {
  public:
   DestructibleItem();
+
+  //returns an adjective describing the current state of the item: "OK",
+  //"damaged" etc.
   Cst getDescriptor() const;
-  void damage(unsigned int x);
+
+  //returns true if the item should be destroyed, or false if not
   bool shouldDestroy() const;
- 
+  
+  //deducts x from the item's durability.
+  void damage(unsigned int x);
+
+
  protected:
   virtual char glyph() const = 0;
   virtual std::string name() const = 0;
@@ -64,7 +88,7 @@ class DestructibleItem : public Item {
 class Ore : public SimpleItem {
  public:
   using SimpleItem::SimpleItem;
-  bool pickup(Player &you);
+  SimpleItem::UseResult pickup(Player &you);
  protected:
   char glyph() const;
   const Color& color() const;

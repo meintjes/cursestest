@@ -76,8 +76,19 @@ bool Space::dropBomb() {
 }
 
 void Space::pickup(Player &you) {
-  if (item && item->pickup(you)) {
+  if (!item) {
+    return;
+  }
+  
+  switch (item->pickup(you)) {
+  case Item::Release:
     item.release();
+    break;
+  case Item::Destroy:
+    item = nullptr;
+    break;
+  default:
+    break;
   }
 }
 
