@@ -145,10 +145,9 @@ bool getInput(Map &map, const CommandMap cmap) {
   case COMMAND_EVOKE_ARTIFACT:
     return map.you.evokeArtifact();
   case COMMAND_USE_ITEM:
-    return map.you.useItem(map);
+    return map.you.useItem();
   case COMMAND_DROP_ITEM:
-    return map.you.dropItem(map(map.getPlayerX(),
-                                map.getPlayerY()));
+    return map.you.dropItem();
 
   case COMMAND_INTERACT_STAIRSUP:
     return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsUp)

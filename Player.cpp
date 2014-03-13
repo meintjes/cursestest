@@ -309,17 +309,17 @@ bool Player::removeOre(int num) {
   }
 }
 
-bool Player::useItem(Map &map) {
+bool Player::useItem() {
   //figure out which item the player wants to use
-  InventoryInputResult input = getInventoryInput();
-  
+  //
+  InventoryInputResult input = getInventoryInput(); 
   //if the player chose an item in their general inventory:
   if (input.type == InventoryInputResult::Inventory) {
     if (input.item == inventory.end()) {
       return false;
     }
     
-    Item::UseResult result = (*input.item)->use(map);
+    Item::UseResult result = (*input.item)->use(getCurrentFloor());
     if (result == Item::Fail) {
       return false; //don't take a turn if the item can't be used
     }
@@ -336,7 +336,7 @@ bool Player::useItem(Map &map) {
 
   //if the player instead wanted to use their current weapon or artifact:
   else if (input.type == InventoryInputResult::CurrentWeapon) {
-    Item::UseResult result = currentWeapon->use(map);
+    Item::UseResult result = currentWeapon->use(getCurrentFloor());
     if (result == Item::Release) {
       currentWeapon.release();
       return true;
@@ -350,7 +350,7 @@ bool Player::useItem(Map &map) {
   }
 
   else { //CurrentArtifact
-    Item::UseResult result = currentArtifact->use(map);
+    Item::UseResult result = currentArtifact->use(getCurrentFloor());
     if (result == Item::Release) {
       currentArtifact.release();
       return true;
@@ -364,7 +364,9 @@ bool Player::useItem(Map &map) {
   }
 }
 
-bool Player::dropItem(Space &space) {
+bool Player::dropItem() {
+  Space &space = getCurrentFloor()(getCurrentFloor().getPlayerX(),
+                                   getCurrentFloor().getPlayerY());
   if (space.hasItem()) {
     return false;
   }
