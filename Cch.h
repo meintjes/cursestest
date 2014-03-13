@@ -1,6 +1,8 @@
 #ifndef __CCH_H__
 #define __CCH_H__
 
+//see Color.h for explanation.
+
 class Cch {
  public:
   constexpr Cch(const char &glyphIn)

@@ -5,6 +5,20 @@
 #include "Cst.h"
 #include "Cch.h"
 
+//Color is used to construct colored text and characters, which circumvent the
+//unwieldy ncurses output functions. Cst ("colored strings") are output using
+//addcs(cst) (or addcs(x, y, cst), which moves to coords x, y before outputting
+//the string). Cch ("colorer chars") are output using addc(cch) (or addch(x, y,
+//cch)). Manually calling ncurses' move(), which uses weird (y, x) syntax, is
+//usually not necessary. Manually using ncurses to set output attributes is
+//even less necessary. Don't do that.
+
+//Cst and Cch have private constructors. Use Color() to construct them; for
+//example, Red("words words words") returns "words words words" in red, and
+//White('x') returns an 'x' in white. Cst can also be implicitly converted from
+//const char* and std::string, in which case they're just light gray. In the
+//same way, light gray Cch can be converted from regular chars.
+
 struct Color {
   int hue;
   bool bold;
@@ -18,6 +32,7 @@ struct Color {
   }
 };
 
+//list of defined colors. new colors probably require initialization in main().
 const Color DarkGray {1, true};
 const Color Red {2, false};
 const Color Orange {2, true};

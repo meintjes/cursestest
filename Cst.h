@@ -3,6 +3,8 @@
 
 #include <string>
 
+//see Color.h for explanation.
+
 class Cst {
  public:
   //constructor for implicit conversion from strings literal.
