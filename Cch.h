@@ -8,6 +8,12 @@ class Cch {
   constexpr Cch(const char &glyphIn)
     : glyph(glyphIn), hue(8), bold(false) {}
 
+  bool operator>(const Cch &rhs);
+  bool operator<(const Cch &rhs);
+  bool operator>=(const Cch &rhs);
+  bool operator<=(const Cch &rhs);
+  bool operator==(const Cch &rhs);
+
   friend void addc(const Cch &cch);
   friend class Color;
 

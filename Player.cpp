@@ -289,9 +289,11 @@ bool Player::addItem(Item *item) {
 }
 
 void Player::addItemUnsafe(Item *item) {
-  //sort the inventory alphabetically during insertion:
+  //sort the inventory by glyph and then by name during insertion:
   for (auto it = inventory.begin(); it != inventory.end(); it++) {
-    if ((*it)->getName() > item->getName()) {
+    if ((*it)->getGlyph() > item->getGlyph() ||
+       ((*it)->getGlyph() == item->getGlyph() &&
+        (*it)->getName() > item->getName())) {
       inventory.insert(it, std::unique_ptr<Item>(item));
       return;
     }

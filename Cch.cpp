@@ -2,6 +2,26 @@
 #include "Cch.h"
 #include "Color.h"
 
+bool Cch::operator>(const Cch &rhs) {
+  return this->glyph > rhs.glyph;
+}
+
+bool Cch::operator<(const Cch &rhs) {
+  return this->glyph < rhs.glyph;
+}
+
+bool Cch::operator>=(const Cch &rhs) {
+  return this->glyph >= rhs.glyph;
+}
+
+bool Cch::operator<=(const Cch &rhs) {
+  return this->glyph <= rhs.glyph;
+}
+
+bool Cch::operator==(const Cch &rhs) {
+  return this->glyph == rhs.glyph;
+}
+
 bool Cch::operator==(const Cch &other) const {
     return glyph == other.glyph && hue == other.hue && bold == other.bold;
 }
