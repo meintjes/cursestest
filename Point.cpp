@@ -1,5 +1,7 @@
 #include "Point.h"
 
+Point::Point() {}
+
 Point::Point(int xIn, int yIn) :
   x(xIn),
   y(yIn)

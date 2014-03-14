@@ -55,7 +55,7 @@ Item.o: Item.cpp Cch.o Player.o functions.o Map.o
 Artifact.o: Artifact.cpp Player.o Cst.o Cst.o Item.o
 	$(GXX) $(GXX_FLAGS) Artifact.cpp
 
-Weapon.o: Weapon.cpp Item.o Map.o
+Weapon.o: Weapon.cpp Item.o Map.o Point.o
 	$(GXX) $(GXX_FLAGS) Weapon.cpp
 
 generation.o: generation.cpp Item.o Enemy.o Weapon.o Artifact.o functions.o

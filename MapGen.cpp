@@ -79,7 +79,7 @@ void Map::generateBoxes(int depth) {
   for (int i = randRange(8, 10); i > 0; i--) {
     Point center{randRange(1, MAPWIDTH), randRange(1, MAPHEIGHT)};
     generateRoom(center, 4);
-    roomLocations.push_back(center);
+    roomLocations.emplace_back(center);
   }
 
   for (unsigned int i = 1; i < roomLocations.size(); i++) {
