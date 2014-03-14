@@ -55,6 +55,9 @@ class Player {
   Mode getMode() const;
   void setMode(Mode modeIn);
 
+  //destroy the item that caused the player to enter their current mode
+  void destroyModeItem();
+
   //set/get the direction of the player's last move. if the player doesn't
   //move for a turn (if setLastMoveDirection isn't called), the last moved
   //direction will change to 0, 0. 
@@ -137,8 +140,10 @@ class Player {
   std::unique_ptr<Weapon> currentWeapon;
   std::unique_ptr<Artifact> currentArtifact;
   Mode mode;
+  std::list<std::unique_ptr<Item> >::iterator modeItemIterator;
   Point lastMoveDirection;
-  bool movedLastTurn;
+  bool movedLastTurn; //don't use this, it's set false every turn by tick().
+                      //instead compare lastMoveDirection to {0, 0}
   int damageTimer;
 
   Branch *currentBranch;

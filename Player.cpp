@@ -18,6 +18,7 @@ Player::Player() :
   staminaMax(30),
   stamina(staminaMax),
   mode(Mode::Move),
+  modeItemIterator(inventory.end()),
   lastMoveDirection({0, 0}),
   damageTimer(0),
 
@@ -199,7 +200,13 @@ Player::Mode Player::getMode() const {
 }
 
 void Player::setMode(Player::Mode modeIn) {
+  modeItemIterator = inventory.end();
   mode = modeIn;
+}
+
+void Player::destroyModeItem() {
+  inventory.erase(modeItemIterator);
+  modeItemIterator = inventory.end();
 }
 
 void Player::setLastMoveDirection(const Point &direction) {
@@ -311,26 +318,36 @@ bool Player::removeOre(int num) {
 
 bool Player::useItem() {
   //figure out which item the player wants to use
-  //
   InventoryInputResult input = getInventoryInput(); 
   //if the player chose an item in their general inventory:
   if (input.type == InventoryInputResult::Inventory) {
     if (input.item == inventory.end()) {
-      return false;
+      return false; //if the player didn't choose an item, back out
     }
-    
+
+    //record the player's mode before they used the item
+    Mode previousMode = getMode();
+
+    //actually use the item and record the result in result
     Item::UseResult result = (*input.item)->use(getCurrentFloor());
+    
+    //if using the item caused the player's mode to change, associate
+    //the item with the player's mode
+    if (previousMode != mode && mode != Mode::Move) {
+      modeItemIterator = input.item;
+    }
+
+    //then handle the result of using the item:
     if (result == Item::Fail) {
       return false; //don't take a turn if the item can't be used
     }
-
     else if (result == Item::Release) {
       input.item->release();
       inventory.erase(input.item);
     }
     else if (result == Item::Destroy) {
       inventory.erase(input.item);
-    } 
+    }
     return true;
   }
 
@@ -380,7 +397,10 @@ bool Player::dropItem() {
     space.setItem(std::move(*input.item));
     inventory.erase(input.item);
     //in case the player drops an arrow or something:
-    setMode(Mode::Move);
+    if (input.item == modeItemIterator) {
+      mode = Mode::Move;
+    }
+    
     return true;
   }
 

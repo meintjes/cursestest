@@ -86,6 +86,7 @@ bool Map::shootArrow(int dx, int dy) {
       napms(25);
     }
   }
+  you.destroyModeItem();
   you.setMode(Player::Mode::Move);
   return true;
 }
@@ -114,6 +115,7 @@ bool Map::throwHook(int dx, int dy) {
         (*this)(x, y).stun(3);
         (*this)(x, y).moveEnemy(&(*this)(playerX + dx, playerY + dy));
       }
+      you.destroyModeItem();
       you.setMode(Player::Mode::Move);
       return true;
     }
@@ -126,6 +128,8 @@ bool Map::throwHook(int dx, int dy) {
       }
     }
   }
+  you.destroyModeItem();
+  you.setMode(Player::Mode::Move);
   return true;
 }
 
