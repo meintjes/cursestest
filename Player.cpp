@@ -70,12 +70,12 @@ void Player::display() const {
   //print current weapon and artifact
   if (currentWeapon) {
     addc(20, 22, currentWeapon->getGlyph());
-    addcs(currentWeapon->getName());
+    addcs(22, 22, currentWeapon->getName());
     addcs(" (" + currentWeapon->getDescriptor() + ")");
   }
   if (currentArtifact) {
     addc(20, 23, currentArtifact->getGlyph());
-    addcs(currentArtifact->getName());
+    addcs(22, 23, currentArtifact->getName());
     addcs(" (" + currentArtifact->getDescriptor() + ")");
   }
 

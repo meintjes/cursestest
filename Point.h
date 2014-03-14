@@ -2,6 +2,7 @@
 #define __POINT_H__
 
 struct Point {
+  Point(int xIn, int yIn);
   int x;
   int y;
   bool operator==(const Point &rhs) const;

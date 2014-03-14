@@ -190,15 +190,15 @@ void Map::tick() {
 	//enemies within range attack the player
 	if (isVisible(x, y, (*this)(x, y).getRange())) {
           (*this)(x, y).renewMemory({playerX, playerY});
-	  toAttack.push_back({x, y});
+	  toAttack.emplace_back(x, y);
 	}
 	//enemies outside range of the player try to move toward him
         else if (isVisible(x, y, 7)) {
           (*this)(x, y).renewMemory({playerX, playerY});
-          toMove.push_back({x, y});
+          toMove.emplace_back(x, y);
 	}
         else if ((*this)(x, y).hasMemory()) {
-          toMove.push_back({x, y});
+          toMove.emplace_back(x, y);
         }
       }
       //random enemy generation goes here?  
@@ -271,7 +271,7 @@ void Map::explode(int x, int y, int radius) {
   for (int x2 = x - radius; x2 <= x + radius; x2++) {
     for (int y2 = y - radius; y2 <= y + radius; y2++) {
       if (isValidX(x) && isValidY(y)) {
-	toExplode.push_back({x2, y2});
+	toExplode.emplace_back(x2, y2);
       }
     }
   }
