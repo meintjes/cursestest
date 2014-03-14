@@ -15,34 +15,13 @@ void playGame();
 bool getInput(Map &map, const CommandMap cmap);
 bool getLongPrompt(Map &map);
 
-Menu ControlsMenu({
-  Option{"Move up/left", std::bind(changeControl, COMMAND_MOVE_UPLEFT)},
-  Option{"Move up", std::bind(changeControl, COMMAND_MOVE_UP)},
-  Option{"Move up/right", std::bind(changeControl, COMMAND_MOVE_UPRIGHT)},
-  Option{"Move left", std::bind(changeControl, COMMAND_MOVE_LEFT)},
-  Option{"Wait", std::bind(changeControl, COMMAND_WAIT)},
-  Option{"Move right", std::bind(changeControl, COMMAND_MOVE_RIGHT)},
-  Option{"Move down/left", std::bind(changeControl, COMMAND_MOVE_DOWNLEFT)},
-  Option{"Move down", std::bind(changeControl, COMMAND_MOVE_DOWN)},
-  Option{"Move down/right", std::bind(changeControl, COMMAND_MOVE_DOWNRIGHT)},
-
-  Option{"Evoke artifact", std::bind(changeControl, COMMAND_EVOKE_ARTIFACT)},
-  Option{"Use item", std::bind(changeControl, COMMAND_USE_ITEM)},
-
-  Option{"Drop item", std::bind(changeControl, COMMAND_DROP_ITEM)},
-
-  Option{"Go up stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSUP)},
-  Option{"Go down stairs", std::bind(changeControl, COMMAND_INTERACT_STAIRSDOWN)},
-  Option{"Enter long command", std::bind(changeControl, COMMAND_LONG_PROMPT)},
-  Option{Red("Reset all controls"), resetControls}
-});
-
 int main() {
-  initscr();
-  noecho();
-  curs_set(0);
-  std::srand(time(0));
+  initscr(); //start ncurses
+  noecho(); //don't repeat inputted characters to the player
+  curs_set(0); //don't show the cursor
+  std::srand(time(0)); //seed the RNG
 
+  //initialize color pairs. don't use these, see Color.h
   start_color();
   init_pair(1, COLOR_BLACK, COLOR_BLACK);
   init_pair(2, COLOR_RED, COLOR_BLACK);
@@ -60,13 +39,29 @@ int main() {
   init_pair(14, COLOR_YELLOW, COLOR_CYAN);
   init_pair(15, COLOR_WHITE, COLOR_WHITE);
 
+  //generate the controls menu
+  std::vector<Option> controlsMenuOptions;
+  for (int i = COMMAND_FIRST + 1; i < COMMAND_LAST; i++) {
+    controlsMenuOptions.emplace_back(
+      [i]() mutable {
+        CommandMap cmap = {COMMAND_FIRST};
+        readControls(cmap);
+        return (getCommandName(static_cast<Command>(i)) + ": "
+                + listKeysForCommand(static_cast<Command>(i), cmap));
+      },
+      std::bind(changeControl, static_cast<Command>(i))
+    );
+  }
+  controlsMenuOptions.emplace_back(Red("Reset all controls"), resetControls);
+  Menu ControlsMenu(controlsMenuOptions);
+  
+  //generate and execute the main menu
   Menu MainMenu({
-    Option{"Play game", playGame},
-    Option{"Change controls", ControlsMenu},
-    Option{"Quit", [&MainMenu]() mutable {
-      MainMenu.close();
-    }}
+    {"Play game", playGame},
+    {"Change controls", ControlsMenu},
+    {"Quit", std::bind(&Menu::close, &MainMenu)}
   });
+
   MainMenu();
 
   endwin();
@@ -78,7 +73,7 @@ void playGame() {
 
   Branch dungeon{"Dungeon", DEPTH_DUNGEON, nullptr, 0};
   for (int i = 0; i < DEPTH_DUNGEON; i++) {
-    dungeon.floors.push_back(Map(you, i));
+    dungeon.floors.emplace_back(you, i);
   }
 
   you.setBranch(&dungeon);

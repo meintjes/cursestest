@@ -3,6 +3,7 @@
 #include "Cst.h"
 #include "Color.h"
 #include <ncurses.h>
+#include <functional>
 
 Menu::Menu(std::vector<Option> optionsIn) :
   options(optionsIn),
