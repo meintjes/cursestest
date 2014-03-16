@@ -34,6 +34,7 @@ class Cst {
   const bool bold;
 };
 
+void addcs(const Cst &cst);
 void addcs(int x, int y, const Cst &cst);
 
 #endif

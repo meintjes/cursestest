@@ -29,5 +29,6 @@ class Cch {
 };
 
 void addc(int x, int y, const Cch &cch);
+void addc(const Cch &cch);
 
 #endif
