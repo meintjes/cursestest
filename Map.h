@@ -35,8 +35,8 @@ class Map {
   bool shootArrow(int dx, int dy);
   bool throwHook(int dx, int dy);
 
-  //lights all space within radius spaces of (x, y)
-  void lightArea(int x, int y, int radius);
+  //lights all space within radius spaces of (x, y) for turns turns
+  void lightArea(int x, int y, int radius, int turns);
 
   //causes the enemy at the given coordinates to attempt to move toward the
   //player (or the last place it saw the player). 

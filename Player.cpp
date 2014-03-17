@@ -91,7 +91,8 @@ bool Player::tick() {
   Map &map = getCurrentFloor();
   map.lightArea(map.getPlayerX(),
                 map.getPlayerY(),
-                torchDuration > 0 ? 6 : 3);
+                torchDuration > 0 ? 6 : 3,
+                1);
 
   if (!movedLastTurn) {
     if (!damageTimer && stamina >= staminaMax) {

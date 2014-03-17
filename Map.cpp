@@ -138,11 +138,11 @@ bool Map::throwHook(int dx, int dy) {
   return true;
 }
 
-void Map::lightArea(int x, int y, int radius) {
+void Map::lightArea(int x, int y, int radius, int turns) {
   for (int x2 = x - radius; x2 <= x + radius; x2++) {
     for (int y2 = y - radius; y2 <= y + radius; y2++) {
       if (isValidX(x2) && isValidY(y2)) {
-        (*this)(x2, y2).light(1);
+        (*this)(x2, y2).light(turns);
       }
     }
   }
