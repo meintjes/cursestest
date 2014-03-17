@@ -70,8 +70,9 @@ class Space {
   //type is destructible, replaces it with floor.
   void explode(Map &map, int x, int y);
 
-  //lights the space for one turn
-  void light();
+  //lights the space for n turns (if called during the update loop; otherwise,
+  //lights for n + 1 turns).
+  void light(int turns);
 
   //updates the space and any enemies on it.
   bool tick();

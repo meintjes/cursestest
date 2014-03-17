@@ -16,7 +16,6 @@ Map::Map(Player &player, int depth) : you(player) {
   if (depth == 0) {
     sanitizeEntry();
   }
-
   lightArea(playerX, playerY, 3);
 }
 

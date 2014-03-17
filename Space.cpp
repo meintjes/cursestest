@@ -100,8 +100,10 @@ void Space::explode(Map &map, int x, int y) {
   damage(3, map, x, y);
 }
 
-void Space::light() {
-  lit = 2;
+void Space::light(int turns) {
+  if (turns + 1 > lit) {
+    lit = turns + 1;
+  }
 }
 
 bool Space::tick() {

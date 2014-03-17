@@ -137,7 +137,7 @@ void Map::lightArea(int x, int y, int radius) {
   for (int x2 = x - radius; x2 <= x + radius; x2++) {
     for (int y2 = y - radius; y2 <= y + radius; y2++) {
       if (isValidX(x2) && isValidY(y2)) {
-        (*this)(x2, y2).light();
+        (*this)(x2, y2).light(1);
       }
     }
   }
