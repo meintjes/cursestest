@@ -228,6 +228,8 @@ void Map::tick() {
   if ((*this)(playerX, playerY).hasGas() && !damagedByGas) {
     you.damage(1);
   }
+
+  assert(!(*this)(playerX, playerY).hasEnemy());
 }
 
 bool Map::isValidX(int x) {
