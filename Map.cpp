@@ -107,6 +107,9 @@ bool Map::throwHook(int dx, int dy) {
       playerX = x - dx;
       playerY = y - dy;
       you.setMode(Player::Mode::Move);
+      
+      you.destroyModeItem();
+      you.setMode(Player::Mode::Move);
       return true;
     }
     //if the hook hits an enemy, pull the enemy toward the player and stop
@@ -115,6 +118,7 @@ bool Map::throwHook(int dx, int dy) {
         (*this)(x, y).stun(3);
         (*this)(x, y).moveEnemy(&(*this)(playerX + dx, playerY + dy));
       }
+      
       you.destroyModeItem();
       you.setMode(Player::Mode::Move);
       return true;
@@ -128,6 +132,7 @@ bool Map::throwHook(int dx, int dy) {
       }
     }
   }
+
   you.destroyModeItem();
   you.setMode(Player::Mode::Move);
   return true;
