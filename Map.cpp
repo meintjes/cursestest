@@ -11,7 +11,7 @@
 void Map::display() const {
   for (int y = 0; y <= MAPHEIGHT + 1; y++) {
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
-      if (isVisible(x, y, you.getLOS())) {
+      if (isVisible(x, y)) {
 	if (x == playerX && y == playerY) {
 	  addc(x, y, you.getGlyph());
 	}
@@ -74,7 +74,7 @@ bool Map::shootArrow(int dx, int dy) {
     x += dx;
     y += dy;
     
-    if (isVisible(x, y, you.getLOS()) && (*this)(x, y).isPassable()) {
+    if (isVisible(x, y) && (*this)(x, y).isPassable()) {
       // Rewrite the actual state of things.
       display();
 
@@ -97,7 +97,7 @@ bool Map::throwHook(int dx, int dy) {
   for (int i = 0, x = playerX, y = playerY; i < 6; i++) {
     x += dx;
     y += dy;
-    bool visible = isVisible(x, y, you.getLOS());
+    bool visible = isVisible(x, y);
     if (visible) {
       addc(x, y, hookGlyph);
     }
@@ -131,6 +131,16 @@ bool Map::throwHook(int dx, int dy) {
   you.destroyModeItem();
   you.setMode(Player::Mode::Move);
   return true;
+}
+
+void Map::lightArea(int x, int y, int radius) {
+  for (int x2 = x - radius; x2 <= x + radius; x2++) {
+    for (int y2 = y - radius; y2 <= y + radius; y2++) {
+      if (isValidX(x2) && isValidY(y2)) {
+        (*this)(x2, y2).light();
+      }
+    }
+  }
 }
 
 void Map::moveEnemy(int x, int y) {
@@ -179,8 +189,8 @@ void Map::tick() {
     damagedByGas = true;
   }
   
-  for (int x = 1; x <= MAPWIDTH; x++) {
-    for (int y = 1; y <= MAPHEIGHT; y++) {
+  for (int x = 0; x <= MAPWIDTH + 1; x++) {
+    for (int y = 0; y <= MAPHEIGHT + 1; y++) {
       //decrement durations of stuff on the space
       if ((*this)(x, y).tick()) {
 	explode(x, y, 1); //if a bomb went off
@@ -188,12 +198,12 @@ void Map::tick() {
 
       if ((*this)(x, y).hasEnemy() && !(*this)(x, y).isStunned()) {
 	//enemies within range attack the player
-	if (isVisible(x, y, (*this)(x, y).getRange())) {
+	if (isVisible(x, y) && (*this)(x, y).getRange() >= distance(x, y)) {
           (*this)(x, y).renewMemory({playerX, playerY});
 	  toAttack.emplace_back(x, y);
 	}
 	//enemies outside range of the player try to move toward him
-        else if (isVisible(x, y, 7)) {
+        else if (isVisible(x, y) && distance(x, y) < 7) {
           (*this)(x, y).renewMemory({playerX, playerY});
           toMove.emplace_back(x, y);
 	}
@@ -223,8 +233,8 @@ bool Map::isValidY(int y) {
   return (y >= 0 && y <= MAPHEIGHT + 1);
 }
 
-bool Map::isVisible(int x, int y, int LOS) const {
-  if (distance(x, y, playerX, playerY) > LOS) {
+bool Map::isVisible(int x, int y) const {
+  if (!(*this)(x, y).isLit()) {
     return false;
   }
 
@@ -301,8 +311,8 @@ void Map::executeToMove() {
   //closest to player move first, to reduce collisions
   std::sort(toMove.begin(), toMove.end(),
 	    [&](Point lhs, Point rhs) {
-	      return (distance(lhs.x, lhs.y, playerX, playerY)
-		      < distance(rhs.x, rhs.y, playerX, playerY));
+	      return (distance(lhs.x, lhs.y)
+		      < distance(rhs.x, rhs.y));
 	    }
 	    );
   for ( auto &point : toMove ) {
@@ -311,6 +321,6 @@ void Map::executeToMove() {
   toMove.clear();
 }
 
-int Map::distance(int x1, int y1, int x2, int y2) {
-  return std::max(abs(x1-x2), abs(y1-y2));
+int Map::distance(int x1, int y1) const {
+  return std::max(abs(x1-playerX), abs(y1-playerY));
 }

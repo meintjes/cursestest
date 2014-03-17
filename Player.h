@@ -33,9 +33,6 @@ class Player {
 
   int getHp() const; //yep
 
-  //get the player's current maximum line of sight distance.
-  int getLOS() const;
-
   //returns a reference to the player's current floor.
   Map& getCurrentFloor() const;
 
@@ -131,6 +128,7 @@ class Player {
   };
   Player::InventoryInputResult getInventoryInput();
   
+  void lightNearbySpaces();
   bool restoreAttribute(int &att, int &attMax, int num);
 
   int hpMax;

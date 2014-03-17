@@ -13,9 +13,11 @@ Map::Map(Player &player, int depth) : you(player) {
   }
 
   (*this)(playerX, playerY).setType(StairsUp);
-  if (depth == 1) {
+  if (depth == 0) {
     sanitizeEntry();
   }
+
+  lightArea(playerX, playerY, 3);
 }
 
 void Map::drawLine(Point a, const Point b, const SpaceType &type) {

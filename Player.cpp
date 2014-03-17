@@ -88,6 +88,11 @@ void Player::display() const {
 }
 
 bool Player::tick() {
+  Map &map = getCurrentFloor();
+  map.lightArea(map.getPlayerX(),
+                map.getPlayerY(),
+                torchDuration > 0 ? 6 : 3);
+
   if (!movedLastTurn) {
     if (!damageTimer && stamina >= staminaMax) {
       heal(1);
@@ -127,10 +132,6 @@ bool Player::tick() {
 
 int Player::getHp() const {
   return hp;
-}
-
-int Player::getLOS() const {
-  return ((torchDuration > 0) ? 6 : 3);
 }
 
 Map& Player::getCurrentFloor() const {
@@ -522,5 +523,5 @@ Player::InventoryInputResult Player::getInventoryInput() {
         while (index == 'w' || index == 'a' || index == 'q');
       }
     }
-  }
+  }  
 }

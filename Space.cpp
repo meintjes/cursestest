@@ -4,14 +4,15 @@
 
 class Map;
 
-Space::Space() {
-  discovered = false;
-  type = &Wall;
-  gasDuration = 0;
-  bombDuration = 0;
-  enemy = nullptr;
-  item = nullptr;
-}
+Space::Space() :
+  discovered(false),
+  lit(false),
+  type(&Wall),
+  gasDuration(0),
+  bombDuration(0),
+  enemy(nullptr),
+  item(nullptr)
+{}
 
 void Space::setType(const SpaceType &typeIn) {
   type = &typeIn;
@@ -99,7 +100,14 @@ void Space::explode(Map &map, int x, int y) {
   damage(3, map, x, y);
 }
 
+void Space::light() {
+  lit = 2;
+}
+
 bool Space::tick() {
+  if (lit > 0) {
+    lit--;
+  }
   if (gasDuration > 0) {
     gasDuration--;
   }
@@ -184,6 +192,10 @@ bool Space::hasGas() const {
 
 bool Space::hasItem() const {
   return (item != nullptr);
+}
+
+bool Space::isLit() const {
+  return lit;
 }
 
 void Space::renewMemory(Point playerPosition) {

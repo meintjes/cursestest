@@ -35,6 +35,9 @@ class Map {
   bool shootArrow(int dx, int dy);
   bool throwHook(int dx, int dy);
 
+  //lights all space within radius spaces of (x, y)
+  void lightArea(int x, int y, int radius);
+
   //causes the enemy at the given coordinates to attempt to move toward the
   //player (or the last place it saw the player). 
   void moveEnemy(int x, int y);
@@ -60,7 +63,7 @@ class Map {
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
 
-  bool isVisible(int x, int y, int LOS) const;
+  bool isVisible(int x, int y) const;
   bool hasLOS(int x1, int y1, int x2, int y2) const;
 
   void explode(int x, int y, int radius);
@@ -71,7 +74,7 @@ class Map {
   std::vector<Point> toMove;
   void executeToMove();
   
-  static int distance(int x1, int y1, int x2, int y2);
+  int distance(int x1, int y1) const;
 };
 
 typedef bool (Map::*DirectionalFn)(int x, int y);

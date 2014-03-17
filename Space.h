@@ -70,6 +70,9 @@ class Space {
   //type is destructible, replaces it with floor.
   void explode(Map &map, int x, int y);
 
+  //lights the space for one turn
+  void light();
+
   //updates the space and any enemies on it.
   bool tick();
 
@@ -86,12 +89,14 @@ class Space {
   bool hasEnemy() const;
   bool hasGas() const;
   bool hasItem() const;
+  bool isLit() const;
 
   //returns true if the space's type is the same as the given type.
   bool typeIs(const SpaceType &typeIn) const;
 
  private:
   mutable bool discovered;
+  int lit;
   const SpaceType *type;
   unsigned int gasDuration;
   unsigned int bombDuration;
