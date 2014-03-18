@@ -207,6 +207,7 @@ void Player::setMode(Player::Mode modeIn) {
 }
 
 void Player::destroyModeItem() {
+  assert(modeItemIterator != inventory.end());
   inventory.erase(modeItemIterator);
   modeItemIterator = inventory.end();
 }
