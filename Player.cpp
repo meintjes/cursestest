@@ -52,7 +52,7 @@ void Player::display() const {
   }
   //display marker for the maximum possible hp regeneration
   if (currentHpMax > hp) {
-    addc(78, 21 - (21 * currentHpMax / hpMax), BlackOnWhite(' '));
+    addc(78, 21 - (21 * currentHpMax / hpMax), LightGreen('-'));
   }
 
   //print numerical displays at bottom right corner

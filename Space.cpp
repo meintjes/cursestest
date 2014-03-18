@@ -37,10 +37,12 @@ bool Space::moveEnemy(Space *target) {
 }
 
 void Space::setEnemy(Enemy *enemyIn) {
+  assert(isPassable());
   enemy = std::unique_ptr<Enemy>(enemyIn);
 }
 
 void Space::setEnemy(std::unique_ptr<Enemy> enemyIn) {
+  assert(isPassable());
   enemy = std::move(enemyIn);
 }
 

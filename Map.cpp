@@ -222,7 +222,9 @@ void Map::tick() {
       }
       //random enemy generation. slows down the more enemies there are
       else if (!randTo(16 * (enemyCount * enemyCount + 32)) &&
-               !isVisible(x, y)) {
+               !isVisible(x, y) &&
+               (*this)(x, y).isPassable() &&
+               (*this)(x, y).hasEnemy()) {
         (*this)(x, y).setEnemy(getRandomEnemy());
         newEnemyCount++;
       }
