@@ -80,6 +80,10 @@ class Player {
   //stamina, instead does nothing and returns false.
   bool removeStamina(int num);
 
+  //return whether hp/stamina is "high" according to a universal standard
+  bool hpIsHigh() const;
+  bool staminaIsHigh() const;
+
   //attempts to add the item to the player's inventory. returns false if
   //if the player's inventory is full.
   bool addItem(Item * const item);
@@ -132,9 +136,11 @@ class Player {
   bool restoreAttribute(int &att, int &attMax, int num);
 
   int hpMax;
+  int currentHpMax;
   int hp;
   int staminaMax;
   int stamina;
+  
   std::unique_ptr<Weapon> currentWeapon;
   std::unique_ptr<Artifact> currentArtifact;
   Mode mode;

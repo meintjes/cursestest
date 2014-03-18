@@ -14,7 +14,8 @@
 Player::Player() :
   ore(0),
   hpMax(30),
-  hp(hpMax),
+  currentHpMax(hpMax),
+  hp(currentHpMax),
   staminaMax(30),
   stamina(staminaMax),
   mode(Mode::Move),
@@ -41,15 +42,17 @@ void Player::display() const {
   }
 
   //at low hp, change bar colors
-  const Color &hpColor = ((hp * 3) / hpMax) ?
-    BlackOnGreen : BlackOnRed;
-  const Color &staminaColor = ((stamina * 3) / staminaMax) ?
-    BlackOnBrown : BlackOnRed;
+  const Color &hpColor = hpIsHigh() ? BlackOnGreen : BlackOnRed;
+  const Color &staminaColor = staminaIsHigh() ? BlackOnBrown : BlackOnRed;
   
   //print hp and stamina bars
   for (int i = 21; i >= 0; i--) {
     addc(78, 21 - i, ((i <= 21 * hp / hpMax) ? hpColor : LightGray)(' '));
     addc(((i <= 21 * stamina / staminaMax) ? staminaColor : LightGray)(' '));
+  }
+  //display marker for the maximum possible hp regeneration
+  if (currentHpMax > hp) {
+    addc(78, 21 - (21 * currentHpMax / hpMax), BlackOnWhite(' '));
   }
 
   //print numerical displays at bottom right corner
@@ -96,7 +99,9 @@ bool Player::tick() {
 
   if (!movedLastTurn) {
     if (!damageTimer && stamina >= staminaMax) {
-      heal(1);
+      if (hp < currentHpMax) {
+        hp += 1;
+      }
     }
     else {
       restoreStamina(1);
@@ -183,6 +188,13 @@ bool Player::attack(int dx, int dy) {
     return shouldSpendTurn;
   }
 }
+bool Player::hpIsHigh() const {
+  return (hp * 3) / hpMax;
+}
+
+bool Player::staminaIsHigh() const {
+  return (stamina * 3) / staminaMax;
+}
 
 bool Player::evokeArtifact() {
   if (currentArtifact &&
@@ -246,10 +258,19 @@ void Player::setArtifact(Artifact * const artifact) {
 void Player::damage(unsigned int num) {
   hp -= num;
   damageTimer = 3;
+  if (!staminaIsHigh()) {
+    currentHpMax -= num;
+  }
 }
 
 bool Player::heal(unsigned int num) {
-  return restoreAttribute(hp, hpMax, num);
+  if (restoreAttribute(hp, hpMax, num)) {
+    restoreAttribute(currentHpMax, hpMax, num);
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 bool Player::removeStamina(int num) {
