@@ -36,7 +36,7 @@ class Enemy {
   //decrements timers for various durations. can be overridden for various
   //other reasons, but should call the base class version so that stunning
   //doesn't permanently incapacitate the enemy or anything like that.
-  virtual void tick();
+  virtual void tick(Map &map, int x, int y);
 
  protected:
   //what happens when the enemy dies. default behavior just removes it from

@@ -106,7 +106,7 @@ void Space::light(int turns) {
   }
 }
 
-bool Space::tick() {
+bool Space::tick(Map &map, int x, int y) {
   if (lit > 0) {
     lit--;
   }
@@ -114,7 +114,7 @@ bool Space::tick() {
     gasDuration--;
   }
   if (enemy) {
-    enemy->tick();
+    enemy->tick(map, x, y);
   }
   if (bombDuration > 0) {
     bombDuration--;
@@ -122,7 +122,6 @@ bool Space::tick() {
       return true;
     }
   }
-
   return false;
 }
 

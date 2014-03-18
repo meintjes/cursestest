@@ -59,6 +59,9 @@ class Map {
   static bool isValidX(int x);
   static bool isValidY(int y);
  
+  //causes every space within radius spaces of (x, y) to explode
+  void explodeArea(int x, int y, int radius);
+
  private:
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
@@ -66,7 +69,6 @@ class Map {
   bool isVisible(int x, int y) const;
   bool hasLOS(int x1, int y1, int x2, int y2) const;
 
-  void explode(int x, int y, int radius);
   std::vector<Point> toExplode;
   void executeToExplode();
   std::vector<Point> toAttack;

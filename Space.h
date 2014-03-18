@@ -74,8 +74,8 @@ class Space {
   //lights for n + 1 turns).
   void light(int turns);
 
-  //updates the space and any enemies on it.
-  bool tick();
+  //updates the space and any enemies on it. returns true if a bomb went off.
+  bool tick(Map &map, int x, int y);
 
   //figures out and returns what glyph to display for the space, based on a
   //number of factors (type, visibility, enemy, item, etc.).

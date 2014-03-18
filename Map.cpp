@@ -106,7 +106,6 @@ bool Map::throwHook(int dx, int dy) {
     if (!(*this)(x, y).isPassable()) {
       playerX = x - dx;
       playerY = y - dy;
-      you.setMode(Player::Mode::Move);
       
       you.destroyModeItem();
       you.setMode(Player::Mode::Move);
@@ -133,7 +132,7 @@ bool Map::throwHook(int dx, int dy) {
     }
   }
 
-  you.destroyModeItem();
+  //if the hook never hits anything, don't destroy it, just put it away
   you.setMode(Player::Mode::Move);
   return true;
 }
@@ -197,8 +196,8 @@ void Map::tick() {
   for (int x = 0; x <= MAPWIDTH + 1; x++) {
     for (int y = 0; y <= MAPHEIGHT + 1; y++) {
       //decrement durations of stuff on the space
-      if ((*this)(x, y).tick()) {
-	explode(x, y, 1); //if a bomb went off
+      if ((*this)(x, y).tick(*this, x, y)) {
+	explodeArea(x, y, 1); //if a bomb went off
       }
 
       if ((*this)(x, y).hasEnemy() && !(*this)(x, y).isStunned()) {
@@ -283,7 +282,7 @@ bool Map::hasLOS(int x1, int y1, int x2, int y2) const {
   }
 }
 
-void Map::explode(int x, int y, int radius) {
+void Map::explodeArea(int x, int y, int radius) {
   assert(radius >= 0);
   for (int x2 = x - radius; x2 <= x + radius; x2++) {
     for (int y2 = y - radius; y2 <= y + radius; y2++) {

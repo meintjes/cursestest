@@ -60,7 +60,7 @@ void Enemy::stun(unsigned int turns) {
   stunDuration += turns;
 }
 
-void Enemy::tick() {
+void Enemy::tick(Map &map, int x, int y) {
   if (memoryDuration > 0) {
     memoryDuration--;
   }
