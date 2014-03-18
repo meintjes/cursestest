@@ -192,7 +192,8 @@ void Map::tick() {
     you.damage(1);
     damagedByGas = true;
   }
-  
+ 
+  int newEnemyCount = 0; 
   for (int x = 0; x <= MAPWIDTH + 1; x++) {
     for (int y = 0; y <= MAPHEIGHT + 1; y++) {
       //decrement durations of stuff on the space
@@ -200,24 +201,35 @@ void Map::tick() {
 	explodeArea(x, y, 1); //if a bomb went off
       }
 
-      if ((*this)(x, y).hasEnemy() && !(*this)(x, y).isStunned()) {
-	//enemies within range attack the player
-	if (isVisible(x, y) && (*this)(x, y).getRange() >= distance(x, y)) {
-          (*this)(x, y).renewMemory({playerX, playerY});
-	  toAttack.emplace_back(x, y);
-	}
-	//enemies outside range of the player try to move toward him
-        else if (isVisible(x, y) && distance(x, y) < 7) {
-          (*this)(x, y).renewMemory({playerX, playerY});
-          toMove.emplace_back(x, y);
-	}
-        else if ((*this)(x, y).hasMemory()) {
-          toMove.emplace_back(x, y);
+      if ((*this)(x, y).hasEnemy()) {
+        if (!(*this)(x, y).isStunned()) {
+          //enemies within range attack the player
+          if (isVisible(x, y) && (*this)(x, y).getRange() >= distance(x, y)) {
+            (*this)(x, y).renewMemory({playerX, playerY});
+            toAttack.emplace_back(x, y);
+          }
+          //enemies outside range of the player try to move toward him
+          else if (isVisible(x, y) && distance(x, y) < 7) {
+            (*this)(x, y).renewMemory({playerX, playerY});
+            toMove.emplace_back(x, y);
+          }
+          else if ((*this)(x, y).hasMemory()) {
+            toMove.emplace_back(x, y);
+          }
         }
+        //even if the enemy is stunned, count it
+        newEnemyCount++;
       }
-      //random enemy generation goes here?  
+      //random enemy generation. slows down the more enemies there are
+      else if (!randTo(16 * (enemyCount * enemyCount + 32)) &&
+               !isVisible(x, y)) {
+        (*this)(x, y).setEnemy(getRandomEnemy());
+        newEnemyCount++;
+      }
     }
   }
+
+  enemyCount = newEnemyCount;
 
   executeToMove();
   executeToExplode();

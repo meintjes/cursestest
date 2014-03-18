@@ -4,7 +4,6 @@
 #include "Space.h"
 #include "Player.h"
 #include "Point.h"
-#include "SpaceType.h"
 #include <vector>
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
@@ -55,7 +54,7 @@ class Map {
   int getPlayerX() const;
   int getPlayerY() const;
 
-  //verify that the given coordinate isn't beyond the bounds of the map.
+  //verify that the given coordinate isn't beyond the bounds of a map.
   static bool isValidX(int x);
   static bool isValidY(int y);
  
@@ -76,7 +75,12 @@ class Map {
   std::vector<Point> toMove;
   void executeToMove();
   
+  //returns the distance from the player to the given coordinates
   int distance(int x1, int y1) const;
+
+  //an approximate count of the number of enemies on the map (one turn ago).
+  //don't use for anything serious, just as an approximation.
+  int enemyCount;
 };
 
 typedef bool (Map::*DirectionalFn)(int x, int y);
