@@ -224,7 +224,7 @@ void Map::tick() {
       else if (!randTo(16 * (enemyCount * enemyCount + 32)) &&
                !isVisible(x, y) &&
                (*this)(x, y).isPassable() &&
-               (*this)(x, y).hasEnemy()) {
+               !(*this)(x, y).hasEnemy()) {
         (*this)(x, y).setEnemy(getRandomEnemy());
         newEnemyCount++;
       }

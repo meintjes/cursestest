@@ -13,10 +13,10 @@
 
 Player::Player() :
   ore(0),
-  hpMax(30),
+  hpMax(20),
   currentHpMax(hpMax),
   hp(currentHpMax),
-  staminaMax(30),
+  staminaMax(10),
   stamina(staminaMax),
   mode(Mode::Move),
   modeItemIterator(inventory.end()),
