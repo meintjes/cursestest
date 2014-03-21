@@ -1,9 +1,11 @@
-#include <ncurses.h>
 #include "Map.h"
+#include <ncurses.h>
+#include "Color.h"
 #include "Player.h"
 #include "Branch.h"
 #include "Command.h"
 #include "Menu.h"
+#include "SpaceType.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
@@ -71,10 +73,7 @@ int main() {
 void playGame() {
   Player you;
 
-  Branch dungeon{"Dungeon", DEPTH_DUNGEON, nullptr, 0};
-  for (int i = 0; i < DEPTH_DUNGEON; i++) {
-    dungeon.floors.emplace_back(you, i);
-  }
+  Branch dungeon("Dungeon", DEPTH_DUNGEON, nullptr, 0, you);
 
   you.setBranch(&dungeon);
 

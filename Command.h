@@ -1,7 +1,6 @@
 #ifndef __COMMAND_H__
 #define __COMMAND_H__
 
-#include "Menu.h"
 #include <string>
 #include "Option.h"
 

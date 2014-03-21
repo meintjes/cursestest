@@ -2,9 +2,11 @@
 #define __MAP_H__
 
 #include "Space.h"
-#include "Player.h"
 #include "Point.h"
+#include "Enemy.h"
 #include <vector>
+
+class Player;
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
 const int MAPWIDTH = 76;

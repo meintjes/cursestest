@@ -1,7 +1,6 @@
 #include "Item.h"
 #include "Player.h"
-#include "Cch.h"
-#include "Cst.h"
+#include "Color.h"
 #include "Map.h"
 #include "functions.h"
 

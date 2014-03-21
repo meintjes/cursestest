@@ -1,17 +1,20 @@
 #ifndef __SPACE_H__
 #define __SPACE_H__
 
-#include "Item.h"
-#include "Enemy.h"
-#include "SpaceType.h"
 #include <memory> 
+#include "Point.h"
+#include "Cch.h"
 
 class Player;
+class Enemy;
 class Map;
+class SimpleItem;
+struct SpaceType;
 
 class Space {
  public:
   Space();
+  ~Space();
 
   //change the SpaceType to the given one.
   void setType(const SpaceType &typeIn);

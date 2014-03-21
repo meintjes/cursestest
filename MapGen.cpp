@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Item.h"
 #include "functions.h"
 #include "generation.h"
 #include "SpaceType.h"

@@ -8,14 +8,25 @@
 
 const int DEPTH_DUNGEON = 12;
 
-struct Branch {
+class Branch {
+ public:
+  Branch(Cst nameIn, unsigned int maxDepthIn,
+         Branch *parentBranchIn, unsigned int parentDepthIn,
+         Player &youIn);
+  Cst getName() const;
+  int getMaxDepth() const;
+  Branch* getParentBranch() const;
+  int getParentDepth() const;
+  Map& getMap(unsigned int mapDepth);
+
+ private:
   Cst name;
-  int depth;
-
+  std::vector<Map*> floors;
+  
+  unsigned int maxDepth;
   Branch *parentBranch;
-  int parentDepth;
-
-  std::vector<Map> floors;
+  unsigned int parentDepth;
+  Player &you;
 };
 
 #endif

@@ -1,8 +1,9 @@
-#include <cassert>
 #include "Space.h"
+#include "Enemy.h"
+#include "Item.h"
+#include "SpaceType.h"
 #include "Cch.h"
-
-class Map;
+#include <cassert>
 
 Space::Space() :
   discovered(false),
@@ -13,6 +14,10 @@ Space::Space() :
   enemy(nullptr),
   item(nullptr)
 {}
+
+Space::~Space() {
+
+}
 
 void Space::setType(const SpaceType &typeIn) {
   type = &typeIn;

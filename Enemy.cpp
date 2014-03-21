@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Player.h"
 #include "Cch.h"
 #include "Color.h"
 #include "Map.h"

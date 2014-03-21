@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "Cch.h"
 #include "Color.h"
+#include "Player.h"
 #include "functions.h"
 #include "Command.h"
 #include <ncurses.h>

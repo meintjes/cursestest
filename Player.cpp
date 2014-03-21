@@ -5,8 +5,7 @@
 #include "Item.h"
 #include "Weapon.h"
 #include "Artifact.h"
-#include "Cst.h"
-#include "Cch.h"
+#include "Color.h"
 #include <string>
 #include <ncurses.h>
 #include <cassert>
@@ -67,7 +66,7 @@ void Player::display() const {
   addcs(80 - staminaDisplay.length(), 23, staminaColor(staminaDisplay));
 
   //print current location
-  addcs(0, 23, currentBranch->name + ": ");
+  addcs(0, 23, currentBranch->getName() + ": ");
   addcs(White(std::to_string(1 + currentDepth)));
 
   //print current weapon and artifact
@@ -141,7 +140,7 @@ int Player::getHp() const {
 }
 
 Map& Player::getCurrentFloor() const {
-  return currentBranch->floors.at(currentDepth);
+  return currentBranch->getMap(currentDepth);
 }
 
 Cch Player::getGlyph() const {
@@ -459,16 +458,16 @@ bool Player::changeDepth(int dz) {
 
   //if going down from bottom of branch, don't spend a turn
   //TODO: make branch ends not generate down-stairs
-  if (currentDepth >= currentBranch->depth) {
-    currentDepth = currentBranch->depth - 1;
+  if (currentDepth >= currentBranch->getMaxDepth()) {
+    currentDepth = currentBranch->getMaxDepth() - 1;
     return false;
   }
 
   //if going up from top of branch, go to parent branch and depth
   if (currentDepth < 0) {
-    if (currentBranch->parentBranch) { 
-      currentDepth = currentBranch->parentDepth;
-      currentBranch = currentBranch->parentBranch;
+    if (currentBranch->getParentBranch()) { 
+      currentDepth = currentBranch->getParentDepth();
+      currentBranch = currentBranch->getParentBranch();
       return true;
     }
     else { //if there's no parent branch, don't spend a turn

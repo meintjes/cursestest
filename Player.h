@@ -6,7 +6,7 @@
 #include <memory>
 #include <list>
 
-struct Branch;
+class Branch;
 class Item;
 class Weapon;
 class Artifact;

@@ -1,4 +1,5 @@
 #include "Artifact.h"
+#include "Color.h"
 #include "functions.h"
 #include "Map.h"
 #include "Player.h"
