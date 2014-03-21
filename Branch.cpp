@@ -11,6 +11,13 @@ Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
   you(youIn)
 {}
 
+Branch::~Branch() {
+  while (floors.size()) {
+    delete floors.back();
+    floors.pop_back();
+  }
+}
+
 Map& Branch::getMap(unsigned int mapDepth) {
   assert(mapDepth <= maxDepth);
 

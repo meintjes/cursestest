@@ -13,6 +13,8 @@ class Branch {
   Branch(Cst nameIn, unsigned int maxDepthIn,
          Branch *parentBranchIn, unsigned int parentDepthIn,
          Player &youIn);
+  ~Branch();
+  
   Cst getName() const;
   int getMaxDepth() const;
   Branch* getParentBranch() const;
