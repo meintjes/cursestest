@@ -12,9 +12,8 @@ Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
 {}
 
 Branch::~Branch() {
-  while (floors.size()) {
-    delete floors.back();
-    floors.pop_back();
+  for (auto &map : floors) {
+    delete map;
   }
 }
 
