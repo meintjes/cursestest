@@ -8,7 +8,10 @@
 //depth arg will eventually be used to scale difficulty. once different branches
 //are implemented, there'll probably be another argument controlling monster
 //and loot generation
-Map::Map(Player &player, int depth) : you(player) {
+Map::Map(Player &player, int depth) :
+  you(player),
+  enemyCount(0)
+{
   switch (randTo(0)) {
   default:
     generateBoxes(depth);
