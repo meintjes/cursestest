@@ -17,23 +17,18 @@ Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
   you(youIn)
 {}
 
-Branch::~Branch() {
-  if (cachedMap) {
-    delete cachedMap;
-  }
-}
-
 Map& Branch::getMap(unsigned int mapDepth) {
-  assert(mapDepth <= maxDepth);
-  assert(mapDepth >= 0);
+  assert(isValidDepth(mapDepth));
 
   if (mapDepth != cachedDepth) {
     //save the cached level to file
-    std::string saveFilename = name.data() + std::to_string(cachedDepth);
-    std::ofstream saveStream(saveFilename.data());
-    if (saveStream) {
-      boost::archive::text_oarchive saveArchive(saveStream);
-      saveArchive << cachedMap;
+    if (isValidDepth(cachedDepth)) {
+      std::string saveFilename = name.data() + std::to_string(cachedDepth);
+      std::ofstream saveStream(saveFilename.data());
+      if (saveStream) {
+        boost::archive::text_oarchive saveArchive(saveStream);
+        saveArchive << cachedMap;
+      }
     }
 
     //load the cached level from file
@@ -45,15 +40,20 @@ Map& Branch::getMap(unsigned int mapDepth) {
       cachedMap->setPlayer(you);
     }
     else { //if there's no file, just make a new map
-      if (cachedMap) {
-        delete cachedMap;
-      }
-      cachedMap = new Map(you, mapDepth);
+      cachedMap.reset(new Map(you, mapDepth));
     }
     cachedDepth = mapDepth;
   }
   
   return *cachedMap;
+}
+
+void Branch::uncache() {
+  cachedMap = nullptr;
+}
+
+bool Branch::isValidDepth(unsigned int depth) const {
+  return (depth < maxDepth) && (depth >= 0);
 }
 
 Cst Branch::getName() const {
