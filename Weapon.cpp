@@ -5,8 +5,8 @@
 #include <cassert>
 
 Item::UseResult Weapon::use(Map &map) {
-  if (map.you.getCurrentWeapon() == this) {
-    if (map.you.addItem(this)) {
+  if (map.you().getCurrentWeapon() == this) {
+    if (map.you().addItem(this)) {
       return Item::Release;
     }
     else {
@@ -14,7 +14,7 @@ Item::UseResult Weapon::use(Map &map) {
     }
   }
   else {
-    map.you.setWeapon(this);
+    map.you().setWeapon(this);
     return Item::Release;
   }
 } 
@@ -86,8 +86,8 @@ const Color& Bludgeon::color() const {
 bool Lance::attack(Map &map, int dx, int dy) {
   int x = map.getPlayerX() + dx;
   int y = map.getPlayerY() + dy;
-  bool shouldSpendTurn = (map.you.getLastMoveDirection() != Point{dx, dy});
-  map.you.setLastMoveDirection({0, 0});
+  bool shouldSpendTurn = (map.you().getLastMoveDirection() != Point{dx, dy});
+  map.you().setLastMoveDirection({0, 0});
   if (!shouldSpendTurn) {
     map(x, y).damage(2, map, x, y);
   }

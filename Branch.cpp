@@ -1,10 +1,16 @@
 #include "Branch.h"
+#include <string>
 #include <cassert>
+#include <fstream>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
        Branch *parentBranchIn, unsigned int parentDepthIn,
-       Player &youIn) :
+       Player *youIn) :
   name(nameIn),
+  cachedDepth(-1),
+  cachedMap(nullptr),
   maxDepth(maxDepthIn),
   parentBranch(parentBranchIn),
   parentDepth(parentDepthIn),
@@ -12,19 +18,42 @@ Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
 {}
 
 Branch::~Branch() {
-  for (auto &map : floors) {
-    delete map;
+  if (cachedMap) {
+    delete cachedMap;
   }
 }
 
 Map& Branch::getMap(unsigned int mapDepth) {
   assert(mapDepth <= maxDepth);
+  assert(mapDepth >= 0);
 
-  while (floors.size() <= mapDepth) {
-    floors.emplace_back(new Map(you, floors.size()));
+  if (mapDepth != cachedDepth) {
+    //save the cached level to file
+    std::string saveFilename = name.data() + std::to_string(cachedDepth);
+    std::ofstream saveStream(saveFilename.data());
+    if (saveStream) {
+      boost::archive::text_oarchive saveArchive(saveStream);
+      saveArchive << cachedMap;
+    }
+
+    //load the cached level from file
+    std::string loadFilename = name.data() + std::to_string(mapDepth);
+    std::ifstream loadStream(loadFilename.data());
+    if (loadStream) {
+      boost::archive::text_iarchive loadArchive(loadStream);
+      loadArchive >> cachedMap;
+      cachedMap->setPlayer(you);
+    }
+    else { //if there's no file, just make a new map
+      if (cachedMap) {
+        delete cachedMap;
+      }
+      cachedMap = new Map(you, mapDepth);
+    }
+    cachedDepth = mapDepth;
   }
-
-  return *floors.at(mapDepth);
+  
+  return *cachedMap;
 }
 
 Cst Branch::getName() const {

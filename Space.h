@@ -1,23 +1,30 @@
 #ifndef __SPACE_H__
 #define __SPACE_H__
 
-#include <memory> 
 #include "Point.h"
 #include "Cch.h"
+#include "Item.h"
+#include <memory>
+
+namespace boost {
+  namespace serialization {
+    class access;
+  }
+}
 
 class Player;
 class Enemy;
 class Map;
-class SimpleItem;
-struct SpaceType;
 
 class Space {
  public:
   Space();
   ~Space();
 
-  //change the SpaceType to the given one.
-  void setType(const SpaceType &typeIn);
+  enum Type {Wall, GlassWall, Floor, StairsUp, StairsDown};
+
+  //change the Type to the given one.
+  void setType(Space::Type typeIn);
   
   //set the item on the space. overwrites the previous item.
   void setItem(SimpleItem * const itemIn);
@@ -86,8 +93,10 @@ class Space {
   Cch getGlyph(bool isVisible) const;
 
   //get information about the space's type.
+  Cch getTypeGlyph() const;
   bool isPassable() const;
   bool isTransparent() const;
+  bool isDestructible() const;
 
   //self-explanatory
   bool hasEnemy() const;
@@ -96,12 +105,24 @@ class Space {
   bool isLit() const;
 
   //returns true if the space's type is the same as the given type.
-  bool typeIs(const SpaceType &typeIn) const;
+  bool typeIs(Space::Type typeIn) const;
 
  private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & discovered;
+    ar & lit;
+    ar & type;
+    ar & gasDuration;
+    ar & bombDuration;
+    ar & enemy;
+    ar & item; 
+  }
+
   mutable bool discovered;
   int lit;
-  const SpaceType *type;
+  Space::Type type;
   unsigned int gasDuration;
   unsigned int bombDuration;
   std::unique_ptr<Enemy> enemy;

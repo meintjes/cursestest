@@ -2,6 +2,16 @@
 #define __ITEM_H__
 
 #include <memory>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
+
+namespace boost {
+  namespace serialization {
+    class access;
+  }
+}
 
 class Cch;
 class Cst;
@@ -30,6 +40,11 @@ class SimpleItem {
   virtual char glyph() const = 0;
   //returns the color of the item
   virtual const Color& color() const = 0;
+
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {}
 };
 
 //abstract class for items that have names and go into the player's inventory
@@ -54,7 +69,16 @@ class Item : public SimpleItem {
  protected:
   //returns the basic (uncolored) name of the item
   virtual std::string name() const = 0;
+
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<SimpleItem>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Item)
+
 
 
 //base class for artifacts and weapons
@@ -72,16 +96,24 @@ class DestructibleItem : public Item {
   //deducts x from the item's durability.
   void damage(unsigned int x);
 
-
  protected:
   virtual char glyph() const = 0;
   virtual std::string name() const = 0;
   virtual const Color& color() const = 0;
 
  private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Item>(*this);
+    ar & durability;
+    ar & durabilityMin;
+  }
+
   int durability;
-  const int durabilityMin;
+  int durabilityMin;
 };
+BOOST_CLASS_EXPORT(DestructibleItem)
 
 
 
@@ -92,7 +124,14 @@ class Ore : public SimpleItem {
  protected:
   char glyph() const;
   const Color& color() const;
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<SimpleItem>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Ore)
 
 
 
@@ -104,7 +143,16 @@ class Bomb : public Item {
   char glyph() const;
   std::string name() const;
   const Color& color() const;
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Item>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Bomb)
+
+
 
 class Torch : public Item {
  public:
@@ -114,7 +162,16 @@ class Torch : public Item {
   char glyph() const;
   std::string name() const;
   const Color& color() const;
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Item>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Torch)
+
+
 
 class Arrow : public Item {
  public:
@@ -124,7 +181,16 @@ class Arrow : public Item {
   char glyph() const;
   std::string name() const;
   const Color& color() const; 
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Item>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Arrow)
+
+
 
 class Hook : public DestructibleItem {
  public:
@@ -134,6 +200,13 @@ class Hook : public DestructibleItem {
   char glyph() const;
   std::string name() const;
   const Color& color() const;
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & boost::serialization::base_object<DestructibleItem>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Hook)
 
 #endif

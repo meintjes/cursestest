@@ -5,8 +5,8 @@
 #include "Player.h"
 
 Item::UseResult Artifact::use(Map &map) {
-  if (map.you.getCurrentArtifact() == this) {
-    if (map.you.addItem(this)) {
+  if (map.you().getCurrentArtifact() == this) {
+    if (map.you().addItem(this)) {
       return Item::Release;
     }
     else {
@@ -14,7 +14,7 @@ Item::UseResult Artifact::use(Map &map) {
     }
   }
   else {
-    map.you.setArtifact(this);
+    map.you().setArtifact(this);
     return Item::Release;
   }
 }
@@ -26,7 +26,7 @@ char Artifact::glyph() const {
 
 
 bool HealingOrb::evoke(Map &map) {
-  if (map.you.heal(1)) {
+  if (map.you().heal(1)) {
     damage(15);
     return true;
   }
@@ -46,7 +46,7 @@ const Color& HealingOrb::color() const {
 
 
 bool TimeStopper::evoke(Map &map) {
-  map.you.stopTime(randRange(4, 6));
+  map.you().stopTime(randRange(4, 6));
   damage(50);
   return true;
 }

@@ -2,7 +2,16 @@
 #define __ENEMY_H__
 
 #include "Point.h"
+#include "unique.h"
 #include <memory>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
+
+namespace boost {
+  namespace serialization {
+    class access;
+  }
+}
 
 class Cch;
 class Map;
@@ -45,6 +54,15 @@ class Enemy {
   int hp;
 
  private:
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & hp;
+    ar & memoryDuration;
+    ar & memoryLocation;
+    ar & stunDuration;
+  }
+
   int memoryDuration;
   Point memoryLocation;
   int stunDuration;
@@ -56,7 +74,15 @@ class Zombie : public Enemy {
  public:
   Zombie();
   Cch getGlyph() const;
+
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Enemy>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Zombie)
 
 class Exploder : public Enemy {
  public:
@@ -65,16 +91,32 @@ class Exploder : public Enemy {
   int getRange() const;
   void attack(Map &map, int x, int y);
   void die(Map &map, int x, int y);
+
  private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Enemy>(*this);
+    ar & isPrimed;
+  }
   bool isPrimed;
 };
+BOOST_CLASS_EXPORT(Exploder)
 
 class Reacher : public Enemy {
  public:
   using Enemy::Enemy;
   Cch getGlyph() const;
   int getRange() const;
+
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Enemy>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Reacher)
 
 class SpawnerBoss : public Enemy {
  public:
@@ -83,13 +125,29 @@ class SpawnerBoss : public Enemy {
   int getRange() const;
   void attack(Map &map, int x, int y);
   void die(Map &map, int x, int y);
+ 
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Enemy>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(SpawnerBoss)
 
 class Douser : public Enemy {
  public:
   using Enemy::Enemy;
   Cch getGlyph() const;
   void attack(Map &map, int x, int y);
+
+ private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Enemy>(*this);
+  }
 };
+BOOST_CLASS_EXPORT(Douser)
 
 #endif

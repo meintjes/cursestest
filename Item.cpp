@@ -93,7 +93,7 @@ const Color& Bomb::color() const {
 
 
 Item::UseResult Torch::use(Map &map) {
-  map.you.setTorchDuration(randRange(125, 175));
+  map.you().setTorchDuration(randRange(125, 175));
   return Item::Destroy;
 }
 
@@ -112,12 +112,12 @@ const Color& Torch::color() const {
 
 
 Item::UseResult Arrow::use(Map &map) {
-  if (map.you.getMode() == Player::Mode::Arrow) {
-    map.you.setMode(Player::Mode::Move);
+  if (map.you().getMode() == Player::Mode::Arrow) {
+    map.you().setMode(Player::Mode::Move);
     return Item::None;
   }
   else {
-    map.you.setMode(Player::Mode::Arrow);
+    map.you().setMode(Player::Mode::Arrow);
     return Item::None;
   }
 }
@@ -137,12 +137,12 @@ const Color& Arrow::color() const {
 
 
 Item::UseResult Hook::use(Map &map) {
-  if (map.you.getMode() == Player::Mode::Hook) {
-    map.you.setMode(Player::Mode::Move);
+  if (map.you().getMode() == Player::Mode::Hook) {
+    map.you().setMode(Player::Mode::Move);
     return Item::None;
   }
   else {
-    map.you.setMode(Player::Mode::Hook);
+    map.you().setMode(Player::Mode::Hook);
     return Item::None;
   }
 }

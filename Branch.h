@@ -1,8 +1,6 @@
 #ifndef __BRANCH_H__
 #define __BRANCH_H__
 
-#include <string>
-#include <vector>
 #include "Map.h"
 #include "Cst.h"
 
@@ -12,7 +10,7 @@ class Branch {
  public:
   Branch(Cst nameIn, unsigned int maxDepthIn,
          Branch *parentBranchIn, unsigned int parentDepthIn,
-         Player &youIn);
+         Player *youIn);
   ~Branch();
   
   Cst getName() const;
@@ -23,12 +21,15 @@ class Branch {
 
  private:
   Cst name;
-  std::vector<Map*> floors;
   
+  unsigned int cachedDepth;
+  Map *cachedMap;
+
   unsigned int maxDepth;
+
   Branch *parentBranch;
   unsigned int parentDepth;
-  Player &you;
+  Player *you;
 };
 
 #endif

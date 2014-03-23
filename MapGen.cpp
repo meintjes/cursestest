@@ -2,14 +2,17 @@
 #include "Item.h"
 #include "functions.h"
 #include "generation.h"
-#include "SpaceType.h"
 #include <assert.h>
 
 //depth arg will eventually be used to scale difficulty. once different branches
 //are implemented, there'll probably be another argument controlling monster
 //and loot generation
-Map::Map(Player &player, int depth) :
-  you(player),
+Map::Map() {
+
+}
+
+Map::Map(Player *playerIn, int depth) :
+  player(playerIn),
   enemyCount(0)
 {
   switch (randTo(0)) {
@@ -17,14 +20,14 @@ Map::Map(Player &player, int depth) :
     generateBoxes(depth);
   }
 
-  (*this)(playerX, playerY).setType(StairsUp);
+  (*this)(playerX, playerY).setType(Space::StairsUp);
   if (depth == 0) {
     sanitizeEntry();
   }
   lightArea(playerX, playerY, 3, 0);
 }
 
-void Map::drawLine(Point a, const Point b, const SpaceType &type) {
+void Map::drawLine(Point a, const Point b, Space::Type type) {
   assert(isValidX(a.x) && isValidX(b.x) &&
 	 isValidY(a.y) && isValidY(b.y));
   //this is horrific style, but fuck it
@@ -59,7 +62,7 @@ void Map::drawLine(Point a, const Point b, const SpaceType &type) {
   (*this)(a.x, a.y).setType(type);
 }
 
-void Map::drawBox(Point a, Point b, const SpaceType &type) {
+void Map::drawBox(Point a, Point b, Space::Type type) {
   assert(isValidX(a.x) && isValidX(b.x) &&
 	 isValidY(a.y) && isValidY(b.y));
   int xMax = std::max(a.x, b.x);
@@ -76,7 +79,7 @@ void Map::generateRoom(Point center, int maxRadius) {
   int xMax = std::min(MAPWIDTH, center.x + randRange(1, maxRadius));
   int yMin = std::max(1, center.y - randRange(1, maxRadius));
   int yMax = std::min(MAPHEIGHT, center.y + randRange(1, maxRadius));
-  drawBox(Point{xMin, yMin}, Point{xMax, yMax}, Floor);
+  drawBox(Point{xMin, yMin}, Point{xMax, yMax}, Space::Floor);
 }
 
 void Map::generateBoxes(int depth) {
@@ -89,13 +92,13 @@ void Map::generateBoxes(int depth) {
   }
 
   for (unsigned int i = 1; i < roomLocations.size(); i++) {
-    drawLine(roomLocations.at(i), roomLocations.at(i - 1), Floor);
+    drawLine(roomLocations.at(i), roomLocations.at(i - 1), Space::Floor);
   }
 
   playerX = roomLocations.at(0).x;
   playerY = roomLocations.at(0).y;
   space[roomLocations.at(roomLocations.size() - 1).x]
-       [roomLocations.at(roomLocations.size() - 1).y].setType(StairsDown);
+       [roomLocations.at(roomLocations.size() - 1).y].setType(Space::StairsDown);
 
   for (int x = 1; x <= MAPWIDTH; x++) {
     for (int y = 1; y <= MAPHEIGHT; y++) {

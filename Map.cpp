@@ -14,7 +14,7 @@ void Map::display() const {
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
       if (isVisible(x, y)) {
 	if (x == playerX && y == playerY) {
-	  addc(x, y, you.getGlyph());
+	  addc(x, y, you().getGlyph());
 	}
 	else {
 	  addc(x, y, (*this)(x, y).getGlyph(true));
@@ -38,13 +38,13 @@ int Map::getPlayerY() const {
 bool Map::movePlayer(int dx, int dy) {
   Space *target = &(*this)(playerX + dx, playerY + dy);
   if (target->hasEnemy()) {
-    return you.attack(dx, dy);
+    return you().attack(dx, dy);
   }
   else if (target->isPassable()) {
     playerX += dx;
     playerY += dy;
-    you.setLastMoveDirection({dx, dy});
-    target->pickup(you);
+    you().setLastMoveDirection({dx, dy});
+    target->pickup(you());
     return true;
   }
   else {
@@ -87,8 +87,8 @@ bool Map::shootArrow(int dx, int dy) {
       napms(25);
     }
   }
-  you.destroyModeItem();
-  you.setMode(Player::Mode::Move);
+  you().destroyModeItem();
+  you().setMode(Player::Mode::Move);
   return true;
 }
 
@@ -108,8 +108,8 @@ bool Map::throwHook(int dx, int dy) {
       playerX = x - dx;
       playerY = y - dy;
       
-      you.destroyModeItem();
-      you.setMode(Player::Mode::Move);
+      you().destroyModeItem();
+      you().setMode(Player::Mode::Move);
       return true;
     }
     //if the hook hits an enemy, pull the enemy toward the player and stop
@@ -119,8 +119,8 @@ bool Map::throwHook(int dx, int dy) {
         (*this)(x, y).moveEnemy(&(*this)(playerX + dx, playerY + dy));
       }
       
-      you.destroyModeItem();
-      you.setMode(Player::Mode::Move);
+      you().destroyModeItem();
+      you().setMode(Player::Mode::Move);
       return true;
     }
     //if the hook hits nothing, draw the animation
@@ -134,7 +134,7 @@ bool Map::throwHook(int dx, int dy) {
   }
 
   //if the hook never hits anything, don't destroy it, just put it away
-  you.setMode(Player::Mode::Move);
+  you().setMode(Player::Mode::Move);
   return true;
 }
 
@@ -184,13 +184,13 @@ Space& Map::operator()(int x, int y) {
 }
 
 void Map::tick() {
-  if (!you.tick()) { //don't update game state for free moves
+  if (!you().tick()) { //don't update game state for free moves
     return;
   }
 
   bool damagedByGas = false;
   if ((*this)(playerX, playerY).hasGas()) {
-    you.damage(1);
+    you().damage(1);
     damagedByGas = true;
   }
  
@@ -240,10 +240,22 @@ void Map::tick() {
 
   //kludge to handle gas clouds appearing as part of an attack
   if ((*this)(playerX, playerY).hasGas() && !damagedByGas) {
-    you.damage(1);
+    you().damage(1);
   }
 
   assert(!(*this)(playerX, playerY).hasEnemy());
+}
+
+Player& Map::you() {
+  return *player;
+}
+
+const Player& Map::you() const {
+  return *player;
+}
+
+void Map::setPlayer(Player* playerIn) {
+  player = playerIn;
 }
 
 bool Map::isValidX(int x) {

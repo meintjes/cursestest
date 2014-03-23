@@ -1,14 +1,13 @@
 #include "Space.h"
 #include "Enemy.h"
-#include "Item.h"
-#include "SpaceType.h"
 #include "Cch.h"
+#include "Color.h"
 #include <cassert>
 
 Space::Space() :
   discovered(false),
   lit(false),
-  type(&Wall),
+  type(Wall),
   gasDuration(0),
   bombDuration(0),
   enemy(nullptr),
@@ -19,8 +18,8 @@ Space::~Space() {
 
 }
 
-void Space::setType(const SpaceType &typeIn) {
-  type = &typeIn;
+void Space::setType(Space::Type typeIn) {
+  type = typeIn;
 }
 
 void Space::setItem(SimpleItem * const itemIn) {
@@ -101,8 +100,8 @@ void Space::pickup(Player &you) {
 }
 
 void Space::explode(Map &map, int x, int y) {
-  if (type->destructible) {
-    type = &Floor;
+  if (isDestructible()) {
+    setType(Floor);
   }
   damage(3, map, x, y);
 }
@@ -146,15 +145,15 @@ Cch Space::getGlyph(bool isVisible) const {
       return item->getGlyph();
     }
     else {
-      return DarkGray(type->glyph);
+      return DarkGray(getTypeGlyph());
     }  
   }
 
   if (enemy) {
     return enemy->getGlyph();
   }
-  if (!type->passable) {
-    return type->glyph;
+  if (!isPassable()) {
+    return getTypeGlyph();
   }
   
   if (gasDuration > 0) {
@@ -179,15 +178,52 @@ Cch Space::getGlyph(bool isVisible) const {
     }
   }
 
-  return type->glyph;
+  return getTypeGlyph();
+}
+
+Cch Space::getTypeGlyph() const {
+  switch (type) {
+  case Wall:
+    return White('#');
+  case GlassWall:
+    return LightCyan('#');
+  case Floor:
+    return White('.');
+  case StairsUp:
+    return White('<');
+  case StairsDown:
+    return White('>');
+  default:
+    return Red('X');
+  }
 }
 
 bool Space::isPassable() const {
-  return type->passable;
+  switch (type) {
+  case Wall:
+  case GlassWall:
+    return false;
+  default:
+    return true;
+  }
 }
 
 bool Space::isTransparent() const {
-  return (type->transparent);
+  switch (type) {
+  case Wall:
+    return false;
+  default:
+    return true;
+  }
+}
+
+bool Space::isDestructible() const {
+  switch (type) {
+  case GlassWall:
+    return true;
+  default:
+    return false;
+  }
 }
 
 bool Space::hasEnemy() const {
@@ -238,6 +274,6 @@ void Space::stun(unsigned int turns) {
   }
 }
 
-bool Space::typeIs(const SpaceType &typeIn) const {
-  return *type == typeIn;
+bool Space::typeIs(Space::Type typeIn) const {
+  return type == typeIn;
 }

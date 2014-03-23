@@ -5,13 +5,13 @@
 #include "Branch.h"
 #include "Command.h"
 #include "Menu.h"
-#include "SpaceType.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
 #include <cstring>
 #include <functional>
 #include <cassert>
+#include <fstream>
 
 void playGame();
 bool getInput(Map &map, const CommandMap cmap);
@@ -73,7 +73,7 @@ int main() {
 void playGame() {
   Player you;
 
-  Branch dungeon("Dungeon", DEPTH_DUNGEON, nullptr, 0, you);
+  Branch dungeon("Dungeon", DEPTH_DUNGEON, nullptr, 0, &you);
 
   you.setBranch(&dungeon);
 
@@ -100,7 +100,7 @@ void playGame() {
 
 bool getInput(Map &map, const CommandMap cmap) {
   DirectionalFn dfn;
-  switch (map.you.getMode()) {
+  switch (map.you().getMode()) {
     case Player::Mode::Move:
       dfn = &Map::movePlayer;
       break;
@@ -137,18 +137,18 @@ bool getInput(Map &map, const CommandMap cmap) {
     return (map.*dfn)(1, 1);
 
   case COMMAND_EVOKE_ARTIFACT:
-    return map.you.evokeArtifact();
+    return map.you().evokeArtifact();
   case COMMAND_USE_ITEM:
-    return map.you.useItem();
+    return map.you().useItem();
   case COMMAND_DROP_ITEM:
-    return map.you.dropItem();
+    return map.you().dropItem();
 
   case COMMAND_INTERACT_STAIRSUP:
-    return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsUp)
-           && map.you.changeDepth(-1);
+    return map(map.getPlayerX(), map.getPlayerY()).typeIs(Space::StairsUp)
+           && map.you().changeDepth(-1);
   case COMMAND_INTERACT_STAIRSDOWN:
-    return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsDown)
-           && map.you.changeDepth(+1);
+    return map(map.getPlayerX(), map.getPlayerY()).typeIs(Space::StairsDown)
+           && map.you().changeDepth(+1);
 
   case COMMAND_LONG_PROMPT:
     return getLongPrompt(map);
@@ -171,10 +171,10 @@ bool getLongPrompt(Map &map) {
   noecho();
 
   if (std::strcmp(command, "die") == 0) {
-    map.you.damage(100);
+    map.you().damage(100);
     didTakeTurn = true;
   }
 
-  map.you.display();
+  map.you().display();
   return didTakeTurn;
 }

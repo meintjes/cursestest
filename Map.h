@@ -6,6 +6,12 @@
 #include "Enemy.h"
 #include <vector>
 
+namespace boost {
+  namespace serialization {
+    class access;
+  }
+}
+
 class Player;
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
@@ -15,11 +21,12 @@ const int MAPHEIGHT = 20;
 class Map {
   //defined in MapGen.cpp
  public:
-  Map(Player &player, int depth);
+  Map();
+  Map(Player *playerIn, int depth);
  private:
   int depth;
-  void drawLine(Point a, Point b, const SpaceType &type);
-  void drawBox(Point a, Point b, const SpaceType &type);
+  void drawLine(Point a, Point b, Space::Type type);
+  void drawBox(Point a, Point b, Space::Type type);
   void generateRoom(Point center, int maxRadius);
   void generateBoxes(int depth);
   void sanitizeEntry(); //removes enemies within 2 spaces of player
@@ -52,7 +59,12 @@ class Map {
   //to the spaces and the enemies contained within.
   void tick();
 
-  Player &you;
+  //returns a reference to the player
+  Player& you();
+  const Player& you() const;
+  void setPlayer(Player* playerIn);
+
+  //get the player's coordinates on the map
   int getPlayerX() const;
   int getPlayerY() const;
 
@@ -64,12 +76,27 @@ class Map {
   void explodeArea(int x, int y, int radius);
 
  private:
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & space;
+    ar & playerX;
+    ar & playerY;
+    ar & enemyCount;
+  }
+
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
+  Player *player;
   int playerX, playerY;
+
+  //an approximate count of the number of enemies on the map (one turn ago).
+  //don't use for anything serious, just as an approximation.
+  int enemyCount;
 
   bool isVisible(int x, int y) const;
   bool hasLOS(int x1, int y1, int x2, int y2) const;
 
+  //these are cleared every turn after the update loop, so they're not saved
   std::vector<Point> toExplode;
   void executeToExplode();
   std::vector<Point> toAttack;
@@ -79,10 +106,6 @@ class Map {
   
   //returns the distance from the player to the given coordinates
   int distance(int x1, int y1) const;
-
-  //an approximate count of the number of enemies on the map (one turn ago).
-  //don't use for anything serious, just as an approximation.
-  int enemyCount;
 };
 
 typedef bool (Map::*DirectionalFn)(int x, int y);
