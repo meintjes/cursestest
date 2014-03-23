@@ -28,9 +28,13 @@ class Branch {
   //the entrance of this branch
   int getParentDepth() const;
 
-  //get the map at the given depth
+  //replaces the cached map with the map at the requested depth, if it's not
+  //the same map, and returns a reference to that map
   Map& getMap(unsigned int mapDepth);
-  void uncache();
+
+  //deallocates the memory used by the map's cache and, if the cached level was
+  //valid, saves it to file
+  void emptyCache();
 
   bool isValidDepth(unsigned int depth) const;
 

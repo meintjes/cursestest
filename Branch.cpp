@@ -22,16 +22,9 @@ Map& Branch::getMap(unsigned int mapDepth) {
 
   if (mapDepth != cachedDepth) {
     //save the cached level to file
-    if (isValidDepth(cachedDepth)) {
-      std::string saveFilename = name.data() + std::to_string(cachedDepth);
-      std::ofstream saveStream(saveFilename.data());
-      if (saveStream) {
-        boost::archive::text_oarchive saveArchive(saveStream);
-        saveArchive << cachedMap;
-      }
-    }
+    emptyCache();
 
-    //load the cached level from file
+    //load the requested level from file
     std::string loadFilename = name.data() + std::to_string(mapDepth);
     std::ifstream loadStream(loadFilename.data());
     if (loadStream) {
@@ -48,8 +41,17 @@ Map& Branch::getMap(unsigned int mapDepth) {
   return *cachedMap;
 }
 
-void Branch::uncache() {
+void Branch::emptyCache() {
+  if (isValidDepth(cachedDepth)) {
+    std::string saveFilename = name.data() + std::to_string(cachedDepth);
+    std::ofstream saveStream(saveFilename.data());
+    if (saveStream) {
+      boost::archive::text_oarchive saveArchive(saveStream);
+      saveArchive << cachedMap;
+    }
+  }
   cachedMap = nullptr;
+  cachedDepth = -1;
 }
 
 bool Branch::isValidDepth(unsigned int depth) const {
