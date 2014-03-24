@@ -7,6 +7,12 @@
 #include "Point.h"
 #include "functions.h"
 
+BOOST_CLASS_EXPORT(Zombie)
+BOOST_CLASS_EXPORT(Exploder)
+BOOST_CLASS_EXPORT(Reacher)
+BOOST_CLASS_EXPORT(SpawnerBoss)
+BOOST_CLASS_EXPORT(Douser)
+
 Enemy::Enemy(int hpIn) :
   hp(hpIn),
   memoryDuration(0),

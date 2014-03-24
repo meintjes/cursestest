@@ -4,6 +4,14 @@
 #include "Map.h"
 #include "Player.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT(Artifact)
+BOOST_CLASS_EXPORT(HealingOrb)
+BOOST_CLASS_EXPORT(TimeStopper)
+
+
 Item::UseResult Artifact::use(Map &map) {
   if (map.you().getCurrentArtifact() == this) {
     if (map.you().addItem(this)) {

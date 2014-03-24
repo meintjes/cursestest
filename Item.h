@@ -1,11 +1,8 @@
 #ifndef __ITEM_H__
 #define __ITEM_H__
 
-#include <memory>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <string>
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
 namespace boost {
   namespace serialization {
@@ -77,7 +74,6 @@ class Item : public SimpleItem {
     ar & boost::serialization::base_object<SimpleItem>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Item)
 
 
 
@@ -113,7 +109,6 @@ class DestructibleItem : public Item {
   int durability;
   int durabilityMin;
 };
-BOOST_CLASS_EXPORT(DestructibleItem)
 
 
 
@@ -131,7 +126,6 @@ class Ore : public SimpleItem {
     ar & boost::serialization::base_object<SimpleItem>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Ore)
 
 
 
@@ -150,7 +144,6 @@ class Bomb : public Item {
     ar & boost::serialization::base_object<Item>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Bomb)
 
 
 
@@ -169,7 +162,6 @@ class Torch : public Item {
     ar & boost::serialization::base_object<Item>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Torch)
 
 
 
@@ -188,7 +180,6 @@ class Arrow : public Item {
     ar & boost::serialization::base_object<Item>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Arrow)
 
 
 
@@ -207,6 +198,5 @@ class Hook : public DestructibleItem {
     ar & boost::serialization::base_object<DestructibleItem>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Hook)
 
 #endif

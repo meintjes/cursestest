@@ -4,6 +4,15 @@
 #include "Map.h"
 #include <cassert>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT(Weapon)
+BOOST_CLASS_EXPORT(Axe)
+BOOST_CLASS_EXPORT(Bludgeon)
+BOOST_CLASS_EXPORT(Lance)
+BOOST_CLASS_EXPORT(Spear)
+
 Item::UseResult Weapon::use(Map &map) {
   if (map.you().getCurrentWeapon() == this) {
     if (map.you().addItem(this)) {

@@ -3,7 +3,6 @@
 
 #include "Item.h"
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
 namespace boost {
   namespace serialization {
@@ -35,7 +34,6 @@ class Weapon : public DestructibleItem {
 
   char glyph() const;
 };
-BOOST_CLASS_EXPORT(Weapon)
 
 //axes cleave through enemies in an arc of three spaces
 class Axe : public Weapon {
@@ -54,7 +52,6 @@ class Axe : public Weapon {
     ar & boost::serialization::base_object<Weapon>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Axe)
 
 //bludgeons stun the target for a single turn
 class Bludgeon : public Weapon {
@@ -74,7 +71,6 @@ class Bludgeon : public Weapon {
     ar & boost::serialization::base_object<Weapon>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Bludgeon)
 
 //lances get a free double attack if the player moved in the same direction
 //last turn
@@ -94,7 +90,6 @@ class Lance : public Weapon {
     ar & boost::serialization::base_object<Weapon>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Lance)
 
 //spears hit the space behind the target as well
 class Spear : public Weapon {
@@ -113,6 +108,5 @@ class Spear : public Weapon {
     ar & boost::serialization::base_object<Weapon>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Spear)
 
 #endif

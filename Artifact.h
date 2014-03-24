@@ -6,7 +6,6 @@
 #include "Item.h"
 #include <string>
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
 namespace boost {
   namespace serialization {
@@ -38,7 +37,6 @@ class Artifact : public DestructibleItem {
 
   char glyph() const;
 };
-BOOST_CLASS_EXPORT(Artifact)
 
 
 
@@ -56,7 +54,6 @@ class HealingOrb : public Artifact {
   std::string name() const;
   const Color& color() const;
 };
-BOOST_CLASS_EXPORT(HealingOrb)
 
 
 
@@ -74,6 +71,5 @@ class TimeStopper : public Artifact {
   std::string name() const;
   const Color& color() const;
 };
-BOOST_CLASS_EXPORT(TimeStopper)
 
 #endif

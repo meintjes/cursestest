@@ -82,7 +82,6 @@ class Zombie : public Enemy {
     ar & boost::serialization::base_object<Enemy>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Zombie)
 
 class Exploder : public Enemy {
  public:
@@ -101,7 +100,6 @@ class Exploder : public Enemy {
   }
   bool isPrimed;
 };
-BOOST_CLASS_EXPORT(Exploder)
 
 class Reacher : public Enemy {
  public:
@@ -116,7 +114,6 @@ class Reacher : public Enemy {
     ar & boost::serialization::base_object<Enemy>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Reacher)
 
 class SpawnerBoss : public Enemy {
  public:
@@ -133,7 +130,6 @@ class SpawnerBoss : public Enemy {
     ar & boost::serialization::base_object<Enemy>(*this);
   }
 };
-BOOST_CLASS_EXPORT(SpawnerBoss)
 
 class Douser : public Enemy {
  public:
@@ -148,6 +144,5 @@ class Douser : public Enemy {
     ar & boost::serialization::base_object<Enemy>(*this);
   }
 };
-BOOST_CLASS_EXPORT(Douser)
 
 #endif
