@@ -4,11 +4,8 @@
 //contains a serilization function for unique pointers. credit dodol from SO:
 //http://stackoverflow.com/questions/12915267/boost-serialization-stdunique-ptr-support
 
-#include <iostream>
+#include <boost/serialization/split_free.hpp>
 #include <memory>
-#include <fstream>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 namespace boost { 
 namespace serialization {
 
