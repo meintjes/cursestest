@@ -7,8 +7,6 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Item)
-BOOST_CLASS_EXPORT(DestructibleItem)
 BOOST_CLASS_EXPORT(Ore)
 BOOST_CLASS_EXPORT(Bomb)
 BOOST_CLASS_EXPORT(Torch)
