@@ -7,6 +7,9 @@
 #include "Point.h"
 #include "functions.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
 BOOST_CLASS_EXPORT(Zombie)
 BOOST_CLASS_EXPORT(Exploder)
 BOOST_CLASS_EXPORT(Reacher)

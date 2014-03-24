@@ -2,10 +2,8 @@
 #define __ENEMY_H__
 
 #include "Point.h"
-#include "unique.h"
 #include <memory>
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
 namespace boost {
   namespace serialization {
