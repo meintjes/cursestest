@@ -18,8 +18,8 @@ class Map {
   Map(Player &player, int depth);
  private:
   int depth;
-  void drawLine(Point a, Point b, const SpaceType &type);
-  void drawBox(Point a, Point b, const SpaceType &type);
+  void drawLine(Point a, Point b, Space::Type type);
+  void drawBox(Point a, Point b, Space::Type type);
   void generateRoom(Point center, int maxRadius);
   void generateBoxes(int depth);
   void sanitizeEntry(); //removes enemies within 2 spaces of player

@@ -9,15 +9,16 @@ class Player;
 class Enemy;
 class Map;
 class SimpleItem;
-struct SpaceType;
 
 class Space {
  public:
   Space();
   ~Space();
+  
+  enum Type {Wall, GlassWall, Floor, StairsUp, StairsDown};
 
-  //change the SpaceType to the given one.
-  void setType(const SpaceType &typeIn);
+  //change the Space's Type to the given one.
+  void setType(Space::Type typeIn);
   
   //set the item on the space. overwrites the previous item.
   void setItem(SimpleItem * const itemIn);
@@ -85,9 +86,13 @@ class Space {
   //note: sets the space as discovered the first time it's called. sorry
   Cch getGlyph(bool isVisible) const;
 
+  //returns the glyph of the space's type
+  Cch getTypeGlyph() const;
+
   //get information about the space's type.
   bool isPassable() const;
   bool isTransparent() const;
+  bool isDestructible() const;
 
   //self-explanatory
   bool hasEnemy() const;
@@ -96,12 +101,12 @@ class Space {
   bool isLit() const;
 
   //returns true if the space's type is the same as the given type.
-  bool typeIs(const SpaceType &typeIn) const;
+  bool typeIs(Space::Type typeIn) const;
 
  private:
   mutable bool discovered;
   int lit;
-  const SpaceType *type;
+  Space::Type type;
   unsigned int gasDuration;
   unsigned int bombDuration;
   std::unique_ptr<Enemy> enemy;

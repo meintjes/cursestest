@@ -1,8 +1,8 @@
 GXX=g++
 GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses
 
-cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o
-	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o SpaceType.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o -o $@
+cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o
+	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o -o $@
 
 less:
 	make 2>&1 | less
@@ -22,7 +22,7 @@ Cst.o: Cst.cpp
 Cch.o: Cch.cpp
 	$(GXX) $(GXX_FLAGS) Cch.cpp
 
-Space.o: Space.cpp Enemy.o SpaceType.o
+Space.o: Space.cpp Enemy.o
 	$(GXX) $(GXX_FLAGS) Space.cpp
 
 Enemy.o: Enemy.cpp Point.o Map.o functions.o generation.o Player.o
@@ -33,9 +33,6 @@ Player.o: Player.cpp Cst.o Cch.o functions.o Item.o Branch.o
 
 functions.o: functions.cpp
 	$(GXX) $(GXX_FLAGS) functions.cpp
-
-SpaceType.o: SpaceType.cpp
-	$(GXX) $(GXX_FLAGS) SpaceType.cpp
 
 Command.o: Command.cpp Menu.o
 	$(GXX) $(GXX_FLAGS) Command.cpp

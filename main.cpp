@@ -5,7 +5,6 @@
 #include "Branch.h"
 #include "Command.h"
 #include "Menu.h"
-#include "SpaceType.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
@@ -144,10 +143,10 @@ bool getInput(Map &map, const CommandMap cmap) {
     return map.you.dropItem();
 
   case COMMAND_INTERACT_STAIRSUP:
-    return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsUp)
+    return map(map.getPlayerX(), map.getPlayerY()).typeIs(Space::StairsUp)
            && map.you.changeDepth(-1);
   case COMMAND_INTERACT_STAIRSDOWN:
-    return map(map.getPlayerX(), map.getPlayerY()).typeIs(StairsDown)
+    return map(map.getPlayerX(), map.getPlayerY()).typeIs(Space::StairsDown)
            && map.you.changeDepth(+1);
 
   case COMMAND_LONG_PROMPT:
