@@ -1,14 +1,29 @@
 #ifndef __ENEMY_H__
 #define __ENEMY_H__
 
+#include "Archive.h"
 #include "Point.h"
 #include <memory>
+#include <string>
 
 class Cch;
 class Map;
 
 class Enemy {
  public:
+  //for loading from files. depending on the tag provided, provides an Enemy*
+  //pointing at an enemy of the correct type which can then be deserialized. 
+  static Enemy* getPointerFromTag(std::string tag);
+
+  //generated automatically by macros. don't manually override.
+  virtual std::string getSerializationTag() const = 0;
+
+  //serialization function. enemies that have additional state need to
+  //override this. probably call the base class version from the override.
+  virtual void serialize(Archive &archive);
+
+
+
   Enemy(int hpIn = 1);
 
   //returns the glyph for the class. must override.
@@ -54,13 +69,16 @@ class Enemy {
 
 class Zombie : public Enemy {
  public:
+  CREATE_TAG_FOR(Zombie)
   Zombie();
   Cch getGlyph() const;
 };
 
 class Exploder : public Enemy {
  public:
+  CREATE_TAG_FOR(Exploder)
   Exploder();
+  void serialize(Archive &ar);
   Cch getGlyph() const;
   int getRange() const;
   void attack(Map &map, int x, int y);
@@ -70,6 +88,7 @@ class Exploder : public Enemy {
 };
 
 class Reacher : public Enemy {
+  CREATE_TAG_FOR(Reacher)
  public:
   using Enemy::Enemy;
   Cch getGlyph() const;
@@ -78,6 +97,7 @@ class Reacher : public Enemy {
 
 class SpawnerBoss : public Enemy {
  public:
+  CREATE_TAG_FOR(SpawnerBoss)
   SpawnerBoss();
   Cch getGlyph() const;
   int getRange() const;
@@ -87,6 +107,7 @@ class SpawnerBoss : public Enemy {
 
 class Douser : public Enemy {
  public:
+  CREATE_TAG_FOR(Douser)
   using Enemy::Enemy;
   Cch getGlyph() const;
   void attack(Map &map, int x, int y);

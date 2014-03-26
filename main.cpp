@@ -62,9 +62,10 @@ int main() {
     {"Change controls", ControlsMenu},
     {"Quit", std::bind(&Menu::close, &MainMenu)}
   });
-
   MainMenu();
+  
 
+  //clean up after ncurses
   endwin();
   return 0;
 }
@@ -159,7 +160,7 @@ bool getInput(Map &map, const CommandMap cmap) {
 }
 
 bool getLongPrompt(Map &map) {
-  char command[79];
+  char command[80];
   bool didTakeTurn = false;
 
   erase();

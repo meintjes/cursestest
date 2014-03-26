@@ -6,6 +6,36 @@
 #include "Item.h"
 #include "Point.h"
 #include "functions.h"
+#include <stdexcept>
+#include <string>
+
+Enemy* Enemy::getPointerFromTag(std::string tag) {
+  switch (tagize(tag.c_str())) {
+  CREATE_CASE_FOR(Zombie)
+  CREATE_CASE_FOR(Exploder)
+  CREATE_CASE_FOR(Reacher)
+  CREATE_CASE_FOR(SpawnerBoss)
+  CREATE_CASE_FOR(Douser)
+  default:
+    throw std::runtime_error("Invalid enemy tag: " + tag);
+    return nullptr;
+  }
+}
+
+void Enemy::serialize(Archive &ar) {
+  ar & hp;
+  ar & memoryDuration;
+  ar & memoryLocation.x;
+  ar & memoryLocation.y;
+  ar & stunDuration;
+}
+
+void Exploder::serialize(Archive &ar) {
+  Enemy::serialize(ar);
+  ar & isPrimed;
+}
+
+
 
 Enemy::Enemy(int hpIn) :
   hp(hpIn),
