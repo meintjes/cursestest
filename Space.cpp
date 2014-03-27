@@ -7,6 +7,48 @@
 #include "Color.h"
 #include <cassert>
 
+void Space::serialize(Archive &ar) {
+  ar & discovered;
+  ar & lit;
+  ar & gasDuration;
+  ar & bombDuration;
+
+  if (ar.getType() == Archive::Save) {
+    ar << type;
+    
+    if (enemy) {
+      ar << enemy->getSerializationTag();
+      enemy->serialize(ar);
+    }
+    else {
+      ar << "None";
+    }
+
+    if (item) {
+      ar << item->getSerializationTag();
+      item->serialize(ar);
+    }
+    else {
+      ar << "None";
+    }
+  }
+  else {
+    int t; //enum types can't be read directly.
+    ar >> t;
+    type = static_cast<Type>(t);
+
+    enemy.reset(getEnemyPointerFromArchive(ar));
+    if (enemy) {
+      enemy->serialize(ar);
+    }
+    
+    item.reset(getItemPointerFromArchive<SimpleItem>(ar));
+    if (item) {
+      item->serialize(ar);
+    }
+  }
+}
+
 Space::Space() :
   discovered(false),
   lit(false),

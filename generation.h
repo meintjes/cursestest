@@ -3,8 +3,17 @@
 
 #include <memory>
 class SimpleItem;
+class Archive;
 
-SimpleItem* getSimpleItemPointerFromTag(std::string tag);
+//helper function for the below.
+SimpleItem* getSimpleItemPointerFromArchive(Archive &ar);
+
+//for loading from files. reads a tag from the archive and provides a pointer
+//pointing at an item of the correct type which can then be deserialized. 
+template <typename T>
+T* getItemPointerFromArchive(Archive &ar) {
+  return dynamic_cast<T*>(getSimpleItemPointerFromArchive(ar));
+}
 
 std::unique_ptr<SimpleItem> getRandomItem();
 std::unique_ptr<SimpleItem> getRandomArtifact();

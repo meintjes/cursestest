@@ -10,9 +10,9 @@ class Cch;
 class Map;
 
 class Enemy;
-//for loading from files. depending on the tag provided, provides an Enemy*
+//for loading from files. reads a tag from the archive and provides a pointer
 //pointing at an enemy of the correct type which can then be deserialized. 
-Enemy* getPointerFromTag(std::string tag);
+Enemy* getEnemyPointerFromArchive(Archive &ar);
 
 class Enemy {
  public:

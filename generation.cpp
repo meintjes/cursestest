@@ -4,11 +4,12 @@
 #include "Weapon.h"
 #include "Artifact.h"
 #include "Enemy.h"
+#include "Archive.h"
 #include <cassert>
 
-//for loading from files. depending on the tag provided, provides a pointer
-//pointing at an item of the correct type which can then be deserialized. 
-SimpleItem* getSimpleItemPointerFromTag(std::string tag) {
+SimpleItem* getSimpleItemPointerFromArchive(Archive &ar) {
+  std::string tag;
+  ar & tag;
   switch (tagize(tag.c_str())) {
   CREATE_CASE_FOR(Ore)
   CREATE_CASE_FOR(Bomb)
@@ -23,7 +24,9 @@ SimpleItem* getSimpleItemPointerFromTag(std::string tag) {
 
   CREATE_CASE_FOR(HealingOrb)
   CREATE_CASE_FOR(TimeStopper)
-  
+
+  CREATE_NONE_CASE
+
   default:
     throw std::runtime_error("Invalid Item tag: " + tag);
     return nullptr;

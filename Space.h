@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Cch.h"
 
+class Archive;
 class Player;
 class Enemy;
 class Map;
@@ -12,6 +13,8 @@ class SimpleItem;
 
 class Space {
  public:
+  void serialize(Archive &ar);
+   
   Space();
   ~Space();
   
