@@ -22,7 +22,7 @@ Cst.o: Cst.cpp
 Cch.o: Cch.cpp
 	$(GXX) $(GXX_FLAGS) Cch.cpp
 
-Space.o: Space.cpp Enemy.o
+Space.o: Space.cpp Enemy.o generation.o
 	$(GXX) $(GXX_FLAGS) Space.cpp
 
 Enemy.o: Enemy.cpp Point.o Map.o functions.o generation.o Player.o Archive.o
@@ -49,10 +49,10 @@ Point.o: Point.cpp
 Item.o: Item.cpp Cch.o Player.o functions.o Map.o
 	$(GXX) $(GXX_FLAGS) Item.cpp
 
-Artifact.o: Artifact.cpp Player.o Cst.o Cst.o Item.o
+Artifact.o: Artifact.cpp Player.o Cst.o Cst.o Item.o generation.o
 	$(GXX) $(GXX_FLAGS) Artifact.cpp
 
-Weapon.o: Weapon.cpp Item.o Map.o Point.o
+Weapon.o: Weapon.cpp Item.o Map.o Point.o generation.o
 	$(GXX) $(GXX_FLAGS) Weapon.cpp
 
 generation.o: generation.cpp Item.o Enemy.o Weapon.o Artifact.o functions.o

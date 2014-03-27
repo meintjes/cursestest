@@ -25,6 +25,7 @@ class Weapon : public DestructibleItem {
 //axes cleave through enemies in an arc of three spaces
 class Axe : public Weapon {
  public:
+  CREATE_TAG_FOR(AXE)
   using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
@@ -36,6 +37,7 @@ class Axe : public Weapon {
 //bludgeons stun the target for a single turn
 class Bludgeon : public Weapon {
  public:
+  CREATE_TAG_FOR(Bludgeon)
   using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
@@ -49,6 +51,7 @@ class Bludgeon : public Weapon {
 //last turn
 class Lance : public Weapon {
  public:
+  CREATE_TAG_FOR(Lance)
   using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
@@ -60,6 +63,7 @@ class Lance : public Weapon {
 //spears hit the space behind the target as well
 class Spear : public Weapon {
  public:
+  CREATE_TAG_FOR(Spear)
   using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);

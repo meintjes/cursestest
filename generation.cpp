@@ -6,6 +6,30 @@
 #include "Enemy.h"
 #include <cassert>
 
+//for loading from files. depending on the tag provided, provides a pointer
+//pointing at an item of the correct type which can then be deserialized. 
+SimpleItem* getSimpleItemPointerFromTag(std::string tag) {
+  switch (tagize(tag.c_str())) {
+  CREATE_CASE_FOR(Ore)
+  CREATE_CASE_FOR(Bomb)
+  CREATE_CASE_FOR(Torch)
+  CREATE_CASE_FOR(Arrow)
+  CREATE_CASE_FOR(Hook)
+
+  CREATE_CASE_FOR(Axe)
+  CREATE_CASE_FOR(Bludgeon)
+  CREATE_CASE_FOR(Lance)
+  CREATE_CASE_FOR(Spear)
+
+  CREATE_CASE_FOR(HealingOrb)
+  CREATE_CASE_FOR(TimeStopper)
+  
+  default:
+    throw std::runtime_error("Invalid Item tag: " + tag);
+    return nullptr;
+  }
+}
+
 std::unique_ptr<SimpleItem> getRandomItem() {
   int num = randTo(99); 
   if (num < 20) {

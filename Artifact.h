@@ -29,6 +29,7 @@ class Artifact : public DestructibleItem {
 
 class HealingOrb : public Artifact {
  public:
+  CREATE_TAG_FOR(HealingOrb)
   using Artifact::Artifact;
   bool evoke(Map &map);
  private:
@@ -40,6 +41,7 @@ class HealingOrb : public Artifact {
 
 class TimeStopper : public Artifact {
  public:
+  CREATE_TAG_FOR(TimeStopper)
   using Artifact::Artifact;
   bool evoke(Map &map);
  private:

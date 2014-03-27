@@ -9,11 +9,13 @@
 class Cch;
 class Map;
 
+class Enemy;
+//for loading from files. depending on the tag provided, provides an Enemy*
+//pointing at an enemy of the correct type which can then be deserialized. 
+Enemy* getPointerFromTag(std::string tag);
+
 class Enemy {
  public:
-  //for loading from files. depending on the tag provided, provides an Enemy*
-  //pointing at an enemy of the correct type which can then be deserialized. 
-  static Enemy* getPointerFromTag(std::string tag);
 
   //generated automatically by macros. don't manually override.
   virtual std::string getSerializationTag() const = 0;

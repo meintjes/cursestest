@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 
-Enemy* Enemy::getPointerFromTag(std::string tag) {
+Enemy* getEnemyPointerFromTag(std::string tag) {
   switch (tagize(tag.c_str())) {
   CREATE_CASE_FOR(Zombie)
   CREATE_CASE_FOR(Exploder)
@@ -17,7 +17,7 @@ Enemy* Enemy::getPointerFromTag(std::string tag) {
   CREATE_CASE_FOR(SpawnerBoss)
   CREATE_CASE_FOR(Douser)
   default:
-    throw std::runtime_error("Invalid enemy tag: " + tag);
+    throw std::runtime_error("Invalid Enemy tag: " + tag);
     return nullptr;
   }
 }

@@ -1,6 +1,7 @@
 #ifndef __ITEM_H__
 #define __ITEM_H__
 
+#include "Archive.h"
 #include <memory>
 
 class Cch;
@@ -8,11 +9,19 @@ class Cst;
 class Color;
 class Player;
 class Map;
-
+  
 //abstract class for items that exist on the ground but don't need names
 //because they can't go into the player's inventory.
 class SimpleItem {
  public:
+  //generated automatically by macros. don't manually override.
+  virtual std::string getSerializationTag() const = 0;
+
+  //serialization function. items that have additional state need to
+  //override this. probably call the base class version from the override.
+  virtual void serialize(Archive &archive);
+
+  
   virtual ~SimpleItem();
 
   //figures out and returns the item's glyph. note that it's not virtual; you
@@ -60,6 +69,9 @@ class Item : public SimpleItem {
 //base class for artifacts and weapons
 class DestructibleItem : public Item {
  public:
+  //overridden version serializes durability info
+  virtual void serialize(Archive &archive);
+  
   DestructibleItem();
 
   //returns an adjective describing the current state of the item: "OK",
@@ -80,13 +92,14 @@ class DestructibleItem : public Item {
 
  private:
   int durability;
-  const int durabilityMin;
+  int durabilityMin;
 };
 
 
 
 class Ore : public SimpleItem {
  public:
+  CREATE_TAG_FOR(Ore)
   using SimpleItem::SimpleItem;
   SimpleItem::UseResult pickup(Player &you);
  protected:
@@ -98,6 +111,7 @@ class Ore : public SimpleItem {
 
 class Bomb : public Item {
  public:
+  CREATE_TAG_FOR(Bomb)
   using Item::Item;
   Item::UseResult use(Map &map);
  protected:
@@ -108,6 +122,7 @@ class Bomb : public Item {
 
 class Torch : public Item {
  public:
+  CREATE_TAG_FOR(Torch)
   using Item::Item;
   Item::UseResult use(Map &map);
  protected:
@@ -118,6 +133,7 @@ class Torch : public Item {
 
 class Arrow : public Item {
  public:
+  CREATE_TAG_FOR(Arrow)
   using Item::Item;
   Item::UseResult use(Map &map);
  protected:
@@ -128,6 +144,7 @@ class Arrow : public Item {
 
 class Hook : public DestructibleItem {
  public:
+  CREATE_TAG_FOR(Hook)
   using DestructibleItem::DestructibleItem;
   Item::UseResult use(Map &map);
  protected:

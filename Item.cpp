@@ -3,6 +3,18 @@
 #include "Color.h"
 #include "Map.h"
 #include "functions.h"
+#include <stdexcept>
+
+void SimpleItem::serialize(Archive &ar) {
+  //no data to serialize.
+}
+
+void DestructibleItem::serialize(Archive &ar) {
+  ar & durability;
+  ar & durabilityMin;
+}
+
+
 
 Cch SimpleItem::getGlyph() const {
   return color()(glyph());

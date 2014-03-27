@@ -1,4 +1,6 @@
 #include "Space.h"
+#include "Archive.h"
+#include "generation.h"
 #include "Item.h"
 #include "Enemy.h"
 #include "Cch.h"
@@ -87,7 +89,7 @@ void Space::pickup(Player &you) {
   if (!item) {
     return;
   }
-  
+ 
   switch (item->pickup(you)) {
   case Item::Release:
     item.release();
