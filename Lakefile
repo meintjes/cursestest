@@ -1,2 +1,0 @@
-CXX_FLAGS = -g -Wall -Werror -pedantic -std=c++11
-LD_FLAGS = -lncurses

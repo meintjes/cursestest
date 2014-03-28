@@ -2,3 +2,5 @@ saves/*
 cursestest
 *~
 *.o
+Lakefile
+getPointerFromArchive.h

@@ -5,39 +5,8 @@
 #include "Weapon.h"
 #include "Enemy.h"
 #include "Archive.h"
+#include "getPointerFromArchive.h"
 #include <cassert>
-
-void* getPointerFromArchive(Archive &ar) {
-  std::string tag;
-  ar & tag;
-  switch (tagize(tag.c_str())) {
-  CREATE_CASE_FOR(Ore)
-  CREATE_CASE_FOR(Bomb)
-  CREATE_CASE_FOR(Torch)
-  CREATE_CASE_FOR(Arrow)
-  CREATE_CASE_FOR(Hook)
-
-  CREATE_CASE_FOR(Axe)
-  CREATE_CASE_FOR(Bludgeon)
-  CREATE_CASE_FOR(Lance)
-  CREATE_CASE_FOR(Spear)
-
-  CREATE_CASE_FOR(HealingOrb)
-  CREATE_CASE_FOR(TimeStopper)
-
-  CREATE_CASE_FOR(Zombie)
-  CREATE_CASE_FOR(Exploder)
-  CREATE_CASE_FOR(Reacher)
-  CREATE_CASE_FOR(SpawnerBoss)
-  CREATE_CASE_FOR(Douser)
-
-  CREATE_NONE_CASE
-
-  default:
-    throw std::runtime_error("Invalid serialization tag: " + tag);
-    return nullptr;
-  }
-}
 
 std::unique_ptr<SimpleItem> getRandomItem() {
   int num = randTo(99); 
