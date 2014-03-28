@@ -7,10 +7,6 @@ cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions
 less:
 	make 2>&1 | less
 
-.FORCE:
-getPointerFromArchive.h: .FORCE
-	./regenerateUnserializer.sh >getPointerFromArchive.h
-
 main.o: main.cpp Map.o Space.o Enemy.o Player.o Command.o Menu.o Branch.o
 	$(GXX) $(GXX_FLAGS) main.cpp
 
@@ -60,6 +56,7 @@ Weapon.o: Weapon.cpp Item.o Map.o Point.o generation.o
 	$(GXX) $(GXX_FLAGS) Weapon.cpp
 
 generation.o: getPointerFromArchive.h generation.cpp Item.o Enemy.o Weapon.o Artifact.o functions.o
+	./regenerateUnserializer.sh >getPointerFromArchive.h
 	$(GXX) $(GXX_FLAGS) generation.cpp
 
 Branch.o: Branch.cpp Map.o
