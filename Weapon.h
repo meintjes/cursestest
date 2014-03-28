@@ -25,7 +25,7 @@ class Weapon : public DestructibleItem {
 //axes cleave through enemies in an arc of three spaces
 class Axe : public Weapon {
  public:
-  CREATE_TAG_FOR(AXE)
+  CREATE_TAG_FOR(Axe)
   using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);

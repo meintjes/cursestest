@@ -92,6 +92,7 @@ void playGame() {
   }
 
   //after the player dies:
+  dungeon.deleteMapFiles();
   erase();
   you.getCurrentFloor().display();
   addcs(0, 22, Red("You have died..."));

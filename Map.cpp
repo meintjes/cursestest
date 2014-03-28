@@ -1,3 +1,4 @@
+#include "Archive.h"
 #include "Map.h"
 #include "Cch.h"
 #include "Color.h"
@@ -8,6 +9,25 @@
 #include <algorithm>
 #include "generation.h"
 #include <assert.h>
+
+//unary constructor that doesn't initialize the map at all. only to be used
+//for constructing maps that are about to be serialized.
+Map::Map(Player &player) :
+  you(player)
+{}
+
+//note: the reference to the player isn't (de)serialized. construct the map
+//with the unary constructor, then serialize it.
+void Map::serialize(Archive &ar) {
+  ar & playerX;
+  ar & playerY;
+  ar & enemyCount;
+  for (int x = 0; x <= MAPWIDTH + 1; x++) {
+    for (int y = 0; y <= MAPHEIGHT + 1; y++) {
+      (*this)(x, y).serialize(ar);
+    }
+  }
+}
 
 void Map::display() const {
   for (int y = 0; y <= MAPHEIGHT + 1; y++) {

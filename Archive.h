@@ -15,6 +15,8 @@ class Archive {
   Archive(std::string path, Archive::Type typeIn);
   Archive::Type getType() const;
 
+  explicit operator bool() const;
+
   template <typename T>
   Archive& operator&(T &t) {
     if (type == Save) {
@@ -60,7 +62,7 @@ constexpr unsigned long long tagize(const char* str, int value = 0) {
                                 return new NAME;
 
 //creates a case for the "None" tag (no item)
-#define CREATE_NONE_CASE case tagize("None"): \
+#define CREATE_NONE_CASE case tagize("_"): \
                            return nullptr;
 
 #endif

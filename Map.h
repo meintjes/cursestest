@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include <vector>
 
+class Archive;
 class Player;
 
 //index 0 and index MAPWIDTH + 1 or MAPHEIGHT + 1 are reserved for walls
@@ -26,6 +27,9 @@ class Map {
 
   //defined in Map.cpp
  public:
+  Map(Player &player);
+  void serialize(Archive &ar);
+  
   //displays the map (and only the map) and refreshes the screen. overwrites
   //the entire map area each turn; for animations, use ncurses directly.
   void display() const;

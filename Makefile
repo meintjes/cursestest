@@ -10,7 +10,7 @@ less:
 main.o: main.cpp Map.o Space.o Enemy.o Player.o Command.o Menu.o Branch.o
 	$(GXX) $(GXX_FLAGS) main.cpp
 
-Map.o: Map.cpp Space.o Cch.o Player.o functions.o Point.o
+Map.o: Map.cpp Space.o Cch.o Player.o functions.o Point.o Archive.o
 	$(GXX) $(GXX_FLAGS) Map.cpp
 
 MapGen.o: MapGen.cpp Space.o functions.o generation.o

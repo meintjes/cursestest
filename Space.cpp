@@ -21,7 +21,7 @@ void Space::serialize(Archive &ar) {
       enemy->serialize(ar);
     }
     else {
-      ar << "None";
+      ar << "_";
     }
 
     if (item) {
@@ -29,7 +29,7 @@ void Space::serialize(Archive &ar) {
       item->serialize(ar);
     }
     else {
-      ar << "None";
+      ar << "_";
     }
   }
   else {

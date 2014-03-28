@@ -1,6 +1,10 @@
 #include "Cst.h"
 #include <ncurses.h>
 
+std::string Cst::data() const {
+  return text;
+}
+
 bool Cst::operator>(const Cst &rhs) {
   return this->text > rhs.text;
 }
