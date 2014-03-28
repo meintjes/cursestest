@@ -72,9 +72,7 @@ int main() {
 
 void playGame() {
   Player you;
-
   Branch dungeon("Dungeon", DEPTH_DUNGEON, nullptr, 0, you);
-
   you.setBranch(&dungeon);
 
   CommandMap cmap = {COMMAND_FIRST};

@@ -74,5 +74,5 @@ void Branch::deleteMapFiles() {
 }
 
 std::string Branch::getPathFor(int depth) {
-  return name.data() + std::to_string(depth);
+  return "saves/" + name.data() + std::to_string(depth);
 }

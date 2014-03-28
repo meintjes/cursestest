@@ -465,13 +465,14 @@ bool Player::changeDepth(int dz) {
 
   //if going up from top of branch, go to parent branch and depth
   if (currentDepth < 0) {
-    if (currentBranch->getParentBranch()) { 
+    if (currentBranch->getParentBranch()) {
+      currentBranch->emptyCache();
       currentDepth = currentBranch->getParentDepth();
       currentBranch = currentBranch->getParentBranch();
       return true;
     }
     else { //if there's no parent branch, don't spend a turn
-      currentDepth -= dz;
+      currentDepth -= dz; //undo the change of depth
       return false;
     }
   }
