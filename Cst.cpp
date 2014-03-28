@@ -1,7 +1,7 @@
 #include "Cst.h"
 #include <ncurses.h>
 
-std::string Cst::data() const {
+std::string Cst::string() const {
   return text;
 }
 

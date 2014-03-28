@@ -13,7 +13,7 @@ class Cst {
   Cst(const std::string &textIn)
     : text(textIn), hue(8), bold(false) {}
 
-  std::string data() const;
+  std::string string() const;
 
   bool operator>(const Cst &rhs);
   bool operator<(const Cst &rhs);

@@ -41,18 +41,21 @@ void Player::serialize(Archive &ar) {
     mode = static_cast<Player::Mode>(x);
   }
 
-/*
   //serialize the rest of the inventory
   if (ar.getType() == Archive::Save) {
     ar << inventory.size();
-    for (std::unique_ptr<Item> &item : inventory)
   }
   else {
-    int inventorySize;
-    
+    unsigned int size;
+    ar >> size;
+    inventory.resize(size);
   }
 
-  / *
+  for (std::unique_ptr<Item> &item : inventory) {
+    serializeUnique(item, ar);
+  }
+
+  /*
   modeItemIterator
   */
 }

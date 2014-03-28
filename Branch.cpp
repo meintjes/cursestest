@@ -69,10 +69,10 @@ bool Branch::isValidDepth(unsigned int depth) const {
 
 void Branch::deleteMapFiles() {
   for (unsigned int i = 0; i < maxDepth; i++) {
-    remove(getPathFor(i).data());
+    remove(getPathFor(i).c_str());
   }
 }
 
 std::string Branch::getPathFor(int depth) {
-  return "saves/" + name.data() + std::to_string(depth);
+  return "saves/" + name.string() + std::to_string(depth);
 }
