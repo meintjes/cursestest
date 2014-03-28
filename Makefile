@@ -28,7 +28,7 @@ Space.o: Space.cpp Enemy.o generation.o
 Enemy.o: Enemy.cpp Point.o Map.o functions.o generation.o Player.o Archive.o
 	$(GXX) $(GXX_FLAGS) Enemy.cpp
 
-Player.o: Player.cpp Cst.o Cch.o functions.o Item.o Branch.o
+Player.o: Player.cpp Cst.o Cch.o functions.o Item.o Branch.o Archive.o generation.o
 	$(GXX) $(GXX_FLAGS) Player.cpp
 
 functions.o: functions.cpp

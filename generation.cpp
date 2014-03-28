@@ -1,13 +1,13 @@
 #include "generation.h"
 #include "functions.h"
 #include "Item.h"
-#include "Weapon.h"
 #include "Artifact.h"
+#include "Weapon.h"
 #include "Enemy.h"
 #include "Archive.h"
 #include <cassert>
 
-SimpleItem* getSimpleItemPointerFromArchive(Archive &ar) {
+void* getPointerFromArchive(Archive &ar) {
   std::string tag;
   ar & tag;
   switch (tagize(tag.c_str())) {
@@ -25,10 +25,16 @@ SimpleItem* getSimpleItemPointerFromArchive(Archive &ar) {
   CREATE_CASE_FOR(HealingOrb)
   CREATE_CASE_FOR(TimeStopper)
 
+  CREATE_CASE_FOR(Zombie)
+  CREATE_CASE_FOR(Exploder)
+  CREATE_CASE_FOR(Reacher)
+  CREATE_CASE_FOR(SpawnerBoss)
+  CREATE_CASE_FOR(Douser)
+
   CREATE_NONE_CASE
 
   default:
-    throw std::runtime_error("Invalid Item tag: " + tag);
+    throw std::runtime_error("Invalid serialization tag: " + tag);
     return nullptr;
   }
 }

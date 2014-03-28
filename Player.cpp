@@ -9,6 +9,55 @@
 #include <string>
 #include <ncurses.h>
 #include <cassert>
+#include "Archive.h"
+#include "generation.h"
+
+void Player::serialize(Archive &ar) {
+  ar & ore;
+  ar & hpMax;
+  ar & hp;
+  ar & staminaMax;
+  ar & stamina;
+  ar & lastMoveDirection.x;
+  ar & lastMoveDirection.y;
+  ar & movedLastTurn;
+  ar & damageTimer;
+  ar & currentDepth;
+
+  ar & torchDuration;
+  ar & speedDuration;
+  ar & freeMovesDuration;
+
+  serializeUnique(currentWeapon, ar);
+  serializeUnique(currentArtifact, ar);
+
+  //serialize mode
+  if (ar.getType() == Archive::Save) {
+    ar << static_cast<int>(mode);
+  }
+  else {
+    int x;
+    ar >> x;
+    mode = static_cast<Player::Mode>(x);
+  }
+
+/*
+  //serialize the rest of the inventory
+  if (ar.getType() == Archive::Save) {
+    ar << inventory.size();
+    for (std::unique_ptr<Item> &item : inventory)
+  }
+  else {
+    int inventorySize;
+    
+  }
+
+  / *
+  modeItemIterator
+  */
+}
+
+
 
 Player::Player() :
   ore(0),

@@ -6,6 +6,7 @@
 #include <memory>
 #include <list>
 
+class Archive;
 class Branch;
 class Item;
 class Weapon;
@@ -20,6 +21,8 @@ class Player {
     Arrow,
     Hook
   };
+
+  void serialize(Archive &ar);
 
   Player();
   ~Player(); //necessary for unique_ptr to incomplete type

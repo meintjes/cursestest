@@ -1,18 +1,30 @@
 #ifndef __GENERATION_H__
 #define __GENERATION_H__
 
+#include "Archive.h"
 #include <memory>
 class SimpleItem;
-class Archive;
 
 //helper function for the below.
-SimpleItem* getSimpleItemPointerFromArchive(Archive &ar);
+void* getPointerFromArchive(Archive &ar);
 
-//for loading from files. reads a tag from the archive and provides a pointer
-//pointing at an item of the correct type which can then be deserialized. 
 template <typename T>
-T* getItemPointerFromArchive(Archive &ar) {
-  return dynamic_cast<T*>(getSimpleItemPointerFromArchive(ar));
+void serializeUnique(std::unique_ptr<T> &ptr, Archive &ar) {
+  if (ar.getType() == Archive::Save) {  
+    if (ptr) {
+      ar << ptr->getSerializationTag();
+      ptr->serialize(ar);
+    }
+    else {
+      ar << "_";
+    }
+  }
+  else {
+    ptr.reset(static_cast<T*>(getPointerFromArchive(ar)));
+    if (ptr) {
+      ptr->serialize(ar);
+    }
+  }
 }
 
 std::unique_ptr<SimpleItem> getRandomItem();

@@ -9,24 +9,6 @@
 #include <stdexcept>
 #include <string>
 
-Enemy* getEnemyPointerFromArchive(Archive &ar) {
-  std::string tag;
-  ar & tag;
-  switch (tagize(tag.c_str())) {
-  CREATE_CASE_FOR(Zombie)
-  CREATE_CASE_FOR(Exploder)
-  CREATE_CASE_FOR(Reacher)
-  CREATE_CASE_FOR(SpawnerBoss)
-  CREATE_CASE_FOR(Douser)
-  
-  CREATE_NONE_CASE
-
-  default:
-    throw std::runtime_error("Invalid Enemy tag: " + tag);
-    return nullptr;
-  }
-}
-
 void Enemy::serialize(Archive &ar) {
   ar & hp;
   ar & memoryDuration;
