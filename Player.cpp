@@ -41,23 +41,48 @@ void Player::serialize(Archive &ar) {
     mode = static_cast<Player::Mode>(x);
   }
 
-  //serialize the rest of the inventory
+  //serialize the inventory and the iterator to the active mode item
   if (ar.getType() == Archive::Save) {
-    ar << inventory.size();
+    //figure out if there's a mode item, because we'll serialize it separately
+    bool modeItemActive = (modeItemIterator != inventory.end());
+
+    //write the size of the inventory, minus one if there was a mode item
+    ar << inventory.size() - modeItemActive;
+
+    //then write the contents of the inventory:
+    for (std::unique_ptr<Item> &itemptr : inventory) {
+      if (!modeItemActive || itemptr != *modeItemIterator) {
+        serializeUnique(itemptr, ar);
+      }
+    }
+   
+    //then, after the inventory, separately add the mode item if there was one
+    if (modeItemActive) {
+      serializeUnique(*modeItemIterator, ar);
+    }
+    else { //otherwise, make an empty pointer and serialize it
+      std::unique_ptr<Item> empty;
+      serializeUnique(empty, ar);
+    }
   }
   else {
+    //read in the size of the inventory and set it to be that size
     unsigned int size;
     ar >> size;
     inventory.resize(size);
+    
+    //read in that many items from the archive
+    for (std::unique_ptr<Item> &itemptr : inventory) {
+      serializeUnique(itemptr, ar);
+    }
+   
+    //read in the mode item
+    std::unique_ptr<Item> itemptr;
+    serializeUnique(itemptr, ar);
+    if (itemptr) {
+      addItem(itemptr.release());
+    }
   }
-
-  for (std::unique_ptr<Item> &item : inventory) {
-    serializeUnique(item, ar);
-  }
-
-  /*
-  modeItemIterator
-  */
 }
 
 
