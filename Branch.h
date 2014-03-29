@@ -2,20 +2,27 @@
 #define __BRANCH_H__
 
 #include "Map.h"
-#include "Cst.h"
-
+#include <string>
 #include <memory>
+
+class Archive;
 
 const int DEPTH_DUNGEON = 12;
 
 class Branch {
  public:
-  Branch(Cst nameIn, unsigned int maxDepthIn,
+  //non-initializing constructor for deserialization
+  Branch(Player &youIn);
+  //read/write branch info to/from file (not the player, though)
+  void serialize(Archive &ar);
+
+  //initializing constructor for new games. deletes maps.
+  Branch(std::string nameIn, unsigned int maxDepthIn,
          Branch *parentBranchIn, unsigned int parentDepthIn,
          Player &youIn);
 
   //get the name of the branch (Dungeon, etc).
-  Cst getName() const;
+  std::string getName() const;
 
   //get the maximum number of maps within the branch
   int getMaxDepth() const;
@@ -40,12 +47,12 @@ class Branch {
   //within the branch
   bool isValidDepth(unsigned int depth) const;
 
-  //deletes any saved map files associated with the branch. called upon death
-  //of the player in order to clean up.
+  //deletes any saved map files associated with the branch. called whenever a
+  //"new" branch is created (the initializing constructor calls it)
   void deleteMapFiles();
 
  private:
-  Cst name;
+  std::string name;
 
   //returns a file path for saving/loading the map with the given depth
   std::string getPathFor(int depth);

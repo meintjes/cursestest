@@ -1,10 +1,22 @@
 #include "Branch.h"
+#include "Archive.h"
 #include <cstdio>
-#include <string>
 #include <cassert>
 #include <fstream>
 
-Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
+Branch::Branch(Player &youIn) :
+  you(youIn)
+{}
+
+void Branch::serialize(Archive &ar) {
+  emptyCache();
+  ar & name;
+  ar & maxDepth;
+
+  //TODO: serialize parentBranch and parentDepth
+}
+
+Branch::Branch(std::string nameIn, unsigned int maxDepthIn,
        Branch *parentBranchIn, unsigned int parentDepthIn,
        Player &youIn) :
   name(nameIn),
@@ -14,7 +26,9 @@ Branch::Branch(Cst nameIn, unsigned int maxDepthIn,
   parentBranch(parentBranchIn),
   parentDepth(parentDepthIn),
   you(youIn)
-{}
+{
+  deleteMapFiles();
+}
 
 Map& Branch::getMap(unsigned int mapDepth) {
   assert(isValidDepth(mapDepth));
@@ -47,7 +61,7 @@ void Branch::emptyCache() {
   cachedDepth = -1;
 }
 
-Cst Branch::getName() const {
+std::string Branch::getName() const {
   return name;
 }
 
@@ -74,5 +88,5 @@ void Branch::deleteMapFiles() {
 }
 
 std::string Branch::getPathFor(int depth) {
-  return "saves/" + name.string() + std::to_string(depth);
+  return "saves/" + name + std::to_string(depth);
 }
