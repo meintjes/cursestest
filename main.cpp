@@ -18,6 +18,7 @@ bool getLongPrompt(Map &map);
 
 int main() {
   initscr(); //start ncurses
+  atexit([](){endwin();}); //end ncurses when program exits
   noecho(); //don't repeat inputted characters to the player
   curs_set(0); //don't show the cursor
   std::srand(time(0)); //seed the RNG
@@ -63,10 +64,8 @@ int main() {
     {"Quit", std::bind(&Menu::close, &MainMenu)}
   });
   MainMenu();
-  
+ 
 
-  //clean up after ncurses
-  endwin();
   return 0;
 }
 
