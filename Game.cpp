@@ -8,7 +8,7 @@
 #include <cassert>
 
 Game::Game() :
-  id(0), //placeholder
+  id(0), //placeholder for finding the next 
   branches({
       {"Dungeon", 12, nullptr, 0, you, id}
   })
@@ -40,29 +40,32 @@ void Game::play() {
 }
 
 void Game::save() {
-  Archive ar(getPath(), Archive::Save);
-  
-  //serialize the player
-  you.serialize(ar);
+  //explicit scope so that the archive closes before the program exits
+  {
+    Archive ar(getPath(), Archive::Save);
 
-  //then the branches; first, the number of branches:
-  ar << branches.size();
+    //serialize the player
+    you.serialize(ar);
 
-  //then the bulk of their data:
-  for (Branch &b : branches) {
-    b.emptyCache(); //(make sure the most recently accessed map is saved too)
-    ar << b.getName();
-    ar << b.getMaxDepth();
-    ar << b.getParentDepth();
-  }
+    //then the branches; first, the number of branches:
+    ar << branches.size();
 
-  //then serialize the parent branch names after everything else
-  for (Branch &b : branches) {
-    if (b.getParentBranch()) {
-      ar << b.getParentBranch()->getName();
+    //then the bulk of their data:
+    for (Branch &b : branches) {
+      b.emptyCache(); //(make sure the most recently accessed map is saved too)
+      ar << b.getName();
+      ar << b.getMaxDepth();
+      ar << b.getParentDepth();
     }
-    else {
-      ar << '_';
+
+    //then serialize the parent branch names after everything else
+    for (Branch &b : branches) {
+      if (b.getParentBranch()) {
+        ar << b.getParentBranch()->getName();
+      }
+      else {
+        ar << '_';
+      }
     }
   }
 
