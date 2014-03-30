@@ -99,17 +99,17 @@ void playGame() {
 bool getInput(Map &map, const CommandMap cmap) {
   DirectionalFn dfn;
   switch (map.you.getMode()) {
-    case Player::Mode::Move:
-      dfn = &Map::movePlayer;
-      break;
-    case Player::Mode::Arrow:
-      dfn = &Map::shootArrow;
-      break;
-    case Player::Mode::Hook:
-      dfn = &Map::throwHook;
-      break;
-    default:
-      assert(false);
+  case Player::Mode::Move:
+    dfn = &Map::movePlayer;
+    break;
+  case Player::Mode::Arrow:
+    dfn = &Map::shootArrow;
+    break;
+  case Player::Mode::Hook:
+    dfn = &Map::throwHook;
+    break;
+  default:
+    assert(false);
   }
 
   switch (cmap[getch()]) {
