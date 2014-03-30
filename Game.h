@@ -25,16 +25,19 @@ class Game {
   //save the game to file and quit
   void save();
 
-  //end the game and delete the associated files
+  //delete the files associated with the game
   void end();
 
  private:
+  std::string getPath() const;
+  
   bool getInput(const CommandMap cmap);
   bool getLongPrompt();
 
   unsigned int id;
   Player you;
   std::vector<Branch> branches;
+
 };
 
 #endif

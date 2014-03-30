@@ -2,20 +2,18 @@
 #include "Map.h"
 #include "Archive.h"
 #include "Color.h"
+#include <algorithm>
 #include <cstring>
 #include <ncurses.h>
 #include <cassert>
 
 Game::Game() :
+  id(0), //placeholder
   branches({
-      {"Dungeon", 12, nullptr, 0, you}
+      {"Dungeon", 12, nullptr, 0, you, id}
   })
 {
   you.setBranch(&branches.front());
-}
-
-Game::Game(unsigned int id) {
-  assert(false);
 }
 
 void Game::play() {
@@ -42,19 +40,76 @@ void Game::play() {
 }
 
 void Game::save() {
+  Archive ar(getPath(), Archive::Save);
+  
+  //serialize the player
+  you.serialize(ar);
+
+  //then the branches; first, the number of branches:
+  ar << branches.size();
+
+  //then the bulk of their data:
   for (Branch &b : branches) {
-    b.emptyCache();
+    b.emptyCache(); //(make sure the most recently accessed map is saved too)
+    ar << b.getName();
+    ar << b.getMaxDepth();
+    ar << b.getParentDepth();
+  }
+
+  //then serialize the parent branch names after everything else
+  for (Branch &b : branches) {
+    if (b.getParentBranch()) {
+      ar << b.getParentBranch()->getName();
+    }
+    else {
+      ar << '_';
+    }
   }
 
   exit(0);
+}
+
+Game::Game(unsigned int idIn) :
+  id(idIn)
+{
+  Archive ar(getPath(), Archive::Load);
+
+  you.serialize(ar);
+
+  int size;
+  ar >> size;
+  for (int i = 0; i < size; i++) {
+    std::string name;
+    unsigned int maxDepth, parentDepth;
+    ar >> name >> maxDepth >> parentDepth;
+    branches.emplace_back(name, maxDepth, nullptr, parentDepth, you, id);
+  }
+
+  for (Branch &b : branches) {
+    //read in the parent branch name:
+    std::string parentName;
+    ar >> parentName;
+    //find the first branch with the name referred to
+    auto parentIterator = std::find_if(branches.begin(),
+                                       branches.end(),
+                                       [&parentName](const Branch &b) {
+                                         return b.getName() == parentName;
+                                       });
+    if (parentIterator != branches.end()) {
+      b.setParentBranch(&*parentIterator);
+    }
+  }
 }
 
 void Game::end() {
   for (Branch &b : branches) {
     b.deleteMapFiles();
   }
+  remove(getPath().c_str());
+}
 
-  exit(0);
+std::string Game::getPath() const {
+  return "saves/" + std::to_string(id) + "Game";
 }
 
 bool Game::getInput(const CommandMap cmap) {

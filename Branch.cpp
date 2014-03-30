@@ -6,6 +6,7 @@
 #include <fstream>
 
 Branch::Branch(const Branch &other) :
+  id(other.id),
   name(other.name),
   cachedDepth(-1),
   cachedMap(nullptr),
@@ -15,21 +16,10 @@ Branch::Branch(const Branch &other) :
   you(other.you)
 {}
 
-Branch::Branch(Player &youIn) :
-  you(youIn)
-{}
-
-void Branch::serialize(Archive &ar) {
-  emptyCache();
-  ar & name;
-  ar & maxDepth;
-
-  //TODO: serialize parentBranch and parentDepth
-}
-
 Branch::Branch(std::string nameIn, unsigned int maxDepthIn,
        Branch *parentBranchIn, unsigned int parentDepthIn,
-       Player &youIn) :
+       Player &youIn, unsigned int idIn) :
+  id(idIn),
   name(nameIn),
   cachedDepth(-1),
   cachedMap(nullptr),
@@ -80,6 +70,10 @@ int Branch::getMaxDepth() const {
   return maxDepth;
 }
 
+void Branch::setParentBranch(Branch *parent) {
+  parentBranch = parent;
+}
+
 Branch* Branch::getParentBranch() const {
   return parentBranch;
 }
@@ -99,5 +93,5 @@ void Branch::deleteMapFiles() {
 }
 
 std::string Branch::getPathFor(int depth) {
-  return "saves/" + name + std::to_string(depth);
+  return "saves/" + std::to_string(id) + name + std::to_string(depth);
 }

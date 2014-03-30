@@ -10,23 +10,21 @@ class Map;
 class Branch {
  public:
   //copy constructor so that vector<Branch> works. performs a shallow copy,
-  //because you don't actually want to make a second Player
+  //because you don't actually want to make a second Player or anything
   Branch(const Branch &other); 
-  //non-initializing constructor for deserialization
-  Branch(Player &youIn);
-  //read/write branch info to/from file (not the player, though)
-  void serialize(Archive &ar);
 
-  //initializing constructor for new games. deletes maps.
   Branch(std::string nameIn, unsigned int maxDepthIn,
          Branch *parentBranchIn, unsigned int parentDepthIn,
-         Player &youIn);
+         Player &youIn, unsigned int idIn);
 
   //get the name of the branch (Dungeon, etc).
   std::string getName() const;
 
   //get the maximum number of maps within the branch
   int getMaxDepth() const;
+
+  //set the parent branch to the pointed-to branch
+  void setParentBranch(Branch *parent);
 
   //get a pointer to the branch that contains this one. returns nullptr if the
   //branch isn't contained by anything.
@@ -53,6 +51,7 @@ class Branch {
   void deleteMapFiles();
 
  private:
+  unsigned int id;
   std::string name;
 
   //returns a file path for saving/loading the map with the given depth
