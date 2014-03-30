@@ -158,21 +158,21 @@ bool getInput(Map &map, const CommandMap cmap) {
 }
 
 bool getLongPrompt(Map &map) {
-  char command[80];
-  bool didTakeTurn = false;
-
+  //get rid of the regular HUD
   erase();
   map.display();
-  addc(0, 23, DarkGray('#'));
+
+  //prompt for a command
   echo();
+  char command[80];
+  addc(0, 23, DarkGray('#'));
   getnstr(command, 79);
   noecho();
 
   if (std::strcmp(command, "die") == 0) {
     map.you.damage(100);
-    didTakeTurn = true;
+    return true;
   }
 
-  map.you.display();
-  return didTakeTurn;
+  return false;
 }
