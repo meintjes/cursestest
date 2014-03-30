@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "functions.h"
+#include "Map.h"
 #include "Space.h"
 #include "Branch.h"
 #include "Item.h"

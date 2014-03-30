@@ -1,20 +1,14 @@
 #include "Map.h"
 #include <ncurses.h>
+#include "Game.h"
 #include "Color.h"
 #include "Player.h"
-#include "Branch.h"
 #include "Command.h"
 #include "Menu.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include <cstring>
 #include <functional>
-#include <cassert>
-
-void playGame();
-bool getInput(Map &map, const CommandMap cmap);
-bool getLongPrompt(Map &map);
 
 int main() {
   initscr(); //start ncurses
@@ -59,7 +53,10 @@ int main() {
   
   //generate and execute the main menu
   Menu MainMenu({
-    {"Play game", playGame},
+    {"Play game", [](){
+                    Game game; game.play();
+                  }
+    },
     {"Change controls", ControlsMenu},
     {"Quit", std::bind(&Menu::close, &MainMenu)}
   });
@@ -67,112 +64,4 @@ int main() {
  
 
   return 0;
-}
-
-void playGame() {
-  Player you;
-  Branch dungeon("Dungeon", DEPTH_DUNGEON, nullptr, 0, you);
-  you.setBranch(&dungeon);
-
-  CommandMap cmap = {COMMAND_FIRST};
-  readControls(cmap);
-
-  //until you die:
-  while (you.getHp() > 0) {
-    //get input that would cause a turn to pass
-    do {
-      you.getCurrentFloor().display();
-      you.display();
-    }
-    while (!getInput(you.getCurrentFloor(), cmap));
-    you.getCurrentFloor().tick(); //then update game state
-  }
-
-  //after the player dies:
-  dungeon.deleteMapFiles();
-  erase();
-  you.getCurrentFloor().display();
-  addcs(0, 22, Red("You have died..."));
-  getch();
-}
-
-bool getInput(Map &map, const CommandMap cmap) {
-  DirectionalFn dfn;
-  switch (map.you.getMode()) {
-  case Player::Mode::Move:
-    dfn = &Map::movePlayer;
-    break;
-  case Player::Mode::Arrow:
-    dfn = &Map::shootArrow;
-    break;
-  case Player::Mode::Hook:
-    dfn = &Map::throwHook;
-    break;
-  default:
-    assert(false);
-  }
-
-  switch (cmap[getch()]) {
-  case COMMAND_FIRST: //unbound keys
-    return false;
-  case COMMAND_MOVE_UPLEFT:
-    return (map.*dfn)(-1, -1);
-  case COMMAND_MOVE_UP:
-    return (map.*dfn)(0, -1);
-  case COMMAND_MOVE_UPRIGHT:
-    return (map.*dfn)(1, -1);
-  case COMMAND_MOVE_LEFT:
-    return (map.*dfn)(-1, 0);
-  case COMMAND_WAIT:
-    return true;
-  case COMMAND_MOVE_RIGHT:
-    return (map.*dfn)(1, 0);
-  case COMMAND_MOVE_DOWNLEFT:
-    return (map.*dfn)(-1, 1);
-  case COMMAND_MOVE_DOWN:
-    return (map.*dfn)(0, 1);
-  case COMMAND_MOVE_DOWNRIGHT:
-    return (map.*dfn)(1, 1);
-
-  case COMMAND_EVOKE_ARTIFACT:
-    return map.you.evokeArtifact();
-  case COMMAND_USE_ITEM:
-    return map.you.useItem();
-  case COMMAND_DROP_ITEM:
-    return map.you.dropItem();
-
-  case COMMAND_INTERACT_STAIRSUP:
-    return map(map.getPlayerX(), map.getPlayerY()).typeIs(Space::StairsUp)
-           && map.you.changeDepth(-1);
-  case COMMAND_INTERACT_STAIRSDOWN:
-    return map(map.getPlayerX(), map.getPlayerY()).typeIs(Space::StairsDown)
-           && map.you.changeDepth(+1);
-
-  case COMMAND_LONG_PROMPT:
-    return getLongPrompt(map);
-
-  default: //some command isn't handled by this function
-    assert(false);
-    return false;
-  }
-}
-
-bool getLongPrompt(Map &map) {
-  //get rid of the regular HUD
-  erase();
-  map.display();
-
-  //prompt for a command
-  echo();
-  char command[80];
-  addc(0, 23, DarkGray('#'));
-  getnstr(command, 79);
-  noecho();
-
-  if (std::strcmp(command, "die") == 0) {
-    map.you.damage(100);
-    return true;
-  }
-
-  return false;
 }

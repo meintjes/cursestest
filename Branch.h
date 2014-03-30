@@ -1,16 +1,17 @@
 #ifndef __BRANCH_H__
 #define __BRANCH_H__
 
-#include "Map.h"
 #include <string>
 #include <memory>
 
 class Archive;
-
-const int DEPTH_DUNGEON = 12;
+class Map;
 
 class Branch {
  public:
+  //copy constructor so that vector<Branch> works. performs a shallow copy,
+  //because you don't actually want to make a second Player
+  Branch(const Branch &other); 
   //non-initializing constructor for deserialization
   Branch(Player &youIn);
   //read/write branch info to/from file (not the player, though)

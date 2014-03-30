@@ -1,8 +1,19 @@
+#include "Map.h"
 #include "Branch.h"
 #include "Archive.h"
 #include <cstdio>
 #include <cassert>
 #include <fstream>
+
+Branch::Branch(const Branch &other) :
+  name(other.name),
+  cachedDepth(-1),
+  cachedMap(nullptr),
+  maxDepth(other.maxDepth),
+  parentBranch(other.parentBranch),
+  parentDepth(other.parentDepth),
+  you(other.you)
+{}
 
 Branch::Branch(Player &youIn) :
   you(youIn)
