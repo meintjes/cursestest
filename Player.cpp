@@ -19,6 +19,7 @@ void Player::serialize(Archive &ar) {
   ar & hp;
   ar & staminaMax;
   ar & stamina;
+  ar & timeSpentRunning;
   ar & lastMoveDirection.x;
   ar & lastMoveDirection.y;
   ar & movedLastTurn;
@@ -97,6 +98,7 @@ Player::Player() :
   stamina(staminaMax),
   mode(Mode::Move),
   modeItemIterator(inventory.end()),
+  timeSpentRunning(0),
   lastMoveDirection({0, 0}),
   movedLastTurn(false),
   damageTimer(0),
@@ -121,12 +123,14 @@ void Player::display() const {
 
   //at low hp, change bar colors
   const Color &hpColor = hpIsHigh() ? BlackOnGreen : BlackOnRed;
-  const Color &staminaColor = staminaIsHigh() ? BlackOnBrown : BlackOnRed;
+  const Color &staminaColor = (mode == Mode::Run) ?
+                               (staminaIsHigh() ? BlackOnCyan : BlackOnBlue) :
+                               (staminaIsHigh() ? BlackOnBrown : BlackOnRed);
   
   //print hp and stamina bars
-  for (int i = 21; i >= 0; i--) {
-    addc(78, 21 - i, ((i <= 21 * hp / hpMax) ? hpColor : LightGray)(' '));
-    addc(((i <= 21 * stamina / staminaMax) ? staminaColor : LightGray)(' '));
+  for (int i = 22; i >= 0; i--) {
+    addc(78, 22 - i, ((i <= 22 * hp / hpMax) ? hpColor : LightGray)(' '));
+    addc(((i <= 22 * stamina / staminaMax) ? staminaColor : LightGray)(' '));
   }
   //display marker for the maximum possible hp regeneration
   if (currentHpMax > hp) {
@@ -175,17 +179,6 @@ bool Player::tick() {
                 torchDuration > 0 ? 6 : 3,
                 1);
 
-  if (!movedLastTurn) {
-    if (!damageTimer && stamina >= staminaMax) {
-      if (hp < currentHpMax) {
-        hp += 1;
-      }
-    }
-    else {
-      restoreStamina(1);
-    }
-  }
-
   if (movedLastTurn) {
     movedLastTurn = false;
   }
@@ -199,6 +192,22 @@ bool Player::tick() {
   
   if (torchDuration > 0) {
     torchDuration--;
+  }
+
+  if (mode == Mode::Run) {
+    if (lastMoveDirection == Point(0, 0)) {
+      toggleRun();
+    }
+    else {
+      timeSpentRunning++;
+      if (timeSpentRunning % 2 == 0) {
+        freeMovesDuration++;
+      }
+
+      if (--stamina <= 0) {
+        toggleRun();
+      }
+    }
   }
 
   if (freeMovesDuration > 0) {
@@ -219,6 +228,7 @@ int Player::getHp() const {
 }
 
 Map& Player::getCurrentFloor() const {
+  assert(currentBranch);
   return currentBranch->getMap(currentDepth);
 }
 
@@ -251,7 +261,7 @@ Cch Player::getGlyph() const {
 
 bool Player::attack(int dx, int dy) {
   Map &currentFloor = getCurrentFloor();
-  removeStamina(2);
+  removeStamina(1);
   if (!currentWeapon) {
     int x = currentFloor.getPlayerX() + dx;
     int y = currentFloor.getPlayerY() + dy;
@@ -294,6 +304,16 @@ Player::Mode Player::getMode() const {
 void Player::setMode(Player::Mode modeIn) {
   modeItemIterator = inventory.end();
   mode = modeIn;
+}
+
+void Player::toggleRun() {
+  if (mode == Mode::Move && stamina > 0) {
+    mode = Mode::Run;
+  }
+  else if (mode == Mode::Run) {
+    mode = Mode::Move;
+    timeSpentRunning = 0;
+  }
 }
 
 void Player::destroyModeItem() {
@@ -349,6 +369,10 @@ bool Player::heal(unsigned int num) {
   else {
     return false;
   }
+}
+
+bool Player::weakHeal(unsigned int num) {
+  return restoreAttribute(hp, currentHpMax, num);
 }
 
 bool Player::removeStamina(int num) {

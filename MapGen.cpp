@@ -20,7 +20,6 @@ Map::Map(Player &player, int depth) :
   if (depth == 0) {
     sanitizeEntry();
   }
-  lightArea(playerX, playerY, 3, 0);
 }
 
 void Map::drawLine(Point a, const Point b, Space::Type type) {

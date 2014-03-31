@@ -84,6 +84,9 @@ class Space {
   //updates the space and any enemies on it. returns true if a bomb went off.
   bool tick(Map &map, int x, int y);
 
+  //called during free turns. doesn't update anything but lighting.
+  void freeTick();
+
   //figures out and returns what glyph to display for the space, based on a
   //number of factors (type, visibility, enemy, item, etc.).
   //note: sets the space as discovered the first time it's called. sorry

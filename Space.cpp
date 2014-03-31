@@ -135,9 +135,8 @@ void Space::light(unsigned int turns) {
 }
 
 bool Space::tick(Map &map, int x, int y) {
-  if (litDuration > 0) {
-    litDuration--;
-  }
+  freeTick();
+  
   if (gasDuration > 0) {
     gasDuration--;
   }
@@ -151,6 +150,12 @@ bool Space::tick(Map &map, int x, int y) {
     }
   }
   return false;
+}
+
+void Space::freeTick() {
+  if (litDuration > 0) {
+    litDuration--;
+  }
 }
 
 Cch Space::getGlyph(bool isVisible) const {

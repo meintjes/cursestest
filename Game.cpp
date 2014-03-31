@@ -14,6 +14,7 @@ Game::Game() :
   })
 {
   you.setBranch(&branches.front());
+  you.getCurrentFloor().tick();
 }
 
 void Game::play() {
@@ -136,6 +137,7 @@ bool Game::getInput(const CommandMap cmap) {
   DirectionalFn dfn;
   switch (map.you.getMode()) {
   case Player::Mode::Move:
+  case Player::Mode::Run:
     dfn = &Map::movePlayer;
     break;
   case Player::Mode::Arrow:
@@ -160,6 +162,9 @@ bool Game::getInput(const CommandMap cmap) {
   case COMMAND_MOVE_LEFT:
     return (map.*dfn)(-1, 0);
   case COMMAND_WAIT:
+    if (!map.you.restoreStamina(1)) {
+      map.you.weakHeal(1);
+    }
     return true;
   case COMMAND_MOVE_RIGHT:
     return (map.*dfn)(1, 0);
@@ -169,6 +174,10 @@ bool Game::getInput(const CommandMap cmap) {
     return (map.*dfn)(0, 1);
   case COMMAND_MOVE_DOWNRIGHT:
     return (map.*dfn)(1, 1);
+
+  case COMMAND_TOGGLE_RUN:
+    map.you.toggleRun();
+    return false;
 
   case COMMAND_EVOKE_ARTIFACT:
     return map.you.evokeArtifact();

@@ -34,6 +34,7 @@ int main() {
   init_pair(13, COLOR_BLACK, COLOR_CYAN);
   init_pair(14, COLOR_YELLOW, COLOR_CYAN);
   init_pair(15, COLOR_WHITE, COLOR_WHITE);
+  init_pair(16, COLOR_BLACK, COLOR_BLUE);
 
   //generate the controls menu
   std::vector<Option> controlsMenuOptions;

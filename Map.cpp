@@ -205,6 +205,11 @@ Space& Map::operator()(int x, int y) {
 
 void Map::tick() {
   if (!you.tick()) { //don't update game state for free moves
+    for (int x = 0; x <= MAPWIDTH + 1; x++) {
+      for (int y = 0; y <= MAPHEIGHT + 1; y++) {
+        (*this)(x, y).freeTick();
+      }
+    }
     return;
   }
 

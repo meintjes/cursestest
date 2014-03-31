@@ -16,9 +16,11 @@ void resetControls() {
   cmap['2'] = cmap['j'] = COMMAND_MOVE_DOWN;
   cmap['3'] = cmap['n'] = COMMAND_MOVE_DOWNRIGHT;
 
-  cmap['a'] = COMMAND_EVOKE_ARTIFACT,
-  cmap['i'] = COMMAND_USE_ITEM,
-  cmap['d'] = COMMAND_DROP_ITEM,
+  cmap['r'] = COMMAND_TOGGLE_RUN;
+
+  cmap['a'] = COMMAND_EVOKE_ARTIFACT;
+  cmap['i'] = COMMAND_USE_ITEM;
+  cmap['d'] = COMMAND_DROP_ITEM;
 
   cmap['<'] = COMMAND_INTERACT_STAIRSUP;
   cmap['>'] = COMMAND_INTERACT_STAIRSDOWN;
@@ -48,6 +50,8 @@ std::string getCommandName(Command command) {
     return "Move down";
   case COMMAND_MOVE_DOWNRIGHT:
     return "Move down/right";
+  case COMMAND_TOGGLE_RUN:
+    return "Start/stop running";
   case COMMAND_EVOKE_ARTIFACT:
     return "Evoke artifact";
   case COMMAND_USE_ITEM:

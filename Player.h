@@ -18,6 +18,7 @@ class Player {
  public:
   enum class Mode {
     Move,
+    Run,
     Arrow,
     Hook
   };
@@ -34,7 +35,8 @@ class Player {
   //should pass (the player has a free turn), and false if it shouldn't.
   bool tick();
 
-  int getHp() const; //yep
+  //formats the player's hard drive and frames them for murder
+  int getHp() const;
 
   //returns a reference to the player's current floor.
   Map& getCurrentFloor() const;
@@ -54,6 +56,10 @@ class Player {
   //get/set the player's current mode (see Player::Mode).
   Mode getMode() const;
   void setMode(Mode modeIn);
+
+  //switches between running/not running (but does nothing if the player
+  //has a mode item out)
+  void toggleRun();
 
   //destroy the item that caused the player to enter their current mode
   void destroyModeItem();
@@ -78,6 +84,9 @@ class Player {
   //stamina if lower). returns false if player is already at 100%.
   bool heal(unsigned int num);
   bool restoreStamina(int num);
+
+  //like heal, but only restores up to the current maximum
+  bool weakHeal(unsigned int num);
 
   //deducts num stamina from the player. if the player doesn't have num
   //stamina, instead does nothing and returns false.
@@ -126,21 +135,23 @@ class Player {
 
  private:
   static const int MAX_NUM_ITEMS = 23;
-  std::list<std::unique_ptr<Item> > inventory;
-  //adds an item with no bounds checking
-  void addItemUnsafe(Item * const item);
-  int ore;
-
+  
   struct InventoryInputResult {
     enum Type {Inventory, CurrentArtifact, CurrentWeapon};
     Type type;
     std::list<std::unique_ptr<Item> >::iterator item;
   };
   Player::InventoryInputResult getInventoryInput();
-  
+
+  //adds an item with no bounds checking
+  void addItemUnsafe(Item * const item);
+
   void lightNearbySpaces();
   bool restoreAttribute(int &att, int &attMax, int num);
 
+  std::list<std::unique_ptr<Item> > inventory;
+  int ore;
+  
   int hpMax;
   int currentHpMax;
   int hp;
@@ -151,6 +162,7 @@ class Player {
   std::unique_ptr<Artifact> currentArtifact;
   Mode mode;
   std::list<std::unique_ptr<Item> >::iterator modeItemIterator;
+  int timeSpentRunning;
   Point lastMoveDirection;
   bool movedLastTurn; //don't use this, it's set false every turn by tick().
                       //instead compare lastMoveDirection to {0, 0}
