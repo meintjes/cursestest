@@ -13,8 +13,8 @@ class Branch {
   //because you don't actually want to make a second Player or anything
   Branch(const Branch &other); 
 
-  Branch(std::string nameIn, unsigned int maxDepthIn,
-         Branch *parentBranchIn, unsigned int parentDepthIn,
+  Branch(std::string nameIn, int maxDepthIn,
+         Branch *parentBranchIn, int parentDepthIn,
          Player &youIn, unsigned int idIn);
 
   //get the name of the branch (Dungeon, etc).
@@ -36,7 +36,7 @@ class Branch {
 
   //replaces the cached map with the map at the requested depth, if it's not
   //the same map, and returns a reference to that map
-  Map& getMap(unsigned int mapDepth);
+  Map& getMap(int mapDepth);
 
   //deallocates the memory used by the map's cache and, if the cached level was
   //valid, saves it to file
@@ -44,7 +44,7 @@ class Branch {
 
   //checks if the given depth might refer to an actual map that could live
   //within the branch
-  bool isValidDepth(unsigned int depth) const;
+  bool isValidDepth(int depth) const;
 
   //deletes any saved map files associated with the branch. called whenever a
   //"new" branch is created (the initializing constructor calls it)
@@ -59,13 +59,13 @@ class Branch {
   
   //Branch keeps its most recently requested map in memory. cachedMap points
   //to this map, cachedDepth indicates the depth of this map within the branch
-  unsigned int cachedDepth;
+  int cachedDepth;
   std::unique_ptr<Map> cachedMap;
 
-  unsigned int maxDepth;
+  int maxDepth;
 
   Branch *parentBranch;
-  unsigned int parentDepth;
+  int parentDepth;
   Player &you;
 };
 

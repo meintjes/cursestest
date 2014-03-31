@@ -16,8 +16,8 @@ Branch::Branch(const Branch &other) :
   you(other.you)
 {}
 
-Branch::Branch(std::string nameIn, unsigned int maxDepthIn,
-       Branch *parentBranchIn, unsigned int parentDepthIn,
+Branch::Branch(std::string nameIn, int maxDepthIn,
+       Branch *parentBranchIn, int parentDepthIn,
        Player &youIn, unsigned int idIn) :
   id(idIn),
   name(nameIn),
@@ -27,13 +27,10 @@ Branch::Branch(std::string nameIn, unsigned int maxDepthIn,
   parentBranch(parentBranchIn),
   parentDepth(parentDepthIn),
   you(youIn)
-{
-  deleteMapFiles();
-}
+{}
 
-Map& Branch::getMap(unsigned int mapDepth) {
-  assert(isValidDepth(mapDepth));
-
+Map& Branch::getMap(int mapDepth) {
+  //assert(isValidDepth(mapDepth));
   if (mapDepth != cachedDepth) {
     //save the cached level to file
     emptyCache();
@@ -49,7 +46,11 @@ Map& Branch::getMap(unsigned int mapDepth) {
     }
     cachedDepth = mapDepth;
   }
-  
+ 
+  if (!cachedMap) {
+    cachedMap.reset(new Map(you, 0));
+  }
+
   return *cachedMap;
 }
 
@@ -82,12 +83,12 @@ int Branch::getParentDepth() const {
   return parentDepth;
 }
 
-bool Branch::isValidDepth(unsigned int depth) const {
+bool Branch::isValidDepth(int depth) const {
   return (depth < maxDepth) && (depth >= 0);
 }
 
 void Branch::deleteMapFiles() {
-  for (unsigned int i = 0; i < maxDepth; i++) {
+  for (int i = 0; i < maxDepth; i++) {
     remove(getPathFor(i).c_str());
   }
 }

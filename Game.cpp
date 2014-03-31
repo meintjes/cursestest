@@ -8,7 +8,7 @@
 #include <cassert>
 
 Game::Game() :
-  id(0), //placeholder for finding the next 
+  id(findUnusedID()),
   branches({
       {"Dungeon", 12, nullptr, 0, you, id}
   })
@@ -64,9 +64,12 @@ void Game::save() {
         ar << b.getParentBranch()->getName();
       }
       else {
-        ar << '_';
+        ar << "nullptr";
       }
     }
+
+    //finally, serialize the name of the player's current branch
+    ar << you.getBranch()->getName();
   }
 
   exit(0);
@@ -83,16 +86,16 @@ Game::Game(unsigned int idIn) :
   ar >> size;
   for (int i = 0; i < size; i++) {
     std::string name;
-    unsigned int maxDepth, parentDepth;
+    int maxDepth, parentDepth;
     ar >> name >> maxDepth >> parentDepth;
     branches.emplace_back(name, maxDepth, nullptr, parentDepth, you, id);
   }
 
   for (Branch &b : branches) {
-    //read in the parent branch name:
+    //read in the parent branch's name:
     std::string parentName;
     ar >> parentName;
-    //find the first branch with the name referred to
+    //find the first branch with that name
     auto parentIterator = std::find_if(branches.begin(),
                                        branches.end(),
                                        [&parentName](const Branch &b) {
@@ -102,6 +105,16 @@ Game::Game(unsigned int idIn) :
       b.setParentBranch(&*parentIterator);
     }
   }
+
+  //then read in the name of the player's branch and put them back in it:
+  std::string branchName;
+  ar >> branchName;
+  auto branchIterator = std::find_if(branches.begin(),
+                                           branches.end(),
+                                           [&branchName](const Branch &b) {
+                                             return b.getName() == branchName;
+                                           });
+  you.setBranch(&*branchIterator);
 }
 
 void Game::end() {
@@ -109,6 +122,8 @@ void Game::end() {
     b.deleteMapFiles();
   }
   remove(getPath().c_str());
+  
+  exit(0);
 }
 
 std::string Game::getPath() const {
@@ -203,3 +218,18 @@ bool Game::getLongPrompt() {
 
   return false;
 }
+
+bool Game::existsID(unsigned int id) {
+  std::ifstream stream("saves/" + std::to_string(id) + "Game");
+  return stream;
+}
+
+unsigned int Game::findUnusedID() {
+  for (unsigned int i = 0; i < ARBITRARY_SAVED_GAMES_LIMIT; i++) {
+    if (!existsID(i)) {
+      return i;
+    }
+  }
+  return 0;
+}
+

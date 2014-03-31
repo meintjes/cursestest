@@ -9,7 +9,7 @@
 
 void Space::serialize(Archive &ar) {
   ar & discovered;
-  ar & lit;
+  ar & litDuration;
   ar & gasDuration;
   ar & bombDuration;
 
@@ -28,7 +28,7 @@ void Space::serialize(Archive &ar) {
 
 Space::Space() :
   discovered(false),
-  lit(false),
+  litDuration(0),
   type(Wall),
   gasDuration(0),
   bombDuration(0),
@@ -128,15 +128,15 @@ void Space::explode(Map &map, int x, int y) {
   damage(3, map, x, y);
 }
 
-void Space::light(int turns) {
-  if (turns + 1 > lit) {
-    lit = turns + 1;
+void Space::light(unsigned int turns) {
+  if (turns + 1 > litDuration) {
+    litDuration = turns + 1;
   }
 }
 
 bool Space::tick(Map &map, int x, int y) {
-  if (lit > 0) {
-    lit--;
+  if (litDuration > 0) {
+    litDuration--;
   }
   if (gasDuration > 0) {
     gasDuration--;
@@ -261,7 +261,7 @@ bool Space::hasItem() const {
 }
 
 bool Space::isLit() const {
-  return lit;
+  return (litDuration > 0);
 }
 
 void Space::renewMemory(Point playerPosition) {

@@ -49,18 +49,33 @@ int main() {
     );
   }
   controlsMenuOptions.emplace_back(Red("Reset all controls"), resetControls);
-  Menu ControlsMenu(controlsMenuOptions);
-  
+  Menu controlsMenu(controlsMenuOptions);
+
+  //generate the "load game" menu
+  std::vector<Option> loadGameMenuOptions;
+  for (unsigned int i = 0; i < ARBITRARY_SAVED_GAMES_LIMIT; i++) {
+    if (Game::existsID(i)) {
+      loadGameMenuOptions.emplace_back("Game #" + std::to_string(i),
+                                      [i]() {
+                                        Game game(i);
+                                        game.play();
+                                      });
+    }
+  }
+  Menu loadGameMenu(loadGameMenuOptions);
+
   //generate and execute the main menu
-  Menu MainMenu({
-    {"Play game", [](){
-                    Game game; game.play();
-                  }
+  Menu mainMenu({
+    {"Start new game", []() {
+                         Game game;
+                         game.play();
+                       }
     },
-    {"Change controls", ControlsMenu},
-    {"Quit", std::bind(&Menu::close, &MainMenu)}
+    {"Load game", loadGameMenu},
+    {"Change controls", controlsMenu},
+    {"Quit", std::bind(&Menu::close, &mainMenu)}
   });
-  MainMenu();
+  mainMenu();
  
 
   return 0;

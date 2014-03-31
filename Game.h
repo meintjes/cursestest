@@ -11,9 +11,17 @@
 //whole, managing the relationship between the player and the branches and such
 //in a less-insane way than trying to do it all in playGame
 
+const unsigned int ARBITRARY_SAVED_GAMES_LIMIT = 100;
+
 class Game {
  public:
-  //construct a new game, numbered sequentially
+  //check whether the given ID is currently in use by a saved game.
+  static bool existsID(unsigned int id);
+
+  //find the lowest ID not currently in use by any saved game.
+  static unsigned int findUnusedID();
+
+  //construct a new game with an id that doesn't collide with any saves
   Game();
 
   //construct a game by loading the game with the given id
@@ -30,8 +38,13 @@ class Game {
 
  private:
   std::string getPath() const;
-  
+
+  //get a single key of input from a player, interpret the key according to
+  //the provided cmap, execute the command and return whether it took a turn 
   bool getInput(const CommandMap cmap);
+
+  //prompt for and interpret multi-character commands. like getInput, returns
+  //whether the given command took a turn or not
   bool getLongPrompt();
 
   unsigned int id;

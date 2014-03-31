@@ -112,7 +112,10 @@ class Player {
   //sets the duration of the player's torch to num turns, overwriting the
   //previous value.
   void setTorchDuration(int num);
- 
+
+  //get the current branch's address
+  Branch* getBranch() const;
+
   //sets the player's current dungeon branch to the given branch.
   void setBranch(Branch *branch);
 

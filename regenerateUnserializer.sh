@@ -24,7 +24,7 @@ BEGIN {
 END {
     print "  CREATE_NONE_CASE"
     print "  default:"
-    print "    throw new std::runtime_error(\"Invalid serialization tag: \" + tag);"
+    print "    throw std::runtime_error(\"Invalid serialization tag: \" + tag);"
     print "    return nullptr;"
     print "  }"
     print "}"

@@ -12,6 +12,10 @@ Menu::Menu(std::vector<Option> optionsIn) :
 {}
 
 void Menu::operator()() {
+  if (options.size() == 0) {
+    return;
+  }
+
   isDone = false;
   do {
     displayMenu();

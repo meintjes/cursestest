@@ -79,7 +79,7 @@ class Space {
 
   //lights the space for n turns (if called during the update loop; otherwise,
   //lights for n + 1 turns).
-  void light(int turns);
+  void light(unsigned int turns);
 
   //updates the space and any enemies on it. returns true if a bomb went off.
   bool tick(Map &map, int x, int y);
@@ -108,7 +108,7 @@ class Space {
 
  private:
   mutable bool discovered;
-  int lit;
+  unsigned int litDuration;
   Space::Type type;
   unsigned int gasDuration;
   unsigned int bombDuration;

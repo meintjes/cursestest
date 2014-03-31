@@ -98,6 +98,7 @@ Player::Player() :
   mode(Mode::Move),
   modeItemIterator(inventory.end()),
   lastMoveDirection({0, 0}),
+  movedLastTurn(false),
   damageTimer(0),
 
   currentBranch(nullptr),
@@ -525,6 +526,10 @@ void Player::stopTime(int num) {
 
 void Player::setTorchDuration(int num) {
   torchDuration = num;
+}
+  
+Branch* Player::getBranch() const {
+  return currentBranch;
 }
 
 void Player::setBranch(Branch *branch) {
