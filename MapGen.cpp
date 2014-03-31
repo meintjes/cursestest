@@ -17,9 +17,8 @@ Map::Map(Player &player, int depth) :
   }
 
   (*this)(playerX, playerY).setType(Space::StairsUp);
-  if (depth == 0) {
-    sanitizeEntry();
-  }
+
+  sanitizeEntry(depth == 0 ? 6 : 0);
 }
 
 void Map::drawLine(Point a, const Point b, Space::Type type) {
@@ -110,9 +109,9 @@ void Map::generateBoxes(int depth) {
   }
 }
 
-void Map::sanitizeEntry() {
-  for (int x = playerX - 3; x <= playerX + 3; x++) {
-    for (int y = playerY - 3; y <= playerY + 3; y++) {
+void Map::sanitizeEntry(int radius) {
+  for (int x = playerX - radius; x <= playerX + radius; x++) {
+    for (int y = playerY - radius; y <= playerY + radius; y++) {
       if (isValidX(x) && isValidY(y)) {
 	(*this)(x, y).removeEnemy();
       }

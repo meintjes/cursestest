@@ -23,7 +23,9 @@ class Map {
   void drawBox(Point a, Point b, Space::Type type);
   void generateRoom(Point center, int maxRadius);
   void generateBoxes(int depth);
-  void sanitizeEntry(); //removes enemies within 2 spaces of player
+
+  //removes enemies within (radius) spaces of player
+  void sanitizeEntry(int radius);
 
   //defined in Map.cpp
  public:
