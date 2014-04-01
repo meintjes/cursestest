@@ -10,7 +10,7 @@
 Game::Game() :
   id(findUnusedID()),
   branches({
-      {"Dungeon", 12, nullptr, 0, you, id}
+      {"Dungeon", 12, 0, nullptr, 0, you, id}
   })
 {
   you.setBranch(&branches.front());
@@ -56,6 +56,7 @@ void Game::save() {
       b.emptyCache(); //(make sure the most recently accessed map is saved too)
       ar << b.getName();
       ar << b.getMaxDepth();
+      ar << b.getDepthOffset();
       ar << b.getParentDepth();
     }
 
@@ -87,9 +88,9 @@ Game::Game(unsigned int idIn) :
   ar >> size;
   for (int i = 0; i < size; i++) {
     std::string name;
-    int maxDepth, parentDepth;
-    ar >> name >> maxDepth >> parentDepth;
-    branches.emplace_back(name, maxDepth, nullptr, parentDepth, you, id);
+    int maxDepth, depthOffset, parentDepth;
+    ar >> name >> maxDepth >> depthOffset >> parentDepth;
+    branches.emplace_back(name, maxDepth, depthOffset, nullptr, parentDepth, you, id);
   }
 
   for (Branch &b : branches) {

@@ -8,6 +8,7 @@
 Branch::Branch(const Branch &other) :
   id(other.id),
   name(other.name),
+  depthOffset(other.depthOffset),
   cachedDepth(-1),
   cachedMap(nullptr),
   maxDepth(other.maxDepth),
@@ -16,11 +17,12 @@ Branch::Branch(const Branch &other) :
   you(other.you)
 {}
 
-Branch::Branch(std::string nameIn, int maxDepthIn,
+Branch::Branch(std::string nameIn, int maxDepthIn, int depthOffsetIn,
        Branch *parentBranchIn, int parentDepthIn,
        Player &youIn, unsigned int idIn) :
   id(idIn),
   name(nameIn),
+  depthOffset(depthOffsetIn),
   cachedDepth(-1),
   cachedMap(nullptr),
   maxDepth(maxDepthIn),
@@ -42,15 +44,11 @@ Map& Branch::getMap(int mapDepth) {
       cachedMap->serialize(ar);
     }
     else { //if there's no file, just make a new map
-      cachedMap.reset(new Map(you, mapDepth));
+      cachedMap.reset(new Map(you, depthOffset + mapDepth));
     }
     cachedDepth = mapDepth;
   }
  
-  if (!cachedMap) {
-    cachedMap.reset(new Map(you, 0));
-  }
-
   return *cachedMap;
 }
 
@@ -69,6 +67,10 @@ std::string Branch::getName() const {
 
 int Branch::getMaxDepth() const {
   return maxDepth;
+}
+
+int Branch::getDepthOffset() const {
+  return depthOffset;
 }
 
 void Branch::setParentBranch(Branch *parent) {

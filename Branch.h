@@ -7,13 +7,15 @@
 class Archive;
 class Map;
 
+//a Branch holds 
+
 class Branch {
  public:
   //copy constructor so that vector<Branch> works. performs a shallow copy,
   //because you don't actually want to make a second Player or anything
   Branch(const Branch &other); 
 
-  Branch(std::string nameIn, int maxDepthIn,
+  Branch(std::string nameIn, int maxDepthIn, int depthOffsetIn,
          Branch *parentBranchIn, int parentDepthIn,
          Player &youIn, unsigned int idIn);
 
@@ -22,6 +24,9 @@ class Branch {
 
   //get the maximum number of maps within the branch
   int getMaxDepth() const;
+
+  //get the depth offset, i.e. the depth of the first level in the branch
+  int getDepthOffset() const;
 
   //set the parent branch to the pointed-to branch
   void setParentBranch(Branch *parent);
@@ -53,6 +58,7 @@ class Branch {
  private:
   unsigned int id;
   std::string name;
+  int depthOffset;
 
   //returns a file path for saving/loading the map with the given depth
   std::string getPathFor(int depth);
