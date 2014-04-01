@@ -16,7 +16,6 @@ Enemy* getEnemyPointerFromArchive(Archive &ar);
 
 class Enemy {
  public:
-
   //generated automatically by macros. don't manually override.
   virtual std::string getSerializationTag() const = 0;
 
@@ -31,16 +30,34 @@ class Enemy {
   //returns the glyph for the class. must override.
   virtual Cch getGlyph() const = 0;
 
-  //returns the maximum distance at which the enemy will attack the player
-  //rather than move toward them. default value is 1, usually don't override
-  virtual int getRange() const;
-
   //what happens when the enemy attacks. default behavior damages the player
   //by 1. probably should override.
   virtual void attack(Map &map, int x, int y);
 
-  //subtracts hp from the enemy. you usually won't want to override this.
+  //returns the maximum distance at which the enemy will attack the player
+  //rather than move toward them. default value is 1, usually don't override.
+  //if more complicated behavior is necessary, override act() instead
+  virtual int getRange() const;
+
+  //returns the amount of time it takes the enemy to move/attack. default for
+  //both is 8.
+  virtual unsigned int getMoveTime() const;
+  virtual unsigned int getAttackTime() const;
+
+  //subtracts num hp from the enemy, then kills it if its hp is at most 0
   virtual void damage(int num, Map &map, int x, int y);
+  
+  //decrements timers for various durations. can be overridden for various
+  //other reasons, but should call the base class version so that stunning
+  //doesn't permanently incapacitate the enemy or anything like that.
+  virtual void tick(unsigned int duration, Map &map, int x, int y);
+
+  //AI figures out whether to move, attack, whatever. the base version checks
+  //getRange() against the distance to the player, calls attack() if close
+  //enough, and moves otherwise. simple enemies can probably get by just by
+  //overriding those functions instead.
+  //returns true if the enemy did something, false if it didn't.
+  virtual bool act(Map &map, int x, int y);
   
   virtual ~Enemy();
 
@@ -48,12 +65,8 @@ class Enemy {
   bool hasMemory() const;
   Point getMemory() const;
   bool isStunned() const;
-  void stun(unsigned int turns);
-
-  //decrements timers for various durations. can be overridden for various
-  //other reasons, but should call the base class version so that stunning
-  //doesn't permanently incapacitate the enemy or anything like that.
-  virtual void tick(Map &map, int x, int y);
+  void stun(unsigned int duration);
+  void addTimeToAct(unsigned int duration);
 
  protected:
   //what happens when the enemy dies. default behavior just removes it from
@@ -62,6 +75,7 @@ class Enemy {
   int hp;
 
  private:
+  unsigned int timeToAct;
   int memoryDuration;
   Point memoryLocation;
   int stunDuration;

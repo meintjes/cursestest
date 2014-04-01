@@ -43,10 +43,9 @@ class Space {
   //supposed to be called when the enemy dies; it just stops existing.
   void removeEnemy();
 
-  //if there is an enemy, has that enemy attack the player. doesn't check
-  //the range or anything; you should do that. the x and y are the coordinates
-  //of THIS space, and the map is the map this space is on.
-  void attack(Map &map, int x, int y);
+  //calls the enemy's act function until it doesn't have the time to act
+  //anymore. if the enemy moves, calls its act function with the new space.
+  bool act(Map &map, int x, int y);
 
   //damages the enemy on this space. doesn't remove it if it dies; that's
   //the enemy's responsibility.
@@ -62,9 +61,8 @@ class Space {
   //returns the location the enemy remembers the player being at.
   Point getMemory() const;
 
-  int getRange() const; //returns the enemy's range.
   bool isStunned() const; //returns whether the enemy is stunned.
-  void stun(unsigned int turns); //stuns the enemy.
+  void stun(unsigned int duration); //prevents the enemy from acting
 
   //adds poisonous gas to the space for the given duration.
   void addGas(unsigned int duration);
@@ -77,15 +75,11 @@ class Space {
   //type is destructible, replaces it with floor.
   void explode(Map &map, int x, int y);
 
-  //lights the space for n turns (if called during the update loop; otherwise,
-  //lights for n + 1 turns).
-  void light(unsigned int turns);
-
   //updates the space and any enemies on it. returns true if a bomb went off.
-  bool tick(Map &map, int x, int y);
+  bool tick(unsigned int duration, Map &map, int x, int y);
 
-  //called during free turns. doesn't update anything but lighting.
-  void freeTick();
+  //if the space has an enemy, gives it (duration) time to act
+  void addTimeToAct(unsigned int duration);
 
   //figures out and returns what glyph to display for the space, based on a
   //number of factors (type, visibility, enemy, item, etc.).
@@ -104,17 +98,15 @@ class Space {
   bool hasEnemy() const;
   bool hasGas() const;
   bool hasItem() const;
-  bool isLit() const;
 
   //returns true if the space's type is the same as the given type.
   bool typeIs(Space::Type typeIn) const;
 
  private:
   mutable bool discovered;
-  unsigned int litDuration;
   Space::Type type;
-  unsigned int gasDuration;
-  unsigned int bombDuration;
+  int gasDuration;
+  int bombDuration;
   std::unique_ptr<Enemy> enemy;
   std::unique_ptr<SimpleItem> item;
 };

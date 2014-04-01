@@ -105,7 +105,7 @@ const Color& Bomb::color() const {
 
 
 Item::UseResult Torch::use(Map &map) {
-  map.you.setTorchDuration(randRange(125, 175));
+  map.you.setTorchDuration(randRange(1000, 1400));
   return Item::Destroy;
 }
 

@@ -46,7 +46,7 @@ const Color& HealingOrb::color() const {
 
 
 bool TimeStopper::evoke(Map &map) {
-  map.you.stopTime(randRange(4, 6));
+  map.you.stopTime(randRange(32, 42));
   damage(50);
   return true;
 }

@@ -22,7 +22,7 @@ Cst.o: Cst.cpp
 Cch.o: Cch.cpp
 	$(GXX) $(GXX_FLAGS) Cch.cpp
 
-Space.o: Space.cpp Enemy.o generation.o
+Space.o: Space.cpp Enemy.o generation.o functions.o
 	$(GXX) $(GXX_FLAGS) Space.cpp
 
 Enemy.o: Enemy.cpp Point.o Map.o functions.o generation.o Player.o Archive.o

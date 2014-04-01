@@ -19,7 +19,6 @@ void Player::serialize(Archive &ar) {
   ar & hp;
   ar & staminaMax;
   ar & stamina;
-  ar & timeSpentRunning;
   ar & lastMoveDirection.x;
   ar & lastMoveDirection.y;
   ar & movedLastTurn;
@@ -98,7 +97,6 @@ Player::Player() :
   stamina(staminaMax),
   mode(Mode::Move),
   modeItemIterator(inventory.end()),
-  timeSpentRunning(0),
   lastMoveDirection({0, 0}),
   movedLastTurn(false),
   damageTimer(0),
@@ -172,12 +170,8 @@ void Player::display() const {
   addcs(50, 23, Brown(std::to_string(ore) + " x Ore"));
 }
 
-bool Player::tick() {
-  Map &map = getCurrentFloor();
-  map.lightArea(map.getPlayerX(),
-                map.getPlayerY(),
-                torchDuration > 0 ? 6 : 3,
-                1);
+unsigned int Player::tick() {
+  unsigned int time = 8;
 
   if (movedLastTurn) {
     movedLastTurn = false;
@@ -186,45 +180,44 @@ bool Player::tick() {
     lastMoveDirection = {0, 0};
   }
 
-  if (damageTimer > 0) {
-    damageTimer--;
-  }
-  
-  if (torchDuration > 0) {
-    torchDuration--;
-  }
-
   if (mode == Mode::Run) {
     if (lastMoveDirection == Point(0, 0)) {
       toggleRun();
     }
     else {
-      timeSpentRunning++;
-      if (timeSpentRunning % 2 == 0) {
-        freeMovesDuration++;
-      }
-
+      time /= 2;
       if (--stamina <= 0) {
         toggleRun();
       }
     }
   }
 
+  //decrement durations of effects not affecting time below this line
+
+  decrementDuration(damageTimer, time);
+  decrementDuration(torchDuration, time);
+
+  //and above this line
+
+  if (speedDuration > 0) {
+    decrementDuration(speedDuration, time);
+    time /= 2;
+  }
+
   if (freeMovesDuration > 0) {
-    freeMovesDuration--;
-    return false;
+    decrementDuration(freeMovesDuration, time);
+    time = 0;
   }
-  else {
-    if (speedDuration > 0) {
-      freeMovesDuration++;
-      speedDuration--;
-    }
-    return true;
-  }
+
+  return time;
 }
 
 int Player::getHp() const {
   return hp;
+}
+
+int Player::getLOS() const {
+  return (torchDuration > 0) ? 6 : 3;
 }
 
 Map& Player::getCurrentFloor() const {
@@ -312,7 +305,6 @@ void Player::toggleRun() {
   }
   else if (mode == Mode::Run) {
     mode = Mode::Move;
-    timeSpentRunning = 0;
   }
 }
 
@@ -355,7 +347,7 @@ void Player::setArtifact(Artifact * const artifact) {
 
 void Player::damage(unsigned int num) {
   hp -= num;
-  damageTimer = 3;
+  damageTimer = 24;
   if (!staminaIsHigh()) {
     currentHpMax -= num;
   }
@@ -372,7 +364,12 @@ bool Player::heal(unsigned int num) {
 }
 
 bool Player::weakHeal(unsigned int num) {
-  return restoreAttribute(hp, currentHpMax, num);
+  if (!damageTimer) {
+    return restoreAttribute(hp, currentHpMax, num);
+  }
+  else {
+    return false;
+  }
 }
 
 bool Player::removeStamina(int num) {

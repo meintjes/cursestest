@@ -46,7 +46,7 @@ class Map {
   void lightArea(int x, int y, int radius, int turns);
 
   //causes the enemy at the given coordinates to attempt to move toward the
-  //player (or the last place it saw the player). 
+  //player (or the last place it saw the player).
   void moveEnemy(int x, int y);
 
   //get a reference (or const reference) to the space located at coords x, y.
@@ -68,6 +68,9 @@ class Map {
  
   //causes every space within radius spaces of (x, y) to explode
   void explodeArea(int x, int y, int radius);
+  
+  //returns the distance from the player to the given coordinates
+  int distance(int x1, int y1) const;
 
  private:
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
@@ -78,14 +81,9 @@ class Map {
 
   std::vector<Point> toExplode;
   void executeToExplode();
-  std::vector<Point> toAttack;
-  void executeToAttack();
-  std::vector<Point> toMove;
-  void executeToMove();
+  std::vector<Point> toAct;
+  void executeToAct();
   
-  //returns the distance from the player to the given coordinates
-  int distance(int x1, int y1) const;
-
   //an approximate count of the number of enemies on the map (one turn ago).
   //don't use for anything serious, just as an approximation.
   int enemyCount;

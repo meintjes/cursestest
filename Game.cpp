@@ -14,7 +14,6 @@ Game::Game() :
   })
 {
   you.setBranch(&branches.front());
-  you.getCurrentFloor().tick();
 }
 
 void Game::play() {

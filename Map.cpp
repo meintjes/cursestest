@@ -32,7 +32,7 @@ void Map::serialize(Archive &ar) {
 void Map::display() const {
   for (int y = 0; y <= MAPHEIGHT + 1; y++) {
     for (int x = 0; x <= MAPWIDTH + 1; x++) {
-      if (isVisible(x, y)) {
+      if (isVisible(x, y) && distance(x, y) <= you.getLOS()) {
 	if (x == playerX && y == playerY) {
 	  addc(x, y, you.getGlyph());
 	}
@@ -135,7 +135,7 @@ bool Map::throwHook(int dx, int dy) {
     //if the hook hits an enemy, pull the enemy toward the player and stop
     else if ((*this)(x, y).hasEnemy()) {
       if (i > 0) { //don't stun enemies that are standing directly next to you
-        (*this)(x, y).stun(3);
+        (*this)(x, y).stun(24);
         (*this)(x, y).moveEnemy(&(*this)(playerX + dx, playerY + dy));
       }
       
@@ -156,16 +156,6 @@ bool Map::throwHook(int dx, int dy) {
   //if the hook never hits anything, don't destroy it, just put it away
   you.setMode(Player::Mode::Move);
   return true;
-}
-
-void Map::lightArea(int x, int y, int radius, int turns) {
-  for (int x2 = x - radius; x2 <= x + radius; x2++) {
-    for (int y2 = y - radius; y2 <= y + radius; y2++) {
-      if (isValidX(x2) && isValidY(y2)) {
-        (*this)(x2, y2).light(turns);
-      }
-    }
-  }
 }
 
 void Map::moveEnemy(int x, int y) {
@@ -204,14 +194,9 @@ Space& Map::operator()(int x, int y) {
 }
 
 void Map::tick() {
-  if (!you.tick()) { //don't update game state for free moves
-    for (int x = 0; x <= MAPWIDTH + 1; x++) {
-      for (int y = 0; y <= MAPHEIGHT + 1; y++) {
-        (*this)(x, y).freeTick();
-      }
-    }
-    return;
-  }
+  unsigned int timePassed = you.tick();
+
+  assert(toAct.empty());
 
   bool damagedByGas = false;
   if ((*this)(playerX, playerY).hasGas()) {
@@ -223,45 +208,37 @@ void Map::tick() {
   for (int x = 0; x <= MAPWIDTH + 1; x++) {
     for (int y = 0; y <= MAPHEIGHT + 1; y++) {
       //decrement durations of stuff on the space
-      if ((*this)(x, y).tick(*this, x, y)) {
+      if ((*this)(x, y).tick(timePassed, *this, x, y)) {
 	explodeArea(x, y, 1); //if a bomb went off
       }
 
-      if ((*this)(x, y).hasEnemy()) {
-        if (!(*this)(x, y).isStunned()) {
-          //enemies within range attack the player
-          if (isVisible(x, y) && (*this)(x, y).getRange() >= distance(x, y)) {
-            (*this)(x, y).renewMemory({playerX, playerY});
-            toAttack.emplace_back(x, y);
-          }
-          //enemies outside range of the player try to move toward him
-          else if (isVisible(x, y) && distance(x, y) < 7) {
-            (*this)(x, y).renewMemory({playerX, playerY});
-            toMove.emplace_back(x, y);
-          }
-          else if ((*this)(x, y).hasMemory()) {
-            toMove.emplace_back(x, y);
-          }
+      if ((*this)(x, y).hasEnemy()) { 
+        ++newEnemyCount;
+
+        if (isVisible(x, y) && distance(x, y) <= 7) {
+          (*this)(x, y).renewMemory({playerX, playerY});
         }
-        //even if the enemy is stunned, count it
-        newEnemyCount++;
+
+        if (!(*this)(x, y).isStunned() && (*this)(x, y).hasMemory()) {
+          (*this)(x, y).addTimeToAct(timePassed);
+          toAct.emplace_back(x, y);
+        }
       }
+
       //random enemy generation. slows down the more enemies there are
       else if (!randTo(16 * (enemyCount * enemyCount + 16)) &&
-               !(*this)(x, y).isLit() &&
+               !isVisible(x, y) && distance(x, y) > you.getLOS() &&
                (*this)(x, y).isPassable() &&
                !(*this)(x, y).hasEnemy()) {
         (*this)(x, y).setEnemy(getRandomEnemy());
-        newEnemyCount++;
+        ++newEnemyCount;
       }
     }
   }
 
   enemyCount = newEnemyCount;
 
-  executeToMove();
-  executeToExplode();
-  executeToAttack();
+  executeToAct();
 
   //kludge to handle gas clouds appearing as part of an attack
   if ((*this)(playerX, playerY).hasGas() && !damagedByGas) {
@@ -280,10 +257,6 @@ bool Map::isValidY(int y) {
 }
 
 bool Map::isVisible(int x, int y) const {
-  if (!(*this)(x, y).isLit()) {
-    return false;
-  }
-
   //extra-permissive; checks if the space has LOS to you, OR if the space
   //one closer to you in each direction has LOS to you. this makes corridors
   //behave significantly nicer.
@@ -336,7 +309,7 @@ void Map::explodeArea(int x, int y, int radius) {
 void Map::executeToExplode() {
   if (toExplode.size()) {
     display();
-    for ( auto &point : toExplode ) {
+    for (Point &point : toExplode) {
       (*this)(point.x, point.y).explode(*this, point.x, point.y);
       addc(point.x, point.y, Red('#'));
     }
@@ -346,25 +319,16 @@ void Map::executeToExplode() {
   }
 }
 
-void Map::executeToAttack() {
-  for ( auto &point : toAttack ) {
-    (*this)(point.x, point.y).attack(*this, point.x, point.y);
+void Map::executeToAct() {
+  //closest to player act first, to reduce collisions while moving, etc.
+  std::sort(toAct.begin(), toAct.end(),
+            [&](Point a, Point b) {
+              return (distance(a.x, a.y) < distance(b.x, b.y));
+            });
+  for (Point &point : toAct) {
+    while ((*this)(point.x, point.y).act(*this, point.x, point.y));
   }
-  toAttack.clear();
-}
-
-void Map::executeToMove() {
-  //closest to player move first, to reduce collisions
-  std::sort(toMove.begin(), toMove.end(),
-	    [&](Point lhs, Point rhs) {
-	      return (distance(lhs.x, lhs.y)
-		      < distance(rhs.x, rhs.y));
-	    }
-	    );
-  for ( auto &point : toMove ) {
-    moveEnemy(point.x, point.y);
-  }
-  toMove.clear();
+  toAct.clear();
 }
 
 int Map::distance(int x1, int y1) const {

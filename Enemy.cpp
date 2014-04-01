@@ -9,8 +9,11 @@
 #include <stdexcept>
 #include <string>
 
+class Space;
+
 void Enemy::serialize(Archive &ar) {
   ar & hp;
+  ar & timeToAct;
   ar & memoryDuration;
   ar & memoryLocation.x;
   ar & memoryLocation.y;
@@ -26,10 +29,33 @@ void Exploder::serialize(Archive &ar) {
 
 Enemy::Enemy(int hpIn) :
   hp(hpIn),
+  timeToAct(0),
   memoryDuration(0),
   memoryLocation({0, 0}),
   stunDuration(0)
 {}
+
+bool Enemy::act(Map &map, int x, int y) {
+  if (timeToAct >= getMoveTime() && map.distance(x, y) > getRange()) {
+    timeToAct -= getMoveTime();
+    map.moveEnemy(x, y);
+    return true;
+  }
+  else if (timeToAct >= getAttackTime()) {
+    timeToAct -= getAttackTime();
+    attack(map, x, y);
+    return true;
+  }
+  return false;
+}
+
+unsigned int Enemy::getMoveTime() const {
+  return 8;
+}
+
+unsigned int Enemy::getAttackTime() const {
+  return 8;
+}
 
 int Enemy::getRange() const {
   return 1;
@@ -71,20 +97,20 @@ bool Enemy::isStunned() const {
   return (stunDuration > 0);
 }
 
-void Enemy::stun(unsigned int turns) {
+void Enemy::stun(unsigned int duration) {
   if (stunDuration <= 0) {
     stunDuration++;
   }
-  stunDuration += turns;
+  stunDuration += duration;
 }
 
-void Enemy::tick(Map &map, int x, int y) {
-  if (memoryDuration > 0) {
-    memoryDuration--;
-  }
-  if (stunDuration > 0) {
-    stunDuration--;
-  }
+void Enemy::tick(unsigned int duration, Map &map, int x, int y) {
+  decrementDuration(memoryDuration, duration);
+  decrementDuration(stunDuration, duration);
+}
+
+void Enemy::addTimeToAct(unsigned int duration) {
+  timeToAct += duration;
 }
 
 
@@ -142,7 +168,7 @@ void Exploder::die(Map &map, int x, int y) {
   Point p = {x, y};
   for (int x = p.x - 1; x <= p.x + 1; x++) {
     for (int y = p.y - 1; y <= p.y + 1; y++) {
-      map(x, y).addGas(4);
+      map(x, y).addGas(32);
     }
   }
   map(x, y).removeEnemy();

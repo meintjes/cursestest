@@ -5,11 +5,11 @@
 #include "Enemy.h"
 #include "Cch.h"
 #include "Color.h"
+#include "functions.h"
 #include <cassert>
 
 void Space::serialize(Archive &ar) {
   ar & discovered;
-  ar & litDuration;
   ar & gasDuration;
   ar & bombDuration;
 
@@ -28,7 +28,6 @@ void Space::serialize(Archive &ar) {
 
 Space::Space() :
   discovered(false),
-  litDuration(0),
   type(Wall),
   gasDuration(0),
   bombDuration(0),
@@ -76,9 +75,12 @@ void Space::removeEnemy() {
   enemy = nullptr;
 }
 
-void Space::attack(Map &map, int x, int y) {
+bool Space::act(Map &map, int x, int y) {
   if (enemy) {
-    enemy->attack(map, x, y);
+    return enemy->act(map, x, y);
+  }
+  else {
+    return false;
   }
 }
 
@@ -96,7 +98,7 @@ void Space::addGas(unsigned int duration) {
 
 bool Space::dropBomb() {
   if (bombDuration <= 0) {
-    bombDuration = 4;
+    bombDuration = 32;
     return true;
   }
   else {
@@ -128,23 +130,15 @@ void Space::explode(Map &map, int x, int y) {
   damage(3, map, x, y);
 }
 
-void Space::light(unsigned int turns) {
-  if (turns + 1 > litDuration) {
-    litDuration = turns + 1;
-  }
-}
-
-bool Space::tick(Map &map, int x, int y) {
-  freeTick();
+bool Space::tick(unsigned int duration, Map &map, int x, int y) {
+  decrementDuration(gasDuration, duration);
   
-  if (gasDuration > 0) {
-    gasDuration--;
-  }
   if (enemy) {
-    enemy->tick(map, x, y);
+    enemy->tick(duration, map, x, y);
   }
+
   if (bombDuration > 0) {
-    bombDuration--;
+    decrementDuration(bombDuration, duration);
     if (bombDuration == 0) {
       return true;
     }
@@ -152,9 +146,9 @@ bool Space::tick(Map &map, int x, int y) {
   return false;
 }
 
-void Space::freeTick() {
-  if (litDuration > 0) {
-    litDuration--;
+void Space::addTimeToAct(unsigned int duration) {
+  if (enemy) {
+    enemy->addTimeToAct(duration);
   }
 }
 
@@ -184,7 +178,7 @@ Cch Space::getGlyph(bool isVisible) const {
   }
   
   if (gasDuration > 0) {
-    if (gasDuration > 1) {
+    if (gasDuration > 8) {
       return LightGreen('*');
     }
     else {
@@ -197,7 +191,7 @@ Cch Space::getGlyph(bool isVisible) const {
   }
 
   if (bombDuration > 0) {
-    if (bombDuration > 1) {
+    if (bombDuration > 8) {
       return Orange('*');
     }
     else {
@@ -265,10 +259,6 @@ bool Space::hasItem() const {
   return (item != nullptr);
 }
 
-bool Space::isLit() const {
-  return (litDuration > 0);
-}
-
 void Space::renewMemory(Point playerPosition) {
   assert(enemy);
   enemy->renewMemory(playerPosition);
@@ -284,20 +274,13 @@ Point Space::getMemory() const {
   return enemy->getMemory();
 }
 
-int Space::getRange() const {
-  if (enemy) {
-    return enemy->getRange();
-  }
-  else return 0;
-}
-
 bool Space::isStunned() const {
   return (enemy && enemy->isStunned() > 0);
 }
 
-void Space::stun(unsigned int turns) {
+void Space::stun(unsigned int duration) {
   if (enemy) {
-    enemy->stun(turns);
+    enemy->stun(duration);
   }
 }
 

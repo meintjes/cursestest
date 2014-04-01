@@ -31,14 +31,18 @@ class Player {
   //display hud, including the health/stamina bars and the bottom pane
   void display() const;
 
-  //update effect durations, etc. when time passes. returns true if time
-  //should pass (the player has a free turn), and false if it shouldn't.
-  bool tick();
+  //update effect durations, etc. when time passes. returns a value
+  //corresponding to how much time should pass: 8 is the norm, lower numbers
+  //are 'faster' actions, and higher numbers are 'slower' actions
+  unsigned int tick();
 
   //formats the player's hard drive and frames them for murder
   int getHp() const;
 
-  //returns a reference to the player's current floor.
+  //returns the current max extent of the player's line of sight
+  int getLOS() const;
+
+  //returns a reference to the player's current floor
   Map& getCurrentFloor() const;
 
   //figures out and returns the player's glyph, based on current mode
@@ -85,7 +89,8 @@ class Player {
   bool heal(unsigned int num);
   bool restoreStamina(int num);
 
-  //like heal, but only restores up to the current maximum
+  //like heal, but only restores up to the current maximum and only if
+  //the player hasn't taken damage recently
   bool weakHeal(unsigned int num);
 
   //deducts num stamina from the player. if the player doesn't have num
@@ -146,7 +151,6 @@ class Player {
   //adds an item with no bounds checking
   void addItemUnsafe(Item * const item);
 
-  void lightNearbySpaces();
   bool restoreAttribute(int &att, int &attMax, int num);
 
   std::list<std::unique_ptr<Item> > inventory;
@@ -162,7 +166,6 @@ class Player {
   std::unique_ptr<Artifact> currentArtifact;
   Mode mode;
   std::list<std::unique_ptr<Item> >::iterator modeItemIterator;
-  int timeSpentRunning;
   Point lastMoveDirection;
   bool movedLastTurn; //don't use this, it's set false every turn by tick().
                       //instead compare lastMoveDirection to {0, 0}

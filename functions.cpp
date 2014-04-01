@@ -15,3 +15,12 @@ int randRange(int min, int max) {
     return min + randTo(max - min);
   }
 }
+
+int& decrementDuration(int &dur, unsigned int num) {
+  dur -= num;
+  if (dur < 0) {
+    dur = 0;
+  }
+  return dur;
+}
+
