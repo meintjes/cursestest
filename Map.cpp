@@ -136,7 +136,7 @@ bool Map::throwHook(int dx, int dy) {
     else if ((*this)(x, y).hasEnemy()) {
       if (i > 0) { //don't stun enemies that are standing directly next to you
         (*this)(x, y).stun(24);
-        (*this)(x, y).moveEnemy(&(*this)(playerX + dx, playerY + dy));
+        (*this)(x, y).moveEnemy((*this)(playerX + dx, playerY + dy));
       }
       
       you.destroyModeItem();
@@ -158,27 +158,28 @@ bool Map::throwHook(int dx, int dy) {
   return true;
 }
 
-void Map::moveEnemy(int x, int y) {
-  //try to move in diagonal direction
+void Map::findPathAndMove(int x, int y) {
   Point target = (*this)(x, y).getMemory();
-  Space *dest = &(*this)(x + sgn(target.x - x), y + sgn(target.y - y));
-  if (!(*this)(x, y).moveEnemy(dest)) {
-    //if it fails, try to move in only one direction
-    //note: where dx == dy, moves in y direction first.
-    //this is probably not as good as randomizing it
-    if (abs(target.x - x) > abs(target.y - y)) { //move in x direction
-      dest = &(*this)(x + sgn(target.x - x), y);
-      if (!(*this)(x, y).moveEnemy(dest)) { //else move in y direction
-	dest = &(*this)(x, y + sgn(target.y - y));
-	(*this)(x, y).moveEnemy(dest);
-      }
-    }
-    else { //move in y direction
-      dest = &(*this)(x, y + sgn(target.y - y));
-      if (!(*this)(x, y).moveEnemy(dest)) { // else move in x direction
-	dest = &(*this)(x + sgn(target.x - x), y);
-	(*this)(x, y).moveEnemy(dest);
-      }
+  int dx = sgn(target.x - x);
+  int dy = sgn(target.y - y);
+
+  //figure out a list of coordinates that are closer to the target
+  Point possibleMoves[] {{x + dx, y + dy},
+                         
+                         {x + dx, y},
+                         {x, y + dy}};
+
+  //random fuzz so that enemies don't path in a completely deterministic (and
+  //opaque) way when the optimal move is blocked
+  if (randTo(1)) {
+    std::swap(possibleMoves[1], possibleMoves[2]);
+  }
+
+  //take the first possible move that is legal, then put the moved-to point
+  //into toAct so that the enemy can complete the rest of its turn
+  for (Point &dest : possibleMoves) {
+    if ((*this)(x, y).moveEnemy((*this)(dest.x, dest.y))) {
+      toAct.emplace_back(dest.x, dest.y);
     }
   }
 }
@@ -238,6 +239,7 @@ void Map::tick() {
 
   enemyCount = newEnemyCount;
 
+  executeToExplode();
   executeToAct();
 
   //kludge to handle gas clouds appearing as part of an attack
@@ -325,7 +327,8 @@ void Map::executeToAct() {
             [&](Point a, Point b) {
               return (distance(a.x, a.y) < distance(b.x, b.y));
             });
-  for (Point &point : toAct) {
+  for (unsigned int i = 0; i < toAct.size(); i++) {
+    const Point &point = toAct.at(i);
     while ((*this)(point.x, point.y).act(*this, point.x, point.y));
   }
   toAct.clear();

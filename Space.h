@@ -33,7 +33,7 @@ class Space {
   
   //moves the enemy from this space to the target space.
   //fails if the space is occupied.
-  bool moveEnemy(Space *target);
+  bool moveEnemy(Space &target);
 
   //sets the enemy on the space. overwrites the previous enemy.
   void setEnemy(Enemy *enemyIn);

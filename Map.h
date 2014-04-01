@@ -42,12 +42,13 @@ class Map {
   bool shootArrow(int dx, int dy);
   bool throwHook(int dx, int dy);
 
-  //lights all space within radius spaces of (x, y) for turns turns
-  void lightArea(int x, int y, int radius, int turns);
-
+  //returns true if the player could see directly to the space, ignoring the
+  //actual extent of their line of sight.
+  bool isVisible(int x, int y) const;
+  
   //causes the enemy at the given coordinates to attempt to move toward the
   //player (or the last place it saw the player).
-  void moveEnemy(int x, int y);
+  void findPathAndMove(int x, int y);
 
   //get a reference (or const reference) to the space located at coords x, y.
   //causes an assertion failure if the space is beyond those coordinates.
@@ -76,7 +77,6 @@ class Map {
   Space space[MAPWIDTH + 2][MAPHEIGHT + 2];
   int playerX, playerY;
 
-  bool isVisible(int x, int y) const;
   bool hasLOS(int x1, int y1, int x2, int y2) const;
 
   std::vector<Point> toExplode;

@@ -36,17 +36,24 @@ Enemy::Enemy(int hpIn) :
 {}
 
 bool Enemy::act(Map &map, int x, int y) {
-  if (timeToAct >= getMoveTime() && map.distance(x, y) > getRange()) {
-    timeToAct -= getMoveTime();
-    map.moveEnemy(x, y);
-    return true;
-  }
-  else if (timeToAct >= getAttackTime()) {
+  if (map.distance(x, y) <= getRange() && map.isVisible(x, y)) {
+    if (timeToAct <= getAttackTime()) {
+      return false;
+    }
+
     timeToAct -= getAttackTime();
     attack(map, x, y);
     return true;
   }
-  return false;
+  else {
+    if (timeToAct <= getMoveTime()) {
+      return false;
+    }
+
+    timeToAct -= getMoveTime();
+    map.findPathAndMove(x, y);
+    return true;
+  }
 }
 
 unsigned int Enemy::getMoveTime() const {
@@ -81,7 +88,7 @@ Enemy::~Enemy() {
 }
 
 void Enemy::renewMemory(Point playerLocation) {
-  memoryDuration = 5;
+  memoryDuration = 40;
   memoryLocation = playerLocation;
 }
 

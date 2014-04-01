@@ -51,9 +51,9 @@ void Space::setItem(std::unique_ptr<SimpleItem> itemIn) {
   item = std::move(itemIn);
 }
 
-bool Space::moveEnemy(Space *target) {
-  if (target->isPassable() && !target->hasEnemy()) {
-    target->setEnemy(std::move(this->enemy));
+bool Space::moveEnemy(Space &target) {
+  if (target.isPassable() && !target.hasEnemy()) {
+    target.setEnemy(std::move(this->enemy));
     return true;
   }
   else {
