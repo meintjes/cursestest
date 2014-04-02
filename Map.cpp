@@ -325,11 +325,11 @@ void Map::executeToExplode() {
 void Map::executeToAct() {
   //closest to player act first, to reduce collisions while moving, etc.
   std::sort(toAct.begin(), toAct.end(),
-            [&](Point a, Point b) {
+            [&](const Point &a, const Point &b) {
               return (distance(a.x, a.y) < distance(b.x, b.y));
             });
   for (unsigned int i = 0; i < toAct.size(); i++) {
-    const Point &point = toAct.at(i);
+    Point point = toAct.at(i);
     while ((*this)(point.x, point.y).act(*this, point.x, point.y)) {
       //intentionally empty loop body. the enemy is asked repeatedly to act
       //until it no longer is able to.
