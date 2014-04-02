@@ -206,8 +206,12 @@ Cch SpawnerBoss::getGlyph() const {
   }
 }
 
+unsigned int SpawnerBoss::getMoveTime() const {
+  return 10;
+}
+
 int SpawnerBoss::getRange() const {
-  return 3;
+  return 4;
 }
 
 void SpawnerBoss::attack(Map &map, int x, int y) {
@@ -218,7 +222,7 @@ void SpawnerBoss::attack(Map &map, int x, int y) {
   }
   else if (map(x, y).isPassable() && !map(x, y).hasEnemy()) {
     map(x, y).setEnemy(new Exploder);
-    stun(2);
+    stun(16);
   }
 }
 

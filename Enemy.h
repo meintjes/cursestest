@@ -116,6 +116,7 @@ class SpawnerBoss : public Enemy {
   CREATE_TAG_FOR(SpawnerBoss)
   SpawnerBoss();
   Cch getGlyph() const;
+  unsigned int getMoveTime() const;
   int getRange() const;
   void attack(Map &map, int x, int y);
   void die(Map &map, int x, int y);
