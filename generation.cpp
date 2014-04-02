@@ -14,12 +14,18 @@ std::unique_ptr<SimpleItem> getRandomItem() {
     return std::unique_ptr<SimpleItem>(new Ore);
   }
   else if (num < 36) {
-    return std::unique_ptr<SimpleItem>(new Bomb);
-  }
-  else if (num < 52) {
     return std::unique_ptr<SimpleItem>(new Torch);
   }
-  else if (num < 68) {
+  else if (num < 46) {
+    return std::unique_ptr<SimpleItem>(new HealthPotion);
+  }
+  else if (num < 56) {
+    return std::unique_ptr<SimpleItem>(new HealthPotion);
+  }
+  else if (num < 66) {
+    return std::unique_ptr<SimpleItem>(new Bomb);
+  }
+  else if (num < 76) {
     return std::unique_ptr<SimpleItem>(new Arrow);
   }
   else if (num < 84) {

@@ -87,6 +87,7 @@ class Zombie : public Enemy {
  public:
   CREATE_TAG_FOR(Zombie)
   Zombie();
+  unsigned int getMoveTime() const;
   Cch getGlyph() const;
 };
 

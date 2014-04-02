@@ -153,4 +153,26 @@ class Hook : public DestructibleItem {
   const Color& color() const;
 };
 
+class HealthPotion : public Item {
+ public:
+  CREATE_TAG_FOR(HealthPotion)
+  using Item::Item;
+  Item::UseResult use(Map &map);
+ protected:
+  char glyph() const;
+  std::string name() const;
+  const Color& color() const;
+};
+
+class StaminaPotion : public Item {
+ public:
+  CREATE_TAG_FOR(StaminaPotion)
+  using Item::Item;
+  Item::UseResult use(Map &map);
+ protected:
+  char glyph() const;
+  std::string name() const;
+  const Color& color() const;
+};
+
 #endif

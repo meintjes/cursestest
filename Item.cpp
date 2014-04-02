@@ -91,7 +91,7 @@ Item::UseResult Bomb::use(Map &map) {
 }
 
 char Bomb::glyph() const {
-  return '!';
+  return '*';
 }
 
 std::string Bomb::name() const {
@@ -169,4 +169,50 @@ std::string Hook::name() const {
 
 const Color& Hook::color() const {
   return LightGray;
+}
+
+
+
+Item::UseResult HealthPotion::use(Map &map) {
+  if (map.you.heal(randRange(8, 12))) {
+    return Item::Destroy;
+  }
+  else {
+    return Item::Fail;
+  }
+}
+
+char HealthPotion::glyph() const {
+  return '!';
+}
+
+std::string HealthPotion::name() const {
+  return "potion of healing";
+}
+
+const Color& HealthPotion::color() const {
+  return DarkGreen;
+}
+
+
+
+Item::UseResult StaminaPotion::use(Map &map) {
+  if (map.you.restoreStamina(randRange(4, 6))) {
+    return Item::Destroy;
+  }
+  else {
+    return Item::Fail;
+  }
+}
+
+char StaminaPotion::glyph() const {
+  return '!';
+}
+
+std::string StaminaPotion::name() const {
+  return "potion of staminaj";
+}
+
+const Color& StaminaPotion::color() const {
+  return Brown;
 }

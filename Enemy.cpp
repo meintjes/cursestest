@@ -73,7 +73,7 @@ void Enemy::attack(Map &map, int x, int y) {
 }
 
 void Enemy::damage(int num, Map &map, int x, int y) {
-  hp--;
+  hp -= num;
   if (hp <= 0) {
     die(map, x, y);
   }
@@ -126,15 +126,12 @@ Zombie::Zombie() :
   Enemy(randRange(1, 3))
 {}
 
+unsigned int Zombie::getMoveTime() const {
+  return 10;
+}
+
 Cch Zombie::getGlyph() const {
-  switch (hp) {
-  case 1:
-    return LightGray('z');
-  case 2:
-    return LightGray('Z');
-  default:
-    return White('Z');
-  }
+  return LightGray('z');
 }
 
 
@@ -234,7 +231,7 @@ void SpawnerBoss::die(Map &map, int x, int y) {
 
 
 Cch Douser::getGlyph() const {
-  return LightBlue('z');
+  return LightBlue('w');
 }
 
 void Douser::attack(Map &map, int x, int y) {
