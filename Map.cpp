@@ -180,6 +180,7 @@ void Map::findPathAndMove(int x, int y) {
   for (Point &dest : possibleMoves) {
     if ((*this)(x, y).moveEnemy((*this)(dest.x, dest.y))) {
       toAct.emplace_back(dest.x, dest.y);
+      return; //stop checking after the first valid space is found
     }
   }
 }
@@ -329,7 +330,10 @@ void Map::executeToAct() {
             });
   for (unsigned int i = 0; i < toAct.size(); i++) {
     const Point &point = toAct.at(i);
-    while ((*this)(point.x, point.y).act(*this, point.x, point.y));
+    while ((*this)(point.x, point.y).act(*this, point.x, point.y)) {
+      //intentionally empty loop body. the enemy is asked repeatedly to act
+      //until it no longer is able to.
+    }
   }
   toAct.clear();
 }
