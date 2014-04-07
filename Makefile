@@ -1,5 +1,5 @@
 GXX=g++
-GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses
+GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses -pipe
 
 cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o Archive.o Game.o
 	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o Archive.o Game.o -o $@

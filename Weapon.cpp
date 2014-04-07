@@ -17,7 +17,7 @@ Item::UseResult Weapon::use(Map &map) {
     map.you.setWeapon(this);
     return Item::Release;
   }
-} 
+}
 
 char Weapon::glyph() const {
   return ')';
@@ -86,16 +86,14 @@ const Color& Bludgeon::color() const {
 bool Lance::attack(Map &map, int dx, int dy) {
   int x = map.getPlayerX() + dx;
   int y = map.getPlayerY() + dy;
-  bool shouldSpendTurn = (map.you.getLastMoveDirection() != Point{dx, dy});
-  map.you.setLastMoveDirection({0, 0});
-  if (!shouldSpendTurn) {
-    map(x, y).damage(2, map, x, y);
+  if (map.you.getLastMoveDirection() == Point{dx, dy}) {
+    map(x, y).damage(3, map, x, y);
   }
   else {
     map(x, y).damage(1, map, x, y);
   }
   damage(2);
-  return shouldSpendTurn;
+  return true;
 }
 
 std::string Lance::name() const {

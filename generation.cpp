@@ -9,6 +9,7 @@
 #include <cassert>
 
 std::unique_ptr<SimpleItem> getRandomItem() {
+  return std::unique_ptr<SimpleItem>(new Lance);
   int num = randTo(99); 
   if (num < 20) {
     return std::unique_ptr<SimpleItem>(new Ore);
