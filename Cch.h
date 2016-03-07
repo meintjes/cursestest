@@ -15,7 +15,7 @@ class Cch {
   bool operator==(const Cch &rhs);
 
   friend void addc(const Cch &cch);
-  friend class Color;
+  friend struct Color;
 
   bool operator==(const Cch &other) const;
  private:

@@ -230,7 +230,7 @@ bool Game::getLongPrompt() {
 
 bool Game::existsID(unsigned int id) {
   std::ifstream stream("saves/" + std::to_string(id) + "Game");
-  return stream;
+  return bool(stream);
 }
 
 unsigned int Game::findUnusedID() {

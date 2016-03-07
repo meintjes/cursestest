@@ -68,7 +68,7 @@ int Enemy::getRange() const {
   return 1;
 }
 
-void Enemy::attack(Map &map, int x, int y) {
+void Enemy::attack(Map &map, int, int) {
   map.you.damage(1);
 }
 
@@ -111,7 +111,7 @@ void Enemy::stun(unsigned int duration) {
   stunDuration += duration;
 }
 
-void Enemy::tick(unsigned int duration, Map &map, int x, int y) {
+void Enemy::tick(unsigned int duration, Map &, int, int) {
   decrementDuration(memoryDuration, duration);
   decrementDuration(stunDuration, duration);
 }
@@ -234,7 +234,7 @@ Cch Douser::getGlyph() const {
   return LightBlue('w');
 }
 
-void Douser::attack(Map &map, int x, int y) {
+void Douser::attack(Map &map, int, int) {
   map.you.damage(1);
   map.you.setTorchDuration(0);
 }

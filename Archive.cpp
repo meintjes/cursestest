@@ -9,7 +9,7 @@ Archive::Archive(std::string path, Archive::Type typeIn) :
 {}
 
 Archive::operator bool() const {
-  return stream;
+  return bool(stream);
 }
 
 Archive::Type Archive::getType() const {

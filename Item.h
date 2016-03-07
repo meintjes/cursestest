@@ -6,7 +6,7 @@
 
 class Cch;
 class Cst;
-class Color;
+struct Color;
 class Player;
 class Map;
   

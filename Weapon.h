@@ -26,7 +26,6 @@ class Weapon : public DestructibleItem {
 class Axe : public Weapon {
  public:
   CREATE_TAG_FOR(Axe)
-  using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
  protected:
@@ -38,7 +37,6 @@ class Axe : public Weapon {
 class Bludgeon : public Weapon {
  public:
   CREATE_TAG_FOR(Bludgeon)
-  using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
 
@@ -52,7 +50,6 @@ class Bludgeon : public Weapon {
 class Lance : public Weapon {
  public:
   CREATE_TAG_FOR(Lance)
-  using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
  protected:
@@ -64,7 +61,6 @@ class Lance : public Weapon {
 class Spear : public Weapon {
  public:
   CREATE_TAG_FOR(Spear)
-  using DestructibleItem::DestructibleItem;
 
   bool attack(Map &map, int dx, int dy);
  protected:

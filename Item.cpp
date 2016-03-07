@@ -5,7 +5,7 @@
 #include "functions.h"
 #include <stdexcept>
 
-void SimpleItem::serialize(Archive &ar) {
+void SimpleItem::serialize(Archive &) {
   //no data to serialize.
 }
 

@@ -323,7 +323,7 @@ Point Player::getLastMoveDirection() const {
   return lastMoveDirection;
 }
 
-const Weapon* const Player::getCurrentWeapon() const {
+const Weapon* Player::getCurrentWeapon() const {
   return currentWeapon.get();
 }
 
@@ -334,7 +334,7 @@ void Player::setWeapon(Weapon* const weapon) {
   currentWeapon = std::unique_ptr<Weapon>(weapon);
 }
 
-const Artifact* const Player::getCurrentArtifact() const {
+const Artifact* Player::getCurrentArtifact() const {
   return currentArtifact.get();
 }
 

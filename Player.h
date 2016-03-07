@@ -76,9 +76,9 @@ class Player {
 
   //set and get pointers to current weapon and artifact. DO NOT save the
   //gotten pointers anywhere; ownership is retained by the player.
-  const Weapon* const getCurrentWeapon() const;
+  const Weapon* getCurrentWeapon() const;
   void setWeapon(Weapon* const weapon);
-  const Artifact* const getCurrentArtifact() const;
+  const Artifact* getCurrentArtifact() const;
   void setArtifact(Artifact* const artifact);
 
   //damage the player for num damage, resets the internal damage timer.

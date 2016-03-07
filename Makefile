@@ -1,73 +1,59 @@
-GXX=g++
-GXX_FLAGS=-c -g -Wall -Werror -pedantic -std=c++11 -lncurses -pipe
+CXX = g++
+CXXFLAGS = -g -Wall -Werror -Wextra -pedantic -std=c++11 -Wno-char-subscripts
+LD_FLAGS = -lncurses
 
-cursestest: main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o Archive.o Game.o
-	$(GXX) -lncurses main.o Map.o MapGen.o Cst.o Cch.o Space.o Enemy.o Player.o functions.o Command.o Menu.o Option.o Point.o Item.o Artifact.o Weapon.o generation.o Branch.o Archive.o Game.o -o $@
+TAG_FILES = $(shell find . -type f -name '*.h' -exec grep 'CREATE_TAG_FOR' -l {} \;)
+TAG_HEADER = getPointerFromArchive.h
+TAG_GEN = ./regenerateUnserializer.sh
 
-less:
-	make 2>&1 | less
+SOURCES = $(wildcard *.cpp)
+OBJECTS = $(SOURCES:%.cpp=%.o)
 
-main.o: main.cpp Map.o Space.o Enemy.o Player.o Command.o Menu.o Branch.o Game.o
-	$(GXX) $(GXX_FLAGS) main.cpp
+cursestest: $(OBJECTS)
+	$(CXX) $(LD_FLAGS) $(OBJECTS) -o $@
 
-Map.o: Map.cpp Space.o Cch.o Player.o functions.o Point.o Archive.o
-	$(GXX) $(GXX_FLAGS) Map.cpp
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-MapGen.o: MapGen.cpp Space.o functions.o generation.o
-	$(GXX) $(GXX_FLAGS) MapGen.cpp
+generation.o: $(TAG_HEADER)
 
-Cst.o: Cst.cpp
-	$(GXX) $(GXX_FLAGS) Cst.cpp
-
-Cch.o: Cch.cpp
-	$(GXX) $(GXX_FLAGS) Cch.cpp
-
-Space.o: Space.cpp Enemy.o generation.o functions.o
-	$(GXX) $(GXX_FLAGS) Space.cpp
-
-Enemy.o: Enemy.cpp Point.o Map.o functions.o generation.o Player.o Archive.o
-	$(GXX) $(GXX_FLAGS) Enemy.cpp
-
-Player.o: Player.cpp Cst.o Cch.o functions.o Item.o Branch.o Archive.o generation.o Map.o
-	$(GXX) $(GXX_FLAGS) Player.cpp
-
-functions.o: functions.cpp
-	$(GXX) $(GXX_FLAGS) functions.cpp
-
-Command.o: Command.cpp Menu.o
-	$(GXX) $(GXX_FLAGS) Command.cpp
-
-Menu.o: Menu.cpp Option.o Cst.o
-	$(GXX) $(GXX_FLAGS) Menu.cpp
-
-Option.o: Option.cpp Cst.o
-	$(GXX) $(GXX_FLAGS) Option.cpp
-
-Point.o: Point.cpp
-	$(GXX) $(GXX_FLAGS) Point.cpp
-
-Item.o: Item.cpp Cch.o Player.o functions.o Map.o
-	$(GXX) $(GXX_FLAGS) Item.cpp
-
-Artifact.o: Artifact.cpp Player.o Cst.o Cst.o Item.o generation.o
-	$(GXX) $(GXX_FLAGS) Artifact.cpp
-
-Weapon.o: Weapon.cpp Item.o Map.o Point.o generation.o
-	$(GXX) $(GXX_FLAGS) Weapon.cpp
-
-generation.o: getPointerFromArchive.h generation.cpp Item.o Enemy.o Weapon.o Artifact.o functions.o
-	./regenerateUnserializer.sh >getPointerFromArchive.h
-	$(GXX) $(GXX_FLAGS) generation.cpp
-
-Branch.o: Branch.cpp Map.o
-	$(GXX) $(GXX_FLAGS) Branch.cpp
-
-Archive.o: Archive.cpp
-	$(GXX) $(GXX_FLAGS) Archive.cpp
-
-Game.o: Game.cpp Player.o Branch.o Archive.o Cst.o Command.o
-	$(GXX) $(GXX_FLAGS) Game.cpp
-
+$(TAG_HEADER): $(TAG_FILES) $(TAG_GEN)
+	$(TAG_GEN) >$(TAG_HEADER)
 
 clean:
-	rm -rf *.o cursestest
+	rm -rf *.o cursestest $(TAG_HEADER)
+
+Archive.o: Archive.cpp Archive.h
+Artifact.o: Artifact.cpp Artifact.h Cst.h Cch.h Item.h Archive.h Color.h \
+  functions.h Map.h Space.h Point.h Enemy.h Player.h
+Branch.o: Branch.cpp Map.h Space.h Point.h Cch.h Enemy.h Archive.h \
+  Branch.h
+Cch.o: Cch.cpp Cch.h Color.h Cst.h
+Command.o: Command.cpp Command.h Option.h Cst.h Color.h Cch.h
+Cst.o: Cst.cpp Cst.h
+Enemy.o: Enemy.cpp Enemy.h Archive.h Point.h Player.h Cch.h Color.h Cst.h \
+  Map.h Space.h Item.h functions.h
+Game.o: Game.cpp Game.h Player.h Cch.h Point.h Branch.h Command.h \
+  Option.h Cst.h Map.h Space.h Enemy.h Archive.h Color.h
+Item.o: Item.cpp Item.h Archive.h Player.h Cch.h Point.h Color.h Cst.h \
+  Map.h Space.h Enemy.h functions.h
+Map.o: Map.cpp Archive.h Map.h Space.h Point.h Cch.h Enemy.h Color.h \
+  Cst.h Player.h functions.h Command.h Option.h generation.h
+MapGen.o: MapGen.cpp Map.h Space.h Point.h Cch.h Enemy.h Archive.h Item.h \
+  functions.h generation.h
+Menu.o: Menu.cpp Menu.h Option.h Cst.h Cch.h Color.h
+Option.o: Option.cpp Option.h Cst.h Color.h Cch.h
+Player.o: Player.cpp Player.h Cch.h Point.h functions.h Map.h Space.h \
+  Enemy.h Archive.h Branch.h Item.h Weapon.h Artifact.h Cst.h Color.h \
+  generation.h
+Point.o: Point.cpp Point.h
+Space.o: Space.cpp Space.h Point.h Cch.h Archive.h generation.h Item.h \
+  Enemy.h Color.h Cst.h functions.h
+Weapon.o: Weapon.cpp Color.h Cst.h Cch.h Weapon.h Item.h Archive.h \
+  Player.h Point.h Map.h Space.h Enemy.h
+functions.o: functions.cpp functions.h
+generation.o: generation.cpp generation.h Archive.h functions.h Item.h \
+  Artifact.h Cst.h Cch.h Weapon.h Enemy.h Point.h \
+  getPointerFromArchive.h
+main.o: main.cpp Map.h Space.h Point.h Cch.h Enemy.h Archive.h Game.h \
+  Player.h Branch.h Command.h Option.h Cst.h Color.h Menu.h

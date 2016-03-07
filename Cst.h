@@ -22,7 +22,7 @@ class Cst {
   bool operator==(const Cst &rhs);
 
   friend void addcs(const Cst &cst);
-  friend class Color;
+  friend struct Color;
   friend Cst operator+(const Cst &cst, const std::string &str);
   friend Cst operator+(const std::string &str, const Cst &cst);
  private:
